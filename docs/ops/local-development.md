@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node 20.11+ (`.nvmrc`) — `nvm use`
+- Node 22.12+ (`.nvmrc`) — `nvm use`
 - pnpm 10 — `corepack enable && corepack prepare pnpm@10.33.0 --activate`
 - Docker, running (the local Supabase stack needs it)
 - Supabase CLI via `npx supabase` (pinned as a dev dependency)
