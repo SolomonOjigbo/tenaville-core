@@ -1,0 +1,13 @@
+{
+  "name": "@tenaville/money",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Naira amounts as integer kobo, with formatting and allocation arithmetic. No floating point (PRD §10.1).",
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}

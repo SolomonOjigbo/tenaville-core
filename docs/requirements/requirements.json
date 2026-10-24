@@ -1,0 +1,1748 @@
+[
+  {
+    "id": "ORG-1",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Signup creates an organisation of type agency or individual landlord with an owner account"
+  },
+  {
+    "id": "ORG-2",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Support verified email and/or phone, staff invitations and account recovery"
+  },
+  {
+    "id": "ORG-3",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Provide roles including Owner/Admin, Property Manager, Letting Agent, Caretaker, Maintenance Coordinator, Accountant, Screening Reviewer, Landlord\u2026"
+  },
+  {
+    "id": "ORG-4",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Enforce role-based and property/portfolio-scoped access"
+  },
+  {
+    "id": "ORG-5",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Record audit events for financial changes, lease changes, screening decisions, sensitive document access, maintenance approvals and permission changes"
+  },
+  {
+    "id": "ORG-6",
+    "prefix": "ORG",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Support multiple branches, teams and branch-level reporting"
+  },
+  {
+    "id": "ORG-7",
+    "prefix": "ORG",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Allow organisation administrators to configure approval limits, workflow templates and notification defaults"
+  },
+  {
+    "id": "ORG-8",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Ensure every tenant organisation\u2019s data is isolated at the database level"
+  },
+  {
+    "id": "ORG-9",
+    "prefix": "ORG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Provide session management: device list, remote sign-out, session timeout and password reset controls"
+  },
+  {
+    "id": "ORG-10",
+    "prefix": "ORG",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/org",
+    "area": "Organisation, users, roles & audit",
+    "summary": "Offer optional two-factor authentication for all users and make it configurable as required for owners and accountants"
+  },
+  {
+    "id": "PROP-1",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Create properties with name/reference, address, state, LGA/area, property type, photos, notes and optional map coordinates"
+  },
+  {
+    "id": "PROP-2",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Create units with label/reference, type, size/bedrooms where applicable, occupancy status, asking/contracted rent, facilities and notes"
+  },
+  {
+    "id": "PROP-3",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Support statuses such as vacant, occupied, reserved, under maintenance and inactive"
+  },
+  {
+    "id": "PROP-4",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Import properties and units from spreadsheet templates with row-level validation and error reporting"
+  },
+  {
+    "id": "PROP-5",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Link properties to one landlord; support ownership shares and multiple landlords in a later release"
+  },
+  {
+    "id": "PROP-6",
+    "prefix": "PROP",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Support custom fields per property or unit"
+  },
+  {
+    "id": "PROP-7",
+    "prefix": "PROP",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Keep an internal vacancy history, including dates vacant/occupied, reason for vacancy and next action"
+  },
+  {
+    "id": "PROP-8",
+    "prefix": "PROP",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Attach property-specific operating documents, warranties, manuals and inspection records"
+  },
+  {
+    "id": "PROP-9",
+    "prefix": "PROP",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Do not expose property records in a public marketplace or public search index"
+  },
+  {
+    "id": "PROP-10",
+    "prefix": "PROP",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/properties",
+    "area": "Properties & units",
+    "summary": "Generate an agency-controlled unit sheet (PDF or private link) that staff can send to a prospect"
+  },
+  {
+    "id": "OWN-1",
+    "prefix": "OWN",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Store landlord contact details, preferred communication channel and remittance details with restricted access"
+  },
+  {
+    "id": "OWN-2",
+    "prefix": "OWN",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Configure management mandate, commission type/rate, remittance schedule and permitted deductions"
+  },
+  {
+    "id": "OWN-3",
+    "prefix": "OWN",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Give landlords secure read-only access to their assigned properties, statements, balances and documents"
+  },
+  {
+    "id": "OWN-4",
+    "prefix": "OWN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Allow landlords to approve or reject repairs above a configurable amount"
+  },
+  {
+    "id": "OWN-5",
+    "prefix": "OWN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Allow landlord comments, approval history and supporting attachments on relevant maintenance requests"
+  },
+  {
+    "id": "OWN-6",
+    "prefix": "OWN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/landlords",
+    "area": "Landlords & management mandates",
+    "summary": "Show landlords agreed portfolio indicators such as occupancy, arrears, maintenance costs and remittance history"
+  },
+  {
+    "id": "LEASE-1",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Maintain tenant records, contacts, optional next-of-kin/employer/business details and authorised documents"
+  },
+  {
+    "id": "LEASE-2",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Create a lease with tenant(s), unit, dates, rent, payment frequency, due dates, deposit and other charges"
+  },
+  {
+    "id": "LEASE-3",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Support lease states draft, active, expiring soon, expired, terminated and renewed"
+  },
+  {
+    "id": "LEASE-4",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Generate renewal records from existing leases while retaining historical terms"
+  },
+  {
+    "id": "LEASE-5",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Record move-in, move-out, handover notes, outstanding balance, meter readings and deposit handling"
+  },
+  {
+    "id": "LEASE-6",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Configure expiry alerts, for example 90, 60 and 30 days before expiry"
+  },
+  {
+    "id": "LEASE-7",
+    "prefix": "LEASE",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Support configurable rent-review/escalation rules and approval before applying new terms"
+  },
+  {
+    "id": "LEASE-8",
+    "prefix": "LEASE",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Provide tenancy agreement templates and electronic signature through an appropriate provider"
+  },
+  {
+    "id": "LEASE-9",
+    "prefix": "LEASE",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Support co-tenants and guarantors"
+  },
+  {
+    "id": "LEASE-10",
+    "prefix": "LEASE",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Create a tenant lease from an approved application without re-entering the same information"
+  },
+  {
+    "id": "LEASE-11",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Preserve lease and tenant history when a tenant record is updated or a lease is terminated"
+  },
+  {
+    "id": "LEASE-12",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Create a lease directly from a tenant and unit without an application"
+  },
+  {
+    "id": "LEASE-13",
+    "prefix": "LEASE",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Manage the caution deposit lifecycle: record the deposit as client funds, hold status, deductions at move-out with evidence and approval, and\u2026"
+  },
+  {
+    "id": "LEASE-14",
+    "prefix": "LEASE",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/leases",
+    "area": "Tenants & lease management",
+    "summary": "Generate notices and letters from agency-configured templates (formal rent reminder, lease expiry or renewal notice, rent-review notice, demand\u2026"
+  },
+  {
+    "id": "RENT-1",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Generate charges from lease terms, including annual, half-yearly, quarterly or monthly rent where configured"
+  },
+  {
+    "id": "RENT-2",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Record payments received through cash, bank transfer, POS or other configured methods, with reference and evidence"
+  },
+  {
+    "id": "RENT-3",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Allocate payments to one or more charges and issue receipts"
+  },
+  {
+    "id": "RENT-4",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Support reversals and corrections without silently overwriting the financial history"
+  },
+  {
+    "id": "RENT-5",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Provide rent roll, upcoming dues, arrears ageing and payment history by tenant, unit, property, landlord and portfolio"
+  },
+  {
+    "id": "RENT-6",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Configure reminders and follow-up tasks for upcoming and overdue charges"
+  },
+  {
+    "id": "RENT-7",
+    "prefix": "RENT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Configure late fees only where the agency\u2019s policy and applicable law permit them"
+  },
+  {
+    "id": "RENT-8",
+    "prefix": "RENT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Provide virtual accounts and payment links via a licensed payment partner, with signed webhooks, idempotency and reconciliation"
+  },
+  {
+    "id": "RENT-9",
+    "prefix": "RENT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Match incoming bank/payment records to tenants, units and charges; provide a review queue for ambiguous matches"
+  },
+  {
+    "id": "RENT-10",
+    "prefix": "RENT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Support scheduled landlord remittance runs with approval and reconciliation"
+  },
+  {
+    "id": "RENT-11",
+    "prefix": "RENT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Export financial records for external accounting tools"
+  },
+  {
+    "id": "RENT-12",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Clearly label recorded payments versus partner-confirmed payments; never claim payment is confirmed without reliable confirmation"
+  },
+  {
+    "id": "RENT-13",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Issue receipts with unique, sequential numbers per organisation (per branch if configured)"
+  },
+  {
+    "id": "RENT-14",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Handle part payments, overpayments and tenant credit"
+  },
+  {
+    "id": "RENT-15",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Provide a daily cash-up per user and payment method for reconciliation against bank and cash"
+  },
+  {
+    "id": "RENT-16",
+    "prefix": "RENT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/rent",
+    "area": "Rent schedules, payments & arrears",
+    "summary": "Support opening balances and historical arrears at cutover (see MIG-2)"
+  },
+  {
+    "id": "LEDGER-1",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Maintain an auditable landlord ledger for rent receipts, commission, approved costs, adjustments and remittances"
+  },
+  {
+    "id": "LEDGER-2",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Generate period statements showing opening balance, collections, deductions, costs, remittances and closing balance"
+  },
+  {
+    "id": "LEDGER-3",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Attach receipts, invoices and approval evidence to ledger-related entries"
+  },
+  {
+    "id": "LEDGER-4",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Separate landlord/client funds from agency income in the data model and financial reports"
+  },
+  {
+    "id": "LEDGER-5",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Restrict statement visibility to authorised staff and the relevant landlord"
+  },
+  {
+    "id": "LEDGER-6",
+    "prefix": "LEDGER",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Support approval and batch processing of remittance schedules"
+  },
+  {
+    "id": "LEDGER-7",
+    "prefix": "LEDGER",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Allow branded PDF and downloadable statements"
+  },
+  {
+    "id": "LEDGER-8",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Route statements through draft, reviewed and issued states"
+  },
+  {
+    "id": "LEDGER-9",
+    "prefix": "LEDGER",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Recognise commission when rent is received by default, with the basis defined in the mandate"
+  },
+  {
+    "id": "LEDGER-10",
+    "prefix": "LEDGER",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Support configurable tax lines (for example VAT on commission, withholding tax on rent), off by default and validated with a tax adviser before use"
+  },
+  {
+    "id": "LEDGER-11",
+    "prefix": "LEDGER",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/ledger",
+    "area": "Landlord ledger, statements & remittances",
+    "summary": "Record the settlement-account model for partner-provided virtual accounts (agency client account, landlord account or split) as organisation\u2026"
+  },
+  {
+    "id": "MAINT-1",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Create a maintenance request against a property/unit, submitted by staff or tenant"
+  },
+  {
+    "id": "MAINT-2",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Capture category, description, urgency, reported date, access constraints, photos/videos where supported, and whether the issue affects safety or\u2026"
+  },
+  {
+    "id": "MAINT-3",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Track core statuses Submitted, Acknowledged, Assigned, In Progress, On Hold, Completed, Rejected and Closed"
+  },
+  {
+    "id": "MAINT-4",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Assign an owner/coordinator, priority, due date and responsible staff member"
+  },
+  {
+    "id": "MAINT-5",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Record activity timeline, comments, status changes, attachments and communications"
+  },
+  {
+    "id": "MAINT-6",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Maintain vendor records, contact details, trade/category, service areas, availability notes and internal performance history"
+  },
+  {
+    "id": "MAINT-7",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Request and compare one or more vendor quotations, including labour, materials, call-out fees, taxes and validity period"
+  },
+  {
+    "id": "MAINT-8",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Configure approval thresholds by landlord, property, cost or job category"
+  },
+  {
+    "id": "MAINT-9",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Create work orders with scope, assigned vendor, target date, agreed cost and access instructions"
+  },
+  {
+    "id": "MAINT-10",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Record actual cost, invoices, receipts, before/after photos and completion notes"
+  },
+  {
+    "id": "MAINT-11",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Allocate repair costs to landlord, tenant, agency, service charge or another configured payer, with reason and approval"
+  },
+  {
+    "id": "MAINT-12",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Notify tenants of acknowledgement, appointment/visit, status changes and completion, subject to notification preferences"
+  },
+  {
+    "id": "MAINT-13",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Let tenants confirm whether the issue is resolved or reopen it with a reason"
+  },
+  {
+    "id": "MAINT-14",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Support recurring preventive maintenance and inspection schedules"
+  },
+  {
+    "id": "MAINT-15",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Track response time, resolution time, repeat incidents, vendor cost and overdue jobs"
+  },
+  {
+    "id": "MAINT-16",
+    "prefix": "MAINT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Preserve the repair history against the property/unit even after a tenancy ends"
+  },
+  {
+    "id": "MAINT-17",
+    "prefix": "MAINT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/maintenance",
+    "area": "Maintenance & repairs",
+    "summary": "Support emergency escalation rules, named contacts and an auditable record of actions taken"
+  },
+  {
+    "id": "CRM-1",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Create a prospect manually or from an agency-controlled channel such as a phone call, WhatsApp message, referral, email or private enquiry form"
+  },
+  {
+    "id": "CRM-2",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Record contact details, preferred contact method, requested property/unit or property type, budget range, preferred area, intended move-in date,\u2026"
+  },
+  {
+    "id": "CRM-3",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Track configurable pipeline stages, with defaults such as New, Contacted, Qualified, Appointment Booked, Viewed, Application Started, Screening,\u2026"
+  },
+  {
+    "id": "CRM-4",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Assign each lead to an agent or team and record the source, owner, next action and follow-up due date"
+  },
+  {
+    "id": "CRM-5",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Maintain a chronological activity timeline for calls, messages, appointments, notes, tasks and stage changes"
+  },
+  {
+    "id": "CRM-6",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Schedule reminders and overdue follow-up alerts; show an agent\u2019s daily follow-up queue"
+  },
+  {
+    "id": "CRM-7",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Detect likely duplicate leads and allow authorised merging while preserving activity history"
+  },
+  {
+    "id": "CRM-8",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Record lost reasons and nurture dates, and support reactivation without creating duplicate records"
+  },
+  {
+    "id": "CRM-9",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Convert a qualified lead to an application and, after approval, to a tenant/lease while reusing data with permission"
+  },
+  {
+    "id": "CRM-10",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Report lead response time, pipeline ageing, appointment conversion, application conversion, lead-to-lease rate and lost reasons"
+  },
+  {
+    "id": "CRM-11",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Support messaging templates for follow-ups via configured WhatsApp Business, SMS and email providers"
+  },
+  {
+    "id": "CRM-12",
+    "prefix": "CRM",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/crm",
+    "area": "CRM pipeline & prospects",
+    "summary": "Honour opt-outs and consent requirements for marketing communications"
+  },
+  {
+    "id": "APPT-1",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Schedule property viewings, tenant meetings, inspections, maintenance visits and other configured appointment types"
+  },
+  {
+    "id": "APPT-2",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Link an appointment to a lead, tenant, property/unit, maintenance request or staff member as applicable"
+  },
+  {
+    "id": "APPT-3",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Record date, start/end time, location or meeting instructions, attendees, assigned staff and access requirements"
+  },
+  {
+    "id": "APPT-4",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Prevent or flag conflicts in the assigned staff member\u2019s schedule and support rescheduling/cancellation"
+  },
+  {
+    "id": "APPT-5",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Send configurable confirmations and reminders through available channels, with delivery status where supported"
+  },
+  {
+    "id": "APPT-6",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Record outcomes such as Completed, No-show, Cancelled, Rescheduled, Interested, Follow-up Required or Not Suitable"
+  },
+  {
+    "id": "APPT-7",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Automatically create follow-up tasks from appointment outcomes, with an owner and due date"
+  },
+  {
+    "id": "APPT-8",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Capture feedback, next steps and the prospect\u2019s interest level after a viewing"
+  },
+  {
+    "id": "APPT-9",
+    "prefix": "APPT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Provide calendar and list views, daily agenda and filters by team, appointment type and status"
+  },
+  {
+    "id": "APPT-10",
+    "prefix": "APPT",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/appointments",
+    "area": "Appointments & follow-ups",
+    "summary": "Integrate with external calendars where justified and permitted by user consent"
+  },
+  {
+    "id": "SCREEN-1",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Create screening templates by organisation and optionally apply overrides by property, landlord or unit type"
+  },
+  {
+    "id": "SCREEN-2",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Configure steps such as identity evidence, employment/business information, income/affordability evidence, previous landlord reference, guarantor\u2026"
+  },
+  {
+    "id": "SCREEN-3",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Mark each step required/optional, assign a reviewer, define accepted evidence types and set an expiry/recency rule where appropriate"
+  },
+  {
+    "id": "SCREEN-4",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Support statuses such as Not Started, Requested, Submitted, Under Review, More Information Required, Passed, Failed, Waived and Expired, with\u2026"
+  },
+  {
+    "id": "SCREEN-5",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Provide a tenant-facing application form and secure document-upload flow within the portal"
+  },
+  {
+    "id": "SCREEN-6",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Record applicant consent, purpose, timestamp, privacy notice version and any third-party checks requested"
+  },
+  {
+    "id": "SCREEN-7",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Keep reviewer notes, evidence, decision rationale, reviewer identity and timestamps in an auditable history"
+  },
+  {
+    "id": "SCREEN-8",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Restrict access to screening information to explicitly authorised roles; do not expose sensitive screening notes to other tenants or general staff"
+  },
+  {
+    "id": "SCREEN-9",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Allow a reviewer to request additional information and notify the applicant of required actions without revealing confidential internal notes"
+  },
+  {
+    "id": "SCREEN-10",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Prevent lease activation where required screening steps remain incomplete, unless an authorised user records an override and reason"
+  },
+  {
+    "id": "SCREEN-11",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Support configurable retention and deletion/anonymisation rules for rejected or withdrawn applications, subject to legal obligations"
+  },
+  {
+    "id": "SCREEN-12",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Report application volume, completion time, pending steps and outcomes without exposing unnecessary personal details"
+  },
+  {
+    "id": "SCREEN-13",
+    "prefix": "SCREEN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Integrate with identity or reference-check providers only after security, legal, pricing and data-processing review"
+  },
+  {
+    "id": "SCREEN-14",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Do not use protected or sensitive personal characteristics as screening criteria"
+  },
+  {
+    "id": "SCREEN-15",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Treat national and financial identifiers (for example NIN and BVN) as highly sensitive"
+  },
+  {
+    "id": "SCREEN-16",
+    "prefix": "SCREEN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/screening",
+    "area": "Configurable tenant screening",
+    "summary": "Apply each template's criteria consistently across applicants and record the criteria version used, so decisions can be reviewed for fairness"
+  },
+  {
+    "id": "TENANT-1",
+    "prefix": "TENANT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide secure tenant access linked to the correct organisation, tenant record and active lease"
+  },
+  {
+    "id": "TENANT-2",
+    "prefix": "TENANT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Show lease summary, rent due dates, charge breakdown, recorded payment history, receipts and current balance"
+  },
+  {
+    "id": "TENANT-3",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Show partner-confirmed payments and virtual account/payment instructions when enabled; clearly distinguish pending from confirmed payments"
+  },
+  {
+    "id": "TENANT-4",
+    "prefix": "TENANT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Let tenants submit maintenance requests with category, description, preferred access times and attachments"
+  },
+  {
+    "id": "TENANT-5",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Let tenants track repair status, appointments, expected next step and relevant messages"
+  },
+  {
+    "id": "TENANT-6",
+    "prefix": "TENANT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide access to lease documents, receipts, notices and other documents explicitly shared with the tenant"
+  },
+  {
+    "id": "TENANT-7",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Allow tenants to update permitted contact details and notification preferences; sensitive changes may require verification or staff approval"
+  },
+  {
+    "id": "TENANT-8",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide a secure communication/request channel and show status for submitted requests"
+  },
+  {
+    "id": "TENANT-9",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Show renewal prompts and allow a tenant to indicate whether they wish to renew, without automatically renewing a lease"
+  },
+  {
+    "id": "TENANT-10",
+    "prefix": "TENANT",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide a financing information area only where an eligible partner is integrated"
+  },
+  {
+    "id": "TENANT-11",
+    "prefix": "TENANT",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Obtain explicit, purpose-specific consent before sharing tenant data with a financing partner"
+  },
+  {
+    "id": "TENANT-12",
+    "prefix": "TENANT",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Allow a tenant to start a financing referral/application and redirect or securely hand off to the provider\u2019s approved flow"
+  },
+  {
+    "id": "TENANT-13",
+    "prefix": "TENANT",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Do not promise approval, display misleading affordability claims or describe financing as a Tenaville loan"
+  },
+  {
+    "id": "TENANT-14",
+    "prefix": "TENANT",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide responsive mobile web access for tenants and landlords in R1"
+  },
+  {
+    "id": "TENANT-15",
+    "prefix": "TENANT",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/tenant-portal",
+    "area": "Tenant self-service portal",
+    "summary": "Provide accessible language, low-data and clear error/retry behaviour for common tenant actions"
+  },
+  {
+    "id": "FIN-1",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Design a provider-neutral integration boundary so a financing partner can be added or replaced without rewriting core tenancy workflows"
+  },
+  {
+    "id": "FIN-2",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Only onboard providers after legal/regulatory review, due diligence, security review and clear contractual responsibilities"
+  },
+  {
+    "id": "FIN-3",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Make clear who the lender is, who makes the credit decision, who services the financing and who receives repayments"
+  },
+  {
+    "id": "FIN-4",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Do not let Tenaville receive, pool, lend or hold tenant financing proceeds unless a separately approved legal/regulatory model explicitly permits it"
+  },
+  {
+    "id": "FIN-5",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Share only consented minimum data and record consent, payload, provider reference and handoff time"
+  },
+  {
+    "id": "FIN-6",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Keep financing application data and status access restricted and segregated from ordinary property-management permissions"
+  },
+  {
+    "id": "FIN-7",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Support provider callbacks/webhooks with signature verification, idempotency, replay protection and audit logging"
+  },
+  {
+    "id": "FIN-8",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Record financing status separately from rent payment status"
+  },
+  {
+    "id": "FIN-9",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Where contractually and technically supported, reconcile confirmed disbursements to the relevant rent charge and show the resulting payment evidence"
+  },
+  {
+    "id": "FIN-10",
+    "prefix": "FIN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/financing",
+    "area": "Rent financing & partner integrations",
+    "summary": "Do not charge tenants hidden fees or make financing a mandatory condition of tenancy management"
+  },
+  {
+    "id": "AN-1",
+    "prefix": "AN",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Provide core operational reports: rent roll, occupancy/unit status, lease expiries, arrears, collections, maintenance queue and landlord statements"
+  },
+  {
+    "id": "AN-2",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Provide portfolio dashboard filters by date range, branch, property, landlord, manager and unit type, subject to permissions"
+  },
+  {
+    "id": "AN-3",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Calculate occupancy rate using a documented and configurable denominator that excludes units intentionally marked inactive where appropriate"
+  },
+  {
+    "id": "AN-4",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Show rent billed versus collected, arrears ageing, collection rate, overdue balances and upcoming rent due"
+  },
+  {
+    "id": "AN-5",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Show lease expiry pipeline, renewal rate, vacancy duration, time from vacancy to occupancy and units requiring action"
+  },
+  {
+    "id": "AN-6",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Show maintenance request volume, response/resolution time, overdue jobs, repeat issues, cost by property/category/vendor and maintenance cost per unit"
+  },
+  {
+    "id": "AN-7",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Show landlord-level collections, approved costs, deductions and net remittances"
+  },
+  {
+    "id": "AN-8",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Show CRM funnel metrics including lead response time, appointment attendance, application conversion and lead-to-lease conversion"
+  },
+  {
+    "id": "AN-9",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Support export to CSV/XLSX/PDF where appropriate and permitted"
+  },
+  {
+    "id": "AN-10",
+    "prefix": "AN",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Define metric formulas and time windows in the product so users can understand what each metric means"
+  },
+  {
+    "id": "AN-11",
+    "prefix": "AN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Support saved dashboards and configurable KPI cards for different roles"
+  },
+  {
+    "id": "AN-12",
+    "prefix": "AN",
+    "pri": "P2",
+    "rel": "R3",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Add optional benchmark comparisons only where reliable, lawful data sources exist; do not imply market-wide representativeness without evidence"
+  },
+  {
+    "id": "AN-13",
+    "prefix": "AN",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/analytics",
+    "area": "Portfolio analytics & reporting",
+    "summary": "Enforce the same organisation and property-level access restrictions in analytics, exports and background reports as in the main application"
+  },
+  {
+    "id": "COMMS-1",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Provide configurable templates for rent reminders, receipts, lease expiry, maintenance updates and landlord statements"
+  },
+  {
+    "id": "COMMS-2",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Abstract messaging providers for WhatsApp Business, SMS and email"
+  },
+  {
+    "id": "COMMS-3",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Store message metadata, recipient, template, send time, delivery status where available and related record"
+  },
+  {
+    "id": "COMMS-4",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Allow tasks with owner, due date, priority, related record, notes and completion status"
+  },
+  {
+    "id": "COMMS-5",
+    "prefix": "COMMS",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Support recurring tasks and automated task creation from configurable events"
+  },
+  {
+    "id": "COMMS-6",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Respect consent, opt-outs, channel preferences, rate limits and provider policy"
+  },
+  {
+    "id": "COMMS-7",
+    "prefix": "COMMS",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Provide an inbox or work queue for messages requiring a human response, subject to provider capabilities"
+  },
+  {
+    "id": "COMMS-8",
+    "prefix": "COMMS",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/comms",
+    "area": "Communications, reminders & tasks",
+    "summary": "Model WhatsApp business messaging within provider rules: use provider-approved templates for business-initiated messages, track template approval\u2026"
+  },
+  {
+    "id": "DOC-1",
+    "prefix": "DOC",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Attach documents to properties, units, landlords, tenants, leases, screening applications, maintenance jobs and payments as appropriate"
+  },
+  {
+    "id": "DOC-2",
+    "prefix": "DOC",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Support access controls, document type, issue/expiry date, uploader and audit trail"
+  },
+  {
+    "id": "DOC-3",
+    "prefix": "DOC",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Generate and download receipts and landlord statements"
+  },
+  {
+    "id": "DOC-4",
+    "prefix": "DOC",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Support inspection checklists, photos, notes, meter readings and acknowledgement/signature capture where supported"
+  },
+  {
+    "id": "DOC-5",
+    "prefix": "DOC",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Alert authorised staff to expiring documents"
+  },
+  {
+    "id": "DOC-6",
+    "prefix": "DOC",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Scan uploads for malware where supported and use time-limited secure download links"
+  },
+  {
+    "id": "DOC-7",
+    "prefix": "DOC",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/documents",
+    "area": "Documents & inspections",
+    "summary": "Never expose a document through a guessable public URL; enforce authorisation at download time"
+  },
+  {
+    "id": "BILL-1",
+    "prefix": "BILL",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/billing",
+    "area": "Subscription & billing",
+    "summary": "Offer a trial and subscription tiers priced primarily by units under management, billed in naira"
+  },
+  {
+    "id": "BILL-2",
+    "prefix": "BILL",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/billing",
+    "area": "Subscription & billing",
+    "summary": "Support subscription payment through an appropriate Nigerian payment gateway, with invoices and receipts"
+  },
+  {
+    "id": "BILL-3",
+    "prefix": "BILL",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/billing",
+    "area": "Subscription & billing",
+    "summary": "Show plan limits and upgrade prompts"
+  },
+  {
+    "id": "BILL-4",
+    "prefix": "BILL",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/billing",
+    "area": "Subscription & billing",
+    "summary": "Do not delete customer data solely because a subscription is unpaid; preserve export access subject to security and legal policy"
+  },
+  {
+    "id": "BILL-5",
+    "prefix": "BILL",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/billing",
+    "area": "Subscription & billing",
+    "summary": "Validate any optional transaction or financing-related revenue model before implementation and disclose fees clearly"
+  },
+  {
+    "id": "MIG-1",
+    "prefix": "MIG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/migration",
+    "area": "Migration & onboarding",
+    "summary": "Import tenants, leases and current charges from spreadsheet templates, extending the property and unit import (PROP-4), with validation and\u2026"
+  },
+  {
+    "id": "MIG-2",
+    "prefix": "MIG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/migration",
+    "area": "Migration & onboarding",
+    "summary": "Import opening balances at a chosen cutover date: tenant arrears and credits, and landlord ledger balances"
+  },
+  {
+    "id": "MIG-3",
+    "prefix": "MIG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/migration",
+    "area": "Migration & onboarding",
+    "summary": "Provide a dry-run import that shows what will be created, with the ability to roll back a completed import batch"
+  },
+  {
+    "id": "MIG-4",
+    "prefix": "MIG",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "packages/core/src/modules/migration",
+    "area": "Migration & onboarding",
+    "summary": "Provide an onboarding checklist and sample templates, and an optional assisted-import service for larger agencies"
+  },
+  {
+    "id": "MIG-5",
+    "prefix": "MIG",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "packages/core/src/modules/migration",
+    "area": "Migration & onboarding",
+    "summary": "Let administrators export all organisation data in documented formats at any time"
+  },
+  {
+    "id": "MOB-1",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Provide native iOS and Android apps for staff covering daily field work: record a payment and send a receipt, view tenants and arrears, log and\u2026"
+  },
+  {
+    "id": "MOB-2",
+    "prefix": "MOB",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Add inspection checklists with photos, notes and meter readings"
+  },
+  {
+    "id": "MOB-3",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Support offline capture for maintenance notes and photos, tasks and payment records"
+  },
+  {
+    "id": "MOB-4",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Offline payments get a clearly marked provisional receipt (\"pending sync\")"
+  },
+  {
+    "id": "MOB-5",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Show sync state (pending, synced, failed) per record with a visible retry, and never silently discard a failed write"
+  },
+  {
+    "id": "MOB-6",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Protect devices: PIN or biometric lock, encrypted local storage, and remote session revocation that wipes locally cached data"
+  },
+  {
+    "id": "MOB-7",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Support low-data operation: compress images before upload, resume interrupted uploads and paginate lists"
+  },
+  {
+    "id": "MOB-8",
+    "prefix": "MOB",
+    "pri": "P0",
+    "rel": "R1",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Send push notifications for tasks, assignments and alerts"
+  },
+  {
+    "id": "MOB-9",
+    "prefix": "MOB",
+    "pri": "P1",
+    "rel": "R2",
+    "module": "apps/mobile",
+    "area": "Staff mobile app",
+    "summary": "Define supported OS versions and a forced-update policy for breaking API changes"
+  }
+]

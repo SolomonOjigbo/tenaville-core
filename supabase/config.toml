@@ -1,0 +1,54 @@
+# Local Supabase stack. Project-linked settings live in the Supabase dashboard;
+# this file configures the local development stack only.
+project_id = "tenaville"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+# Local mail catcher — invitations and recovery emails land here in development.
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+# Documents, receipts, maintenance photos. Buckets are private; access is a
+# short-lived signed URL issued after an authorisation check (PRD DOC-7).
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+
+[auth.sms]
+# Phone verification — PRD ORG-2 allows verified email and/or phone.
+enable_signup = false
+enable_confirmations = false
+
+[analytics]
+enabled = false

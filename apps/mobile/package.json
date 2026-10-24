@@ -1,0 +1,25 @@
+{
+  "name": "@tenaville/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Expo staff app for field work: payments and receipts, arrears, maintenance with photos, tasks — offline-capable.",
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "@tenaville/money": "workspace:*",
+    "@tenaville/ui": "workspace:*",
+    "@tenaville/validation": "workspace:*",
+    "expo": "~51.0.0",
+    "expo-router": "~3.5.0",
+    "react": "^18.3.1",
+    "react-native": "0.74.5"
+  }
+}

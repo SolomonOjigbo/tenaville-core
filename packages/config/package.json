@@ -1,0 +1,14 @@
+{
+  "name": "@tenaville/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared ESLint, TypeScript and Vitest configuration.",
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.js",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/next.json": "./tsconfig/next.json",
+    "./tsconfig/react-native.json": "./tsconfig/react-native.json",
+    "./vitest": "./vitest.config.js"
+  }
+}

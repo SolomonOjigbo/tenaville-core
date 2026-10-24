@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+.turbo/
+.expo/
+expo-env.d.ts
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+!supabase/.env.example
+
+# Supabase local stack
+supabase/.branches/
+supabase/.temp/
+
+# Test and coverage
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# Local scratch — never commit customer data extracts
+/scratch/
+*.local.*

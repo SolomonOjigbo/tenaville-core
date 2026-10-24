@@ -1,0 +1,20 @@
+{
+  "name": "@tenaville/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Domain modules for the Tenaville modular monolith. Business rules live here, not in route handlers.",
+  "type": "module",
+  "exports": {
+    "./*": "./src/modules/*/application/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tenaville/db": "workspace:*",
+    "@tenaville/money": "workspace:*",
+    "@tenaville/validation": "workspace:*"
+  }
+}

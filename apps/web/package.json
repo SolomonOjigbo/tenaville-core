@@ -1,0 +1,26 @@
+{
+  "name": "@tenaville/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Next.js app: staff console, landlord portal, tenant portal, and the route handlers that serve the mobile app.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@tenaville/adapters": "workspace:*",
+    "@tenaville/core": "workspace:*",
+    "@tenaville/db": "workspace:*",
+    "@tenaville/money": "workspace:*",
+    "@tenaville/ui": "workspace:*",
+    "@tenaville/validation": "workspace:*",
+    "next": "^14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
