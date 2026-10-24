@@ -31,6 +31,26 @@ jobs:
     # PRD §16.2: "Automated cross-tenant isolation tests pass in CI on every release."
     # This job is required and must never be made optional.
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Supabase's own Postgres image, from Docker Hub rather than ECR Public.
+        # `supabase start` pulls from public.ecr.aws, where anonymous pulls hit
+        # "Data limit exceeded" and made this required job intermittently red.
+        # This image carries the extensions the schema needs (plpgsql_check for
+        # `db lint`, pgtap for the policy tests) which stock postgres lacks.
+        # The isolation tests need a database, not the whole local stack.
+        image: supabase/postgres:15.6.1.139
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      SUPABASE_DB_URL: postgresql://postgres:postgres@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -39,8 +59,31 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: npx supabase start
-      - run: npx supabase db lint --level warning
+
+      - name: Apply migrations
+        run: |
+          shopt -s nullglob
+          for f in supabase/migrations/*.sql; do
+            echo "applying $f"
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+
+      - name: Lint schema
+        run: npx supabase db lint --db-url "$SUPABASE_DB_URL" --level warning --fail-on warning
+
+      - name: Policy tests
+        run: |
+          shopt -s nullglob
+          files=(supabase/tests/*.sql)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "no pgTAP tests yet"; exit 0
+          fi
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -c 'create extension if not exists pgtap;'
+          for f in "${files[@]}"; do
+            echo "running $f"
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f "$f"
+          done
+
       - run: pnpm test:isolation
 
   traceability:

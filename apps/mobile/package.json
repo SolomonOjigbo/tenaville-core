@@ -13,16 +13,21 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~57.0.17",
     "@supabase/supabase-js": "^2.45.4",
     "@tenaville/money": "workspace:*",
     "@tenaville/ui": "workspace:*",
     "@tenaville/validation": "workspace:*",
-    "expo": "~51.0.0",
-    "expo-router": "~3.5.0",
-    "react": "18.2.0",
-    "react-native": "0.74.5"
+    "expo": "~57.0.31",
+    "expo-constants": "~57.0.22",
+    "expo-linking": "~57.0.13",
+    "expo-router": "~57.0.29",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native": "0.87.1"
   },
   "devDependencies": {
-    "@tenaville/config": "workspace:*"
+    "@tenaville/config": "workspace:*",
+    "@types/react": "^19.1.1"
   }
 }

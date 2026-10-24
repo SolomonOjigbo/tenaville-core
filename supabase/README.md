@@ -5,8 +5,9 @@ Postgres via Supabase. Migrations are forward-only SQL; RLS is the tenant bounda
 ```
 supabase/
 ├── config.toml     local stack configuration
+├── seed.sql        seed entrypoint — the CLI looks for this exact path
 ├── migrations/     forward-only SQL, timestamp-prefixed
-├── seed/           development seed — at least two organisations, no real data
+├── seed/           individual seed files, included from seed.sql
 └── tests/          pgTAP tests, primarily RLS policy assertions
 ```
 
@@ -22,7 +23,10 @@ supabase/
 
 ## Seed data
 
-`seed/` creates at least two organisations with deliberately similar-looking tenants, properties and amounts, so a cross-tenant bug shows up as obviously wrong data rather than as plausible data.
+The CLI loads `seed.sql` only, so individual files live in `seed/` and are
+included from it with `\ir` in dependency order.
+
+Seed data creates at least two organisations with deliberately similar-looking tenants, properties and amounts, so a cross-tenant bug shows up as obviously wrong data rather than as plausible data.
 
 Never seed from a production extract. A real customer record in a seed file is a data-protection incident, not a convenience.
 

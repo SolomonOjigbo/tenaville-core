@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node 22.12+ (`.nvmrc`) — `nvm use`
+- Node 24.3+ (`.nvmrc`) — `nvm use`
 - pnpm 10 — `corepack enable && corepack prepare pnpm@10.33.0 --activate`
 - Docker, running (the local Supabase stack needs it)
 - Supabase CLI via `npx supabase` (pinned as a dev dependency)
@@ -29,8 +29,17 @@ binary in a `postinstall`, so `package.json` lists it (and esbuild) under
 `pnpm.onlyBuiltDependencies`. Without that entry `pnpm db:start` fails with
 `supabase: not found` after an apparently successful install.
 
-The two apps pin React differently on purpose: `react-native` 0.74.5 requires
-React 18.2.0 exactly, while the web app is free to move ahead.
+Both apps share one React major. `react-native` 0.87.1 requires React `^19.2.3`,
+and Next 16 accepts `^19.0.0`, so there is no reason to split them — a split
+React major would stop `packages/ui` and any shared hook from serving both.
+
+The Node floor comes from `react-native` 0.87.1, whose `engines` are
+`^22.13.0 || ^24.3.0 || >= 26.0.0`. Node 24 is the LTS line inside that range.
+
+`expo-router` declares further peers (`react-native-screens`,
+`react-native-safe-area-context`, `react-native-reanimated` and others). Install
+them with `npx expo install <pkg>` when mobile work starts rather than by hand —
+it resolves the versions that match the installed SDK.
 
 ## Everyday commands
 

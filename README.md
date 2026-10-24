@@ -36,7 +36,7 @@ pnpm db:reset      # apply migrations and seed
 pnpm dev
 ```
 
-Requires Node 22.12+ (see `.nvmrc`), pnpm 10, Docker (for the local Supabase stack), and the Supabase CLI via `npx supabase`.
+Requires Node 24.3+ (see `.nvmrc`), pnpm 10, Docker (for the local Supabase stack), and the Supabase CLI via `npx supabase`.
 
 ## Working here
 
