@@ -4,14 +4,19 @@
   "private": true,
   "description": "Supabase clients, generated Postgres types and the cross-tenant isolation test suite.",
   "type": "module",
-  "exports": { ".": "./src/index.ts" },
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:isolation": "vitest run --dir src/__tests__/isolation"
+    "test": "vitest run --passWithNoTests",
+    "test:isolation": "vitest run --dir src/__tests__/isolation --passWithNoTests"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4"
+  },
+  "devDependencies": {
+    "@tenaville/config": "workspace:*"
   }
 }

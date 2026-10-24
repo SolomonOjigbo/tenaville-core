@@ -12,14 +12,14 @@ The mandate defines commission basis, permitted deductions and remittance terms 
 
 6 requirements: P0 3 · P1 3 · P2 0. Status is tracked in [the traceability matrix](../../../../../docs/requirements/traceability.md).
 
-| ID | Pri | Requirement |
-|---|---|---|
-| OWN-1 | P0 | Store landlord contact details, preferred communication channel and remittance details with restricted access |
-| OWN-2 | P0 | Configure management mandate, commission type/rate, remittance schedule and permitted deductions |
-| OWN-3 | P0 | Give landlords secure read-only access to their assigned properties, statements, balances and documents |
-| OWN-4 | P1 | Allow landlords to approve or reject repairs above a configurable amount |
-| OWN-5 | P1 | Allow landlord comments, approval history and supporting attachments on relevant maintenance requests |
-| OWN-6 | P1 | Show landlords agreed portfolio indicators such as occupancy, arrears, maintenance costs and remittance history |
+| ID    | Pri | Requirement                                                                                                     |
+| ----- | --- | --------------------------------------------------------------------------------------------------------------- |
+| OWN-1 | P0  | Store landlord contact details, preferred communication channel and remittance details with restricted access   |
+| OWN-2 | P0  | Configure management mandate, commission type/rate, remittance schedule and permitted deductions                |
+| OWN-3 | P0  | Give landlords secure read-only access to their assigned properties, statements, balances and documents         |
+| OWN-4 | P1  | Allow landlords to approve or reject repairs above a configurable amount                                        |
+| OWN-5 | P1  | Allow landlord comments, approval history and supporting attachments on relevant maintenance requests           |
+| OWN-6 | P1  | Show landlords agreed portfolio indicators such as occupancy, arrears, maintenance costs and remittance history |
 
 ## Layout
 

@@ -22,6 +22,16 @@ pnpm db:reset   # apply migrations and seed
 pnpm dev        # web on :3000, mobile via Expo
 ```
 
+## A note on install
+
+pnpm 10 blocks dependency build scripts by default. The Supabase CLI installs its
+binary in a `postinstall`, so `package.json` lists it (and esbuild) under
+`pnpm.onlyBuiltDependencies`. Without that entry `pnpm db:start` fails with
+`supabase: not found` after an apparently successful install.
+
+The two apps pin React differently on purpose: `react-native` 0.74.5 requires
+React 18.2.0 exactly, while the web app is free to move ahead.
+
 ## Everyday commands
 
 ```bash

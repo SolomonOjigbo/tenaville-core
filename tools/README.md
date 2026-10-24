@@ -2,8 +2,8 @@
 
 Repository scripts.
 
-| Script | Purpose |
-|---|---|
+| Script                   | Purpose                                                                                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `check-traceability.mjs` | Verifies the PRD, `docs/requirements/requirements.json` and `docs/requirements/traceability.md` agree, and that every owner module path exists |
 
 ## check-traceability.mjs

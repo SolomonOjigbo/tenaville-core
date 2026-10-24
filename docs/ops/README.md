@@ -2,11 +2,11 @@
 
 Runbooks and operational policy. Several of these are launch exit criteria rather than nice-to-haves.
 
-| Document | Purpose |
-|---|---|
-| [Local development](local-development.md) | Getting the stack running |
-| [Agency onboarding and cutover](agency-onboarding.md) | Migrating an agency off spreadsheets |
-| [Open decisions](open-decisions.md) | PRD §18 questions, tracked to an owner |
+| Document                                              | Purpose                                |
+| ----------------------------------------------------- | -------------------------------------- |
+| [Local development](local-development.md)             | Getting the stack running              |
+| [Agency onboarding and cutover](agency-onboarding.md) | Migrating an agency off spreadsheets   |
+| [Open decisions](open-decisions.md)                   | PRD §18 questions, tracked to an owner |
 
 ## Required before production launch
 

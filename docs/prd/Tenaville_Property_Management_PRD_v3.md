@@ -12,11 +12,11 @@
 
 ## 0. Document control and revision summary
 
-| Version | Summary |
-|---|---|
-| 1.0 | First draft: record-only rent tracking, landlord ledger, maintenance, web and native mobile |
-| 2.0 | Revised direction: management-first (no marketplace), CRM, appointments, configurable screening, tenant portal, partner-enabled financing, analytics |
-| 3.0 | Review pass: consistency fixes, missing requirements added, scope sequencing tightened, product renamed (see Appendix A) |
+| Version | Summary                                                                                                                                              |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0     | First draft: record-only rent tracking, landlord ledger, maintenance, web and native mobile                                                          |
+| 2.0     | Revised direction: management-first (no marketplace), CRM, appointments, configurable screening, tenant portal, partner-enabled financing, analytics |
+| 3.0     | Review pass: consistency fixes, missing requirements added, scope sequencing tightened, product renamed (see Appendix A)                             |
 
 ### What changed in v3
 
@@ -126,64 +126,63 @@ Become the dependable operating system for Nigerian property managers: one place
 
 The metrics above need numbers to be useful. These are starting hypotheses, to be replaced with baselines measured in the pilot and agreed with pilot agencies.
 
-| Metric | Starting hypothesis | How it is measured |
-|---|---|---|
-| Activation | Agency imports 10 or more units and records a lease or payment within 7 days | Signup and event timestamps |
-| Payment-status currency | 95% or more of active leases show a payment status updated within 7 days of the due date | Ledger and lease data |
-| Statement preparation time | At least 50% lower than the agency's own baseline | Timed pilot sessions plus in-app timestamps |
-| Repair acknowledgement | Acknowledged within one business day for most requests | Work order timestamps |
-| Offline sync integrity | Zero duplicate payments or receipts in pilot and test runs | Sync logs and ledger checks |
-| Month-3 retention | Set after the pilot; measure from the first paying cohort | Subscription data |
-
+| Metric                     | Starting hypothesis                                                                      | How it is measured                          |
+| -------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Activation                 | Agency imports 10 or more units and records a lease or payment within 7 days             | Signup and event timestamps                 |
+| Payment-status currency    | 95% or more of active leases show a payment status updated within 7 days of the due date | Ledger and lease data                       |
+| Statement preparation time | At least 50% lower than the agency's own baseline                                        | Timed pilot sessions plus in-app timestamps |
+| Repair acknowledgement     | Acknowledged within one business day for most requests                                   | Work order timestamps                       |
+| Offline sync integrity     | Zero duplicate payments or receipts in pilot and test runs                               | Sync logs and ledger checks                 |
+| Month-3 retention          | Set after the pilot; measure from the first paying cohort                                | Subscription data                           |
 
 ## 5. Users and personas
 
-| Persona | Context | Primary needs |
-|---|---|---|
-| Agency owner / administrator | Owns the agency relationship and controls staff and portfolios | Portfolio oversight, financial integrity, analytics, permissions, approvals and growth |
-| Property manager | Manages assigned properties and tenancies | Daily operations, renewals, repairs, tenant communication and task management |
-| Letting agent / CRM user | Handles prospective tenants and appointments | Lead pipeline, reminders, viewing schedule, application handoff and follow-up |
-| Caretaker / field agent | Works on site, sometimes with poor connectivity | Log repairs with photos, update work status, complete inspections and record field activity |
-| Maintenance coordinator | Coordinates vendors, quotations, approvals and jobs | Work orders, assignments, deadlines, evidence, costs and completion confirmation |
-| Accountant / bookkeeper | Maintains rent records and landlord balances | Payment allocation, reconciliation, statements, remittances and exports |
-| Landlord / property owner | Owns one or more managed properties | Statements, repair approvals, portfolio performance and secure remote access |
-| Tenant | Lives in or occupies a managed unit | Rent balance, receipts, documents, repair requests, updates and financing referrals |
-| Screening reviewer | Reviews tenant applications and supporting evidence | Configurable checklist, secure documents, review notes, decisions and audit history |
-| Individual landlord-manager | Manages a small portfolio directly | A simplified version of the same management workflows |
-| Financing partner (external) | Provides eligible rent-financing products | Consented referrals and only the minimum permitted application information |
+| Persona                      | Context                                                        | Primary needs                                                                               |
+| ---------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Agency owner / administrator | Owns the agency relationship and controls staff and portfolios | Portfolio oversight, financial integrity, analytics, permissions, approvals and growth      |
+| Property manager             | Manages assigned properties and tenancies                      | Daily operations, renewals, repairs, tenant communication and task management               |
+| Letting agent / CRM user     | Handles prospective tenants and appointments                   | Lead pipeline, reminders, viewing schedule, application handoff and follow-up               |
+| Caretaker / field agent      | Works on site, sometimes with poor connectivity                | Log repairs with photos, update work status, complete inspections and record field activity |
+| Maintenance coordinator      | Coordinates vendors, quotations, approvals and jobs            | Work orders, assignments, deadlines, evidence, costs and completion confirmation            |
+| Accountant / bookkeeper      | Maintains rent records and landlord balances                   | Payment allocation, reconciliation, statements, remittances and exports                     |
+| Landlord / property owner    | Owns one or more managed properties                            | Statements, repair approvals, portfolio performance and secure remote access                |
+| Tenant                       | Lives in or occupies a managed unit                            | Rent balance, receipts, documents, repair requests, updates and financing referrals         |
+| Screening reviewer           | Reviews tenant applications and supporting evidence            | Configurable checklist, secure documents, review notes, decisions and audit history         |
+| Individual landlord-manager  | Manages a small portfolio directly                             | A simplified version of the same management workflows                                       |
+| Financing partner (external) | Provides eligible rent-financing products                      | Consented referrals and only the minimum permitted application information                  |
 
 ## 6. Scope and release strategy
 
 Priorities: **P0 = core launch**, **P1 = next release**, **P2 = later expansion**. Release boundaries should be validated against delivery capacity and pilot feedback.
 
-| Release | Theme | Main scope |
-|---|---|---|
-| **R1 — Core management** | Record, track and coordinate | Organisation and roles; landlords, properties and units; tenants and leases; rent schedules and manual payment records; arrears; landlord ledger and statements; foundational maintenance requests and work orders; documents; basic reminders; landlord read-only portal; initial tenant portal; native staff mobile app for field workflows (offline-capable); landlord and tenant access on responsive web; basic reports |
-| **R2 — Workflow automation** | Coordinate and automate | Virtual accounts/payment links through a licensed partner; auto-reconciliation; expanded tenant portal; CRM pipeline; appointment scheduling and follow-ups; configurable screening workflow; maintenance approvals, quotations and vendor coordination; landlord repair approvals; portfolio analytics; accounting exports; recurring inspections and reminders |
-| **R3 — Tenant services and intelligence** | Improve outcomes and extend | Partner-enabled rent-financing journey; advanced analytics and configurable dashboards; deeper tenant self-service; advanced maintenance scheduling and service-charge workflows; e-signature; integrations/API; expanded branch and portfolio controls |
+| Release                                   | Theme                        | Main scope                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **R1 — Core management**                  | Record, track and coordinate | Organisation and roles; landlords, properties and units; tenants and leases; rent schedules and manual payment records; arrears; landlord ledger and statements; foundational maintenance requests and work orders; documents; basic reminders; landlord read-only portal; initial tenant portal; native staff mobile app for field workflows (offline-capable); landlord and tenant access on responsive web; basic reports |
+| **R2 — Workflow automation**              | Coordinate and automate      | Virtual accounts/payment links through a licensed partner; auto-reconciliation; expanded tenant portal; CRM pipeline; appointment scheduling and follow-ups; configurable screening workflow; maintenance approvals, quotations and vendor coordination; landlord repair approvals; portfolio analytics; accounting exports; recurring inspections and reminders                                                             |
+| **R3 — Tenant services and intelligence** | Improve outcomes and extend  | Partner-enabled rent-financing journey; advanced analytics and configurable dashboards; deeper tenant self-service; advanced maintenance scheduling and service-charge workflows; e-signature; integrations/API; expanded branch and portfolio controls                                                                                                                                                                      |
 
 **Explicit exclusion across all releases:** no public marketplace listings or public property-search marketplace. Internal property/unit records and internal vacancy status remain necessary for management. Agencies may optionally share a private or agency-controlled vacancy page in a later release only if separately approved; this must not become a Tenaville public marketplace.
 
 ## 7. Core domain concepts
 
-| Term | Meaning |
-|---|---|
-| Organisation | A tenant of the SaaS product: an agency or individual landlord account |
-| Landlord | Person or entity that owns a property |
-| Management mandate | Agreement defining an agency’s authority, commission, deductions and remittance terms |
-| Property | Building, compound or estate under management |
-| Unit | Rentable flat, room, shop, office or other space within a property |
-| Tenant | Person or organisation occupying a unit under a lease |
-| Prospect / lead | A potential tenant or other prospective customer being handled by an agency |
-| Appointment | Scheduled viewing, inspection, maintenance visit or other property-related meeting |
-| Screening profile | Configurable set of checks and decision steps applied to a tenant application |
-| Lease | Agreement tying tenant(s) to a unit with dates, rent and other charges |
-| Charge | Amount owed, such as rent, service charge, caution deposit, utility or agreed fee |
-| Payment allocation | Assignment of a payment to one or more charges |
-| Work order | Managed maintenance or repair job with assignment, status, approvals, evidence and costs |
-| Landlord statement | Period report of collections, deductions, costs and net remittance |
-| Client funds | Money collected on behalf of landlords, distinct from agency income |
-| Financing referral | A tenant-authorised handoff or application flow to an external financing provider |
+| Term               | Meaning                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------- |
+| Organisation       | A tenant of the SaaS product: an agency or individual landlord account                   |
+| Landlord           | Person or entity that owns a property                                                    |
+| Management mandate | Agreement defining an agency’s authority, commission, deductions and remittance terms    |
+| Property           | Building, compound or estate under management                                            |
+| Unit               | Rentable flat, room, shop, office or other space within a property                       |
+| Tenant             | Person or organisation occupying a unit under a lease                                    |
+| Prospect / lead    | A potential tenant or other prospective customer being handled by an agency              |
+| Appointment        | Scheduled viewing, inspection, maintenance visit or other property-related meeting       |
+| Screening profile  | Configurable set of checks and decision steps applied to a tenant application            |
+| Lease              | Agreement tying tenant(s) to a unit with dates, rent and other charges                   |
+| Charge             | Amount owed, such as rent, service charge, caution deposit, utility or agreed fee        |
+| Payment allocation | Assignment of a payment to one or more charges                                           |
+| Work order         | Managed maintenance or repair job with assignment, status, approvals, evidence and costs |
+| Landlord statement | Period report of collections, deductions, costs and net remittance                       |
+| Client funds       | Money collected on behalf of landlords, distinct from agency income                      |
+| Financing referral | A tenant-authorised handoff or application flow to an external financing provider        |
 
 ## 8. Functional requirements
 
@@ -530,25 +529,25 @@ These items require review by qualified Nigerian legal, privacy and financial-se
 
 ## 12. Non-functional requirements
 
-| Area | Requirement |
-|---|---|
-| Performance | Common screens should load in under 2 seconds on a typical mobile connection where practical; large lists use pagination and search |
-| Availability | Define target availability and incident response before production; communicate planned maintenance |
-| Mobile usability | Responsive UI for small screens; core field workflows usable with one hand where practical |
-| Offline operation | Support offline capture for selected field actions such as maintenance notes/photos and inspections; financial writes must sync safely and expose sync status |
-| Security | Secure authentication, least privilege, session controls, rate limiting, secure secrets and regular dependency updates |
-| Data isolation | Database-enforced organisation-level isolation and automated tests for cross-tenant access |
-| Files | Private object storage, authorised access, size/type limits, upload validation and malware scanning where supported |
-| Auditability | Searchable audit trail for financial, lease, screening, maintenance approval and permission events |
-| Accessibility | Clear labels, keyboard support on web, readable contrast and accessible form validation |
-| Reliability | Idempotent background jobs, retries with limits, dead-letter/error visibility and reconciliation tools |
-| Interoperability | Versioned API and provider adapters for messaging, payments, financing and calendar integrations |
-| Data portability | Organisations can export their data in documented formats, subject to access rights and applicable law |
-| Observability | Structured logs, error tracking, uptime monitoring, background-job monitoring and alerting |
-| Scalability | Start with a maintainable modular architecture that can support thousands of organisations and large portfolios without premature microservices |
-| Localisation | Nigeria-first formats: NGN, Nigerian phone numbers, state/LGA fields and WAT display; design for future localisation |
-| Support and onboarding | Define support channels and response targets for pilot and launch. Provide migration help and a status page |
-| Recovery objectives | Define recovery point and recovery time objectives before launch, test restores regularly and publish the targets internally |
+| Area                   | Requirement                                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Performance            | Common screens should load in under 2 seconds on a typical mobile connection where practical; large lists use pagination and search                           |
+| Availability           | Define target availability and incident response before production; communicate planned maintenance                                                           |
+| Mobile usability       | Responsive UI for small screens; core field workflows usable with one hand where practical                                                                    |
+| Offline operation      | Support offline capture for selected field actions such as maintenance notes/photos and inspections; financial writes must sync safely and expose sync status |
+| Security               | Secure authentication, least privilege, session controls, rate limiting, secure secrets and regular dependency updates                                        |
+| Data isolation         | Database-enforced organisation-level isolation and automated tests for cross-tenant access                                                                    |
+| Files                  | Private object storage, authorised access, size/type limits, upload validation and malware scanning where supported                                           |
+| Auditability           | Searchable audit trail for financial, lease, screening, maintenance approval and permission events                                                            |
+| Accessibility          | Clear labels, keyboard support on web, readable contrast and accessible form validation                                                                       |
+| Reliability            | Idempotent background jobs, retries with limits, dead-letter/error visibility and reconciliation tools                                                        |
+| Interoperability       | Versioned API and provider adapters for messaging, payments, financing and calendar integrations                                                              |
+| Data portability       | Organisations can export their data in documented formats, subject to access rights and applicable law                                                        |
+| Observability          | Structured logs, error tracking, uptime monitoring, background-job monitoring and alerting                                                                    |
+| Scalability            | Start with a maintainable modular architecture that can support thousands of organisations and large portfolios without premature microservices               |
+| Localisation           | Nigeria-first formats: NGN, Nigerian phone numbers, state/LGA fields and WAT display; design for future localisation                                          |
+| Support and onboarding | Define support channels and response targets for pilot and launch. Provide migration help and a status page                                                   |
+| Recovery objectives    | Define recovery point and recovery time objectives before launch, test restores regularly and publish the targets internally                                  |
 
 ## 13. Proposed technical approach
 
@@ -585,6 +584,7 @@ Core entities should be organisation-scoped unless a carefully reviewed cross-or
 - **Analytics:** report definitions and optional pre-aggregated snapshots, with source-of-truth values remaining in operational records.
 
 Key relationships:
+
 - A landlord owns one or more properties under a management mandate.
 - A property contains one or more units.
 - A lease joins one or more tenants to a unit and generates charges.
@@ -660,7 +660,6 @@ Key relationships:
 - Maintenance approvals prevent non-emergency work from being marked authorised before required approval.
 - Analytics metrics are documented and reconcile with underlying records.
 
-
 ### 16.4 R3 exit criteria (financing)
 
 - Financing referral is disabled by default until a provider has passed required legal, security and operational checks.
@@ -669,27 +668,27 @@ Key relationships:
 
 ## 17. Risks and mitigations
 
-| Risk | Why it matters | Mitigation |
-|---|---|---|
-| Staff continue using paper and WhatsApp | Adoption risk | Make common actions faster, support import, reminders and practical onboarding |
-| Financial records are incorrect or manipulated | Trust and disputes | Append-only ledger, permissions, audit logs, reversals and daily cash-up |
-| Maintenance jobs exceed budget or are disputed | Landlord trust and cost control | Quote capture, thresholds, approval evidence and itemised costs |
-| Vendors miss visits or deliver poor work | Tenant satisfaction | Assignment, reminders, evidence, performance history and escalation |
-| CRM becomes overcomplicated | Low agent adoption | Ship simple default stages, allow configuration and measure usage |
-| Screening data is mishandled | Privacy and discrimination risk | Least privilege, purpose limitation, lawful criteria, audit and retention policy |
-| Tenants do not use the portal | Low self-service adoption | Mobile-first UX, links from messages, useful repair tracking and receipts |
-| Financing provider fails or changes terms | Tenant harm and operational disruption | Provider abstraction, due diligence, clear disclosure and ability to disable referrals |
-| Financing is mistaken for rent payment | Ledger errors and disputes | Separate status models; reconcile only confirmed disbursements |
-| Messaging cost or provider policy changes | Margin and delivery risk | Provider abstraction, fallback channels and cost controls |
-| State tenancy requirements differ | Incorrect workflows or notices | Configurable rules and legal review |
-| Offline sync conflicts | Data integrity risk | Idempotent operations, server-authoritative financial records and visible sync state |
-| Pricing is unproven | Revenue risk | Pilot price tests and unit economics review |
-| Scope grows too quickly | Delayed launch | Keep marketplace and sales out of scope; phase CRM, screening, analytics and financing |
-| Migration of existing records is slow or error-prone | Agencies cannot switch from spreadsheets | Import tooling with dry-run and rollback, opening-balance support and assisted onboarding |
-| Offline payments create duplicate or mismatched receipts | Financial trust | Client-generated IDs, server-assigned receipt numbers, provisional receipts and sync tests |
-| WhatsApp templates are rejected or messaging costs rise | Reminders fail or margin shrinks | Template tracking, SMS and email fallback, cost visibility |
-| Sensitive identifiers are stored unnecessarily | Privacy and security exposure | Collect only if required, mask, restrict, prefer provider verification |
-| Product name is unavailable or conflicts with another mark | Rebrand cost after launch | Check name, domain, app stores and CAC before any public use |
+| Risk                                                       | Why it matters                           | Mitigation                                                                                 |
+| ---------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Staff continue using paper and WhatsApp                    | Adoption risk                            | Make common actions faster, support import, reminders and practical onboarding             |
+| Financial records are incorrect or manipulated             | Trust and disputes                       | Append-only ledger, permissions, audit logs, reversals and daily cash-up                   |
+| Maintenance jobs exceed budget or are disputed             | Landlord trust and cost control          | Quote capture, thresholds, approval evidence and itemised costs                            |
+| Vendors miss visits or deliver poor work                   | Tenant satisfaction                      | Assignment, reminders, evidence, performance history and escalation                        |
+| CRM becomes overcomplicated                                | Low agent adoption                       | Ship simple default stages, allow configuration and measure usage                          |
+| Screening data is mishandled                               | Privacy and discrimination risk          | Least privilege, purpose limitation, lawful criteria, audit and retention policy           |
+| Tenants do not use the portal                              | Low self-service adoption                | Mobile-first UX, links from messages, useful repair tracking and receipts                  |
+| Financing provider fails or changes terms                  | Tenant harm and operational disruption   | Provider abstraction, due diligence, clear disclosure and ability to disable referrals     |
+| Financing is mistaken for rent payment                     | Ledger errors and disputes               | Separate status models; reconcile only confirmed disbursements                             |
+| Messaging cost or provider policy changes                  | Margin and delivery risk                 | Provider abstraction, fallback channels and cost controls                                  |
+| State tenancy requirements differ                          | Incorrect workflows or notices           | Configurable rules and legal review                                                        |
+| Offline sync conflicts                                     | Data integrity risk                      | Idempotent operations, server-authoritative financial records and visible sync state       |
+| Pricing is unproven                                        | Revenue risk                             | Pilot price tests and unit economics review                                                |
+| Scope grows too quickly                                    | Delayed launch                           | Keep marketplace and sales out of scope; phase CRM, screening, analytics and financing     |
+| Migration of existing records is slow or error-prone       | Agencies cannot switch from spreadsheets | Import tooling with dry-run and rollback, opening-balance support and assisted onboarding  |
+| Offline payments create duplicate or mismatched receipts   | Financial trust                          | Client-generated IDs, server-assigned receipt numbers, provisional receipts and sync tests |
+| WhatsApp templates are rejected or messaging costs rise    | Reminders fail or margin shrinks         | Template tracking, SMS and email fallback, cost visibility                                 |
+| Sensitive identifiers are stored unnecessarily             | Privacy and security exposure            | Collect only if required, mask, restrict, prefer provider verification                     |
+| Product name is unavailable or conflicts with another mark | Rebrand cost after launch                | Check name, domain, app stores and CAC before any public use                               |
 
 ## 18. Open product decisions
 
@@ -738,17 +737,18 @@ Key relationships:
 
 The working name Keyholder was replaced. The selected name is **Tenaville**, a blend of "tenant" and "ville" that suggests a community of tenants. It is easy to say and spell, and it reads as property-related straight away.
 
-| Option | Assessment | Watch-outs |
-|---|---|---|
+| Option                   | Assessment                                                                                                                  | Watch-outs                                                                                                                                                                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Tenaville** (selected) | Descriptive, warm, easy to pronounce and spell. A preliminary search found no matching property-management software product | A Cyprus company of that name was struck off in 2022. "-ville" is common in names of housing estates, so confirm it is distinctive enough. The start of the name resembles an existing hygiene brand, so ask a trademark adviser about the risk |
-| Assetville | Clear and professional | Reads as asset or investment tracking rather than tenancy. The .com was listed for sale |
-| Estiville | Estate-related | Close to the surname Estivill, so it is easy to misspell |
-| Estuville | No exact match surfaced in a preliminary search | Hard to say and spell, and the meaning is unclear |
-| Tenura | Short and modern, echoes tenure and tenancy | Invented word with no descriptive pull; a preliminary search found no conflict |
+| Assetville               | Clear and professional                                                                                                      | Reads as asset or investment tracking rather than tenancy. The .com was listed for sale                                                                                                                                                         |
+| Estiville                | Estate-related                                                                                                              | Close to the surname Estivill, so it is easy to misspell                                                                                                                                                                                        |
+| Estuville                | No exact match surfaced in a preliminary search                                                                             | Hard to say and spell, and the meaning is unclear                                                                                                                                                                                               |
+| Tenura                   | Short and modern, echoes tenure and tenancy                                                                                 | Invented word with no descriptive pull; a preliminary search found no conflict                                                                                                                                                                  |
 
 These results are from preliminary searches only and do not confirm availability. Names beginning with "Rent" are crowded in software directories, so they are not recommended.
 
 **Before using the name publicly:**
+
 - Check the CAC business-name register and a trademark search in Nigeria.
 - Check the .com, .ng and .com.ng domains, social handles and app-store listings.
 - Say the name aloud to five agents and ask them to write it down, to test pronunciation and spelling.

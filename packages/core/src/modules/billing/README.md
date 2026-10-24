@@ -12,13 +12,13 @@ Priced by units under management, in naira. Unpaid subscriptions never trigger c
 
 5 requirements: P0 4 · P1 1 · P2 0. Status is tracked in [the traceability matrix](../../../../../docs/requirements/traceability.md).
 
-| ID | Pri | Requirement |
-|---|---|---|
-| BILL-1 | P0 | Offer a trial and subscription tiers priced primarily by units under management, billed in naira |
-| BILL-2 | P0 | Support subscription payment through an appropriate Nigerian payment gateway, with invoices and receipts |
-| BILL-3 | P0 | Show plan limits and upgrade prompts |
-| BILL-4 | P0 | Do not delete customer data solely because a subscription is unpaid; preserve export access subject to security and legal policy |
-| BILL-5 | P1 | Validate any optional transaction or financing-related revenue model before implementation and disclose fees clearly |
+| ID     | Pri | Requirement                                                                                                                      |
+| ------ | --- | -------------------------------------------------------------------------------------------------------------------------------- |
+| BILL-1 | P0  | Offer a trial and subscription tiers priced primarily by units under management, billed in naira                                 |
+| BILL-2 | P0  | Support subscription payment through an appropriate Nigerian payment gateway, with invoices and receipts                         |
+| BILL-3 | P0  | Show plan limits and upgrade prompts                                                                                             |
+| BILL-4 | P0  | Do not delete customer data solely because a subscription is unpaid; preserve export access subject to security and legal policy |
+| BILL-5 | P1  | Validate any optional transaction or financing-related revenue model before implementation and disclose fees clearly             |
 
 ## Layout
 

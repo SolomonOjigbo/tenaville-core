@@ -10,21 +10,21 @@ Tenaville is **not a public property marketplace**. No public property search, n
 
 ## Repository map
 
-| Path | What lives there |
-|---|---|
-| `apps/web` | Next.js app — staff console, landlord portal, tenant portal, and the versioned route handlers the mobile app calls |
-| `apps/mobile` | Expo staff app for field work, offline-capable |
-| `packages/core` | Domain modules, one per PRD section 8 area. Business rules live here |
-| `packages/db` | Supabase clients, generated Postgres types, cross-tenant isolation tests |
-| `packages/adapters` | Provider adapters behind stable ports: messaging, payments, financing, storage, identity |
-| `packages/money` | Naira as integer kobo, with allocation arithmetic |
-| `packages/validation` | Zod schemas shared across web, mobile and route handlers |
-| `packages/ui` | Design tokens and primitives |
-| `packages/config` | Shared ESLint, TypeScript, Vitest configuration |
-| `supabase/` | Migrations, RLS policies, seed data, pgTAP policy tests |
-| `docs/` | PRD, architecture, decisions, requirement traceability, runbooks |
-| `brand/` | Wordmark and brand assets |
-| `tools/` | Repository scripts, including the traceability check that runs in CI |
+| Path                  | What lives there                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `apps/web`            | Next.js app — staff console, landlord portal, tenant portal, and the versioned route handlers the mobile app calls |
+| `apps/mobile`         | Expo staff app for field work, offline-capable                                                                     |
+| `packages/core`       | Domain modules, one per PRD section 8 area. Business rules live here                                               |
+| `packages/db`         | Supabase clients, generated Postgres types, cross-tenant isolation tests                                           |
+| `packages/adapters`   | Provider adapters behind stable ports: messaging, payments, financing, storage, identity                           |
+| `packages/money`      | Naira as integer kobo, with allocation arithmetic                                                                  |
+| `packages/validation` | Zod schemas shared across web, mobile and route handlers                                                           |
+| `packages/ui`         | Design tokens and primitives                                                                                       |
+| `packages/config`     | Shared ESLint, TypeScript, Vitest configuration                                                                    |
+| `supabase/`           | Migrations, RLS policies, seed data, pgTAP policy tests                                                            |
+| `docs/`               | PRD, architecture, decisions, requirement traceability, runbooks                                                   |
+| `brand/`              | Wordmark and brand assets                                                                                          |
+| `tools/`              | Repository scripts, including the traceability check that runs in CI                                               |
 
 ## Getting started
 

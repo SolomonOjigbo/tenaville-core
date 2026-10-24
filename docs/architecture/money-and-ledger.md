@@ -1,6 +1,6 @@
 # Money, ledger and financial integrity
 
-> PRD §10.1–10.5, §10.15, §10.17, RENT-*, LEDGER-*, LEASE-13, §16.2 exit criteria.
+> PRD §10.1–10.5, §10.15, §10.17, RENT-_, LEDGER-_, LEASE-13, §16.2 exit criteria.
 
 Agencies hold other people's money. The PRD's risk table names "financial records are incorrect or manipulated" as a trust-and-disputes risk, and the launch exit criteria require landlord statements accepted without material manual correction, and receipt numbering with no gaps, duplicates or reuse. Everything below exists to make those outcomes structural rather than careful.
 
@@ -26,7 +26,7 @@ Default allocation is oldest charge first, with a permissioned manual override (
 
 Sequential per organisation, per branch where configured (RENT-13). Numbers are allocated by the server from a `ReceiptSequence`, never by a client. Voided or reversed receipts keep their number; numbers are never reused.
 
-This interacts with offline capture: an offline payment gets a provisional receipt marked *pending sync*, and the official number is assigned on sync (MOB-4). See [offline sync](offline-sync.md).
+This interacts with offline capture: an offline payment gets a provisional receipt marked _pending sync_, and the official number is assigned on sync (MOB-4). See [offline sync](offline-sync.md).
 
 Pilot agencies expect a particular format — prefix, branch, year (PRD open decision 16) — so the format is configuration, while the sequence guarantee is not.
 

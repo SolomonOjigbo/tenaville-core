@@ -25,7 +25,7 @@ These are correctness requirements from PRD MOB-3…MOB-5 and §10.16, and the p
 
 1. **The server is authoritative for money.** Last-writer-wins is not permitted for payments, allocations or ledger entries.
 2. **Client-generated IDs.** Every offline record carries a UUID generated on the device, so a retried sync is recognised as the same write rather than creating a duplicate.
-3. **Provisional receipts.** An offline payment prints a receipt clearly marked *pending sync*. The official, sequential receipt number is assigned by the server on sync (RENT-13), and the tenant is notified at that point — not before.
+3. **Provisional receipts.** An offline payment prints a receipt clearly marked _pending sync_. The official, sequential receipt number is assigned by the server on sync (RENT-13), and the tenant is notified at that point — not before.
 4. **Sync state is visible per record** — pending, synced, failed — with a retry the user can reach. A failed write is never silently discarded.
 5. **Revocation wipes the cache.** Remote session revocation clears locally cached data (MOB-6).
 

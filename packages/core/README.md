@@ -6,25 +6,25 @@ Business rules live here — not in route handlers, not in React components, not
 
 ## Modules
 
-| Module | Prefix | First release |
-|---|---|---|
-| [org](src/modules/org) | ORG | R1 |
-| [properties](src/modules/properties) | PROP | R1 |
-| [landlords](src/modules/landlords) | OWN | R1 |
-| [leases](src/modules/leases) | LEASE | R1 |
-| [rent](src/modules/rent) | RENT | R1 |
-| [ledger](src/modules/ledger) | LEDGER | R1 |
-| [maintenance](src/modules/maintenance) | MAINT | R1 |
-| [tenant-portal](src/modules/tenant-portal) | TENANT | R1 |
-| [comms](src/modules/comms) | COMMS | R1 |
-| [documents](src/modules/documents) | DOC | R1 |
-| [billing](src/modules/billing) | BILL | R1 |
-| [migration](src/modules/migration) | MIG | R1 |
-| [analytics](src/modules/analytics) | AN | R1 (core reports) |
-| [crm](src/modules/crm) | CRM | R2 |
-| [appointments](src/modules/appointments) | APPT | R2 |
-| [screening](src/modules/screening) | SCREEN | R2 |
-| [financing](src/modules/financing) | FIN | R3 |
+| Module                                     | Prefix | First release     |
+| ------------------------------------------ | ------ | ----------------- |
+| [org](src/modules/org)                     | ORG    | R1                |
+| [properties](src/modules/properties)       | PROP   | R1                |
+| [landlords](src/modules/landlords)         | OWN    | R1                |
+| [leases](src/modules/leases)               | LEASE  | R1                |
+| [rent](src/modules/rent)                   | RENT   | R1                |
+| [ledger](src/modules/ledger)               | LEDGER | R1                |
+| [maintenance](src/modules/maintenance)     | MAINT  | R1                |
+| [tenant-portal](src/modules/tenant-portal) | TENANT | R1                |
+| [comms](src/modules/comms)                 | COMMS  | R1                |
+| [documents](src/modules/documents)         | DOC    | R1                |
+| [billing](src/modules/billing)             | BILL   | R1                |
+| [migration](src/modules/migration)         | MIG    | R1                |
+| [analytics](src/modules/analytics)         | AN     | R1 (core reports) |
+| [crm](src/modules/crm)                     | CRM    | R2                |
+| [appointments](src/modules/appointments)   | APPT   | R2                |
+| [screening](src/modules/screening)         | SCREEN | R2                |
+| [financing](src/modules/financing)         | FIN    | R3                |
 
 Each module's README lists its own requirements and owned entities.
 

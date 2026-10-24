@@ -4,20 +4,20 @@
 
 Engineering can build against these constraints now, but several items gate launch rather than development.
 
-| # | Item | Gates | Owner | Status |
-|---|---|---|---|---|
-| 1 | **Product name** — CAC business-name register, Nigerian trademark search, `.com`/`.ng`/`.com.ng` domains, social handles, app-store listings | Any public use of the name | Founder | Open |
-| 2 | **Data protection** — obligations under the Nigeria Data Protection Act: privacy notices, lawful basis, processor agreements, security, breach handling | Production launch | Legal + Eng | Open |
-| 3 | **Sensitive identifiers** — what may lawfully be collected, stored or displayed for NIN and BVN | Screening (R2) | Legal | Open |
-| 4 | **Tenant screening criteria** — lawful, relevant, explainable criteria; purpose and consent; retention and review | Screening (R2) | Legal + Product | Open |
-| 5 | **Client money and deposits** — how caution deposits and rent collected for landlords must be held and accounted for under professional and legal obligations | R1 ledger design | Legal + Accounting | Open |
-| 6 | **Agency commission, tax and remittance** — applicable tax treatment; VAT on commission, withholding tax on rent | Tax lines (R2); `TaxRule` off by default until cleared | Tax adviser | Open |
-| 7 | **Payments** — virtual accounts and processing supplied by suitably licensed partners; Tenaville holds no customer funds | Payment automation (R2) | Legal + Founder | Open |
-| 8 | **Rent financing** — provider authorisation, lending/advertising/referral responsibilities, data sharing, complaint handling | Financing (R3) | Legal | Open |
-| 9 | **Consumer transparency for financing** — who discloses cost, eligibility and repayment obligations, and when | Financing (R3) | Legal | Open |
-| 10 | **Messaging** — WhatsApp Business policy (approved templates, opt-in); marketing consent separate from operational tenancy messages | R1 comms | Product + Legal | Open |
-| 11 | **State tenancy rules** — requirements and notice periods vary by state; defaults must not be presented as legal advice | Notices (R2) | Legal | Open |
-| 12 | **Professional claims** — no implication that Tenaville certifies title, verifies ownership, guarantees tenant identity or gives legal advice | All marketing and in-product copy | Product | Open |
+| #   | Item                                                                                                                                                          | Gates                                                  | Owner              | Status |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------ | ------ |
+| 1   | **Product name** — CAC business-name register, Nigerian trademark search, `.com`/`.ng`/`.com.ng` domains, social handles, app-store listings                  | Any public use of the name                             | Founder            | Open   |
+| 2   | **Data protection** — obligations under the Nigeria Data Protection Act: privacy notices, lawful basis, processor agreements, security, breach handling       | Production launch                                      | Legal + Eng        | Open   |
+| 3   | **Sensitive identifiers** — what may lawfully be collected, stored or displayed for NIN and BVN                                                               | Screening (R2)                                         | Legal              | Open   |
+| 4   | **Tenant screening criteria** — lawful, relevant, explainable criteria; purpose and consent; retention and review                                             | Screening (R2)                                         | Legal + Product    | Open   |
+| 5   | **Client money and deposits** — how caution deposits and rent collected for landlords must be held and accounted for under professional and legal obligations | R1 ledger design                                       | Legal + Accounting | Open   |
+| 6   | **Agency commission, tax and remittance** — applicable tax treatment; VAT on commission, withholding tax on rent                                              | Tax lines (R2); `TaxRule` off by default until cleared | Tax adviser        | Open   |
+| 7   | **Payments** — virtual accounts and processing supplied by suitably licensed partners; Tenaville holds no customer funds                                      | Payment automation (R2)                                | Legal + Founder    | Open   |
+| 8   | **Rent financing** — provider authorisation, lending/advertising/referral responsibilities, data sharing, complaint handling                                  | Financing (R3)                                         | Legal              | Open   |
+| 9   | **Consumer transparency for financing** — who discloses cost, eligibility and repayment obligations, and when                                                 | Financing (R3)                                         | Legal              | Open   |
+| 10  | **Messaging** — WhatsApp Business policy (approved templates, opt-in); marketing consent separate from operational tenancy messages                           | R1 comms                                               | Product + Legal    | Open   |
+| 11  | **State tenancy rules** — requirements and notice periods vary by state; defaults must not be presented as legal advice                                       | Notices (R2)                                           | Legal              | Open   |
+| 12  | **Professional claims** — no implication that Tenaville certifies title, verifies ownership, guarantees tenant identity or gives legal advice                 | All marketing and in-product copy                      | Product            | Open   |
 
 ## Standing engineering constraints
 

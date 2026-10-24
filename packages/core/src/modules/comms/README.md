@@ -12,16 +12,16 @@ Providers sit behind an adapter (COMMS-2) so WhatsApp template rejection or a pr
 
 8 requirements: P0 6 · P1 2 · P2 0. Status is tracked in [the traceability matrix](../../../../../docs/requirements/traceability.md).
 
-| ID | Pri | Requirement |
-|---|---|---|
-| COMMS-1 | P0 | Provide configurable templates for rent reminders, receipts, lease expiry, maintenance updates and landlord statements |
-| COMMS-2 | P0 | Abstract messaging providers for WhatsApp Business, SMS and email |
-| COMMS-3 | P0 | Store message metadata, recipient, template, send time, delivery status where available and related record |
-| COMMS-4 | P0 | Allow tasks with owner, due date, priority, related record, notes and completion status |
-| COMMS-5 | P1 | Support recurring tasks and automated task creation from configurable events |
-| COMMS-6 | P0 | Respect consent, opt-outs, channel preferences, rate limits and provider policy |
-| COMMS-7 | P1 | Provide an inbox or work queue for messages requiring a human response, subject to provider capabilities |
-| COMMS-8 | P0 | Model WhatsApp business messaging within provider rules: use provider-approved templates for business-initiated messages, track template approval… |
+| ID      | Pri | Requirement                                                                                                                                        |
+| ------- | --- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| COMMS-1 | P0  | Provide configurable templates for rent reminders, receipts, lease expiry, maintenance updates and landlord statements                             |
+| COMMS-2 | P0  | Abstract messaging providers for WhatsApp Business, SMS and email                                                                                  |
+| COMMS-3 | P0  | Store message metadata, recipient, template, send time, delivery status where available and related record                                         |
+| COMMS-4 | P0  | Allow tasks with owner, due date, priority, related record, notes and completion status                                                            |
+| COMMS-5 | P1  | Support recurring tasks and automated task creation from configurable events                                                                       |
+| COMMS-6 | P0  | Respect consent, opt-outs, channel preferences, rate limits and provider policy                                                                    |
+| COMMS-7 | P1  | Provide an inbox or work queue for messages requiring a human response, subject to provider capabilities                                           |
+| COMMS-8 | P0  | Model WhatsApp business messaging within provider rules: use provider-approved templates for business-initiated messages, track template approval… |
 
 ## Layout
 

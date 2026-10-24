@@ -2,13 +2,13 @@
 
 ## Start here
 
-| Document | Read it when |
-|---|---|
-| [PRD v3](prd/Tenaville_Property_Management_PRD_v3.md) | You need the authoritative scope, requirement wording or rationale |
-| [CLAUDE.md](../CLAUDE.md) | Before writing any code — the invariants that are expensive to discover late |
-| [Architecture overview](architecture/overview.md) | You are orienting in the codebase |
-| [Release plan](requirements/release-plan.md) | You are deciding what to build next |
-| [Traceability](requirements/traceability.md) | You are implementing or reviewing a requirement |
+| Document                                              | Read it when                                                                 |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [PRD v3](prd/Tenaville_Property_Management_PRD_v3.md) | You need the authoritative scope, requirement wording or rationale           |
+| [CLAUDE.md](../CLAUDE.md)                             | Before writing any code — the invariants that are expensive to discover late |
+| [Architecture overview](architecture/overview.md)     | You are orienting in the codebase                                            |
+| [Release plan](requirements/release-plan.md)          | You are deciding what to build next                                          |
+| [Traceability](requirements/traceability.md)          | You are implementing or reviewing a requirement                              |
 
 ## Architecture
 

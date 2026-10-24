@@ -48,6 +48,13 @@ export default tseslint.config(
   { ignores: ['**/dist/**', '**/.next/**', '**/.expo/**', '**/generated/**'] },
   ...tseslint.configs.recommendedTypeChecked,
   {
+    // Config files are not part of a tsconfig project, so type-aware rules
+    // cannot run on them.
+    files: ['**/*.{js,mjs,cjs}'],
+    ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: { projectService: true },
     },

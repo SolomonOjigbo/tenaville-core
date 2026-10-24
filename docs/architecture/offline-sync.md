@@ -6,14 +6,14 @@ Caretakers and agents work on site, often with poor connectivity. The staff app 
 
 ## What works offline
 
-| Capability | Offline | Why |
-|---|---|---|
-| Maintenance notes and photos | Yes | Captured on site; no financial effect (MOB-3) |
-| Tasks and follow-ups | Yes | Field work queue (MOB-3) |
-| Payment records | Yes, provisional | Agents collect rent on site; the record is provisional until sync (MOB-4) |
-| Receipt issue | Provisional only | Official number is server-assigned (RENT-13, MOB-4) |
-| Inspections with photos and meter readings | Yes (R2) | MOB-2 |
-| Allocation overrides, reversals, ledger entries, statements | No | Require server state and permission checks that cannot be evaluated offline |
+| Capability                                                  | Offline          | Why                                                                         |
+| ----------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------- |
+| Maintenance notes and photos                                | Yes              | Captured on site; no financial effect (MOB-3)                               |
+| Tasks and follow-ups                                        | Yes              | Field work queue (MOB-3)                                                    |
+| Payment records                                             | Yes, provisional | Agents collect rent on site; the record is provisional until sync (MOB-4)   |
+| Receipt issue                                               | Provisional only | Official number is server-assigned (RENT-13, MOB-4)                         |
+| Inspections with photos and meter readings                  | Yes (R2)         | MOB-2                                                                       |
+| Allocation overrides, reversals, ledger entries, statements | No               | Require server state and permission checks that cannot be evaluated offline |
 
 Reads are cached for lists the agent needs in the field — assigned tenants, arrears, open jobs — paginated and compressed (MOB-7).
 

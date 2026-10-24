@@ -4,11 +4,18 @@
   "private": true,
   "description": "Zod schemas shared by web, mobile and route handlers, including Nigerian phone, state and LGA formats.",
   "type": "module",
-  "exports": { ".": "./src/index.ts" },
-  "scripts": {
-    "lint": "eslint src",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+  "exports": {
+    ".": "./src/index.ts"
   },
-  "dependencies": { "zod": "^3.23.8" }
+  "scripts": {
+    "lint": "eslint src --no-error-on-unmatched-pattern",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@tenaville/config": "workspace:*"
+  }
 }

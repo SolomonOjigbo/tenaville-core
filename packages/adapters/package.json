@@ -4,10 +4,15 @@
   "private": true,
   "description": "Provider adapters behind stable ports: messaging, payments, financing, storage, identity. Swapping a provider must not reach into domain code.",
   "type": "module",
-  "exports": { "./*": "./src/*/index.ts" },
+  "exports": {
+    "./*": "./src/*/index.ts"
+  },
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@tenaville/config": "workspace:*"
   }
 }

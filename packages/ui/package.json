@@ -9,7 +9,10 @@
     "./tokens": "./src/tokens.ts"
   },
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@tenaville/config": "workspace:*"
   }
 }

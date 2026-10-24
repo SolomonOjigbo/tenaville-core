@@ -1,7 +1,7 @@
 # Brand assets
 
-| File | Use |
-|---|---|
+| File                     | Use                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------- |
 | `tenaville-wordmark.png` | House-and-roof wordmark. Primary mark for the README, app headers and documents |
 
 ## Before public use

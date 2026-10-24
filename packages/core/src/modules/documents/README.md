@@ -12,15 +12,15 @@ No document is ever reachable through a guessable URL; authorisation is checked 
 
 7 requirements: P0 4 · P1 3 · P2 0. Status is tracked in [the traceability matrix](../../../../../docs/requirements/traceability.md).
 
-| ID | Pri | Requirement |
-|---|---|---|
-| DOC-1 | P0 | Attach documents to properties, units, landlords, tenants, leases, screening applications, maintenance jobs and payments as appropriate |
-| DOC-2 | P0 | Support access controls, document type, issue/expiry date, uploader and audit trail |
-| DOC-3 | P0 | Generate and download receipts and landlord statements |
-| DOC-4 | P1 | Support inspection checklists, photos, notes, meter readings and acknowledgement/signature capture where supported |
-| DOC-5 | P1 | Alert authorised staff to expiring documents |
-| DOC-6 | P1 | Scan uploads for malware where supported and use time-limited secure download links |
-| DOC-7 | P0 | Never expose a document through a guessable public URL; enforce authorisation at download time |
+| ID    | Pri | Requirement                                                                                                                             |
+| ----- | --- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| DOC-1 | P0  | Attach documents to properties, units, landlords, tenants, leases, screening applications, maintenance jobs and payments as appropriate |
+| DOC-2 | P0  | Support access controls, document type, issue/expiry date, uploader and audit trail                                                     |
+| DOC-3 | P0  | Generate and download receipts and landlord statements                                                                                  |
+| DOC-4 | P1  | Support inspection checklists, photos, notes, meter readings and acknowledgement/signature capture where supported                      |
+| DOC-5 | P1  | Alert authorised staff to expiring documents                                                                                            |
+| DOC-6 | P1  | Scan uploads for malware where supported and use time-limited secure download links                                                     |
+| DOC-7 | P0  | Never expose a document through a guessable public URL; enforce authorisation at download time                                          |
 
 ## Layout
 
