@@ -87,8 +87,8 @@
     "points": 3,
     "requirements": [],
     "acceptance": "Shared layout, navigation, form and table components render on desktop and mobile widths.",
-    "status": "partial",
-    "note": "UI kit integrated into @tenaville/ui with a drift test; web shell and components not built"
+    "status": "done",
+    "note": "UI kit integrated with a drift and contrast test; shell with role-filtered navigation, theme toggle, layout, form and table components; verified rendering at desktop and 375px with no page overflow"
   },
   {
     "ticket": "TV-008",

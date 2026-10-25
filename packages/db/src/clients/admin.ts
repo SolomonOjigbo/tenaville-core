@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-import type { Database } from '../generated/database.types.js';
-import { supabaseServiceRoleKey, supabaseUrl } from '../env.js';
+import type { Database } from '../generated/database.types';
+import { supabaseServiceRoleKey, supabaseUrl } from '../env';
 
 /**
  * Service-role client. **Row-level security does not apply.**

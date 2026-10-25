@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-import type { Database } from '../generated/database.types.js';
-import { supabaseAnonKey, supabaseUrl } from '../env.js';
+import type { Database } from '../generated/database.types';
+import { supabaseAnonKey, supabaseUrl } from '../env';
 
 /**
  * Anon-key client carrying the signed-in user's session. Row-level security

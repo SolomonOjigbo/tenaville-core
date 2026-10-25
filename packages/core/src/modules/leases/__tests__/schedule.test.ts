@@ -10,7 +10,7 @@ import {
   formatDate,
   generateRentPeriods,
   parseDate,
-} from '../domain/schedule.js';
+} from '../domain/schedule';
 
 describe('calendar arithmetic', () => {
   it('clamps a month addition to the shorter month', () => {

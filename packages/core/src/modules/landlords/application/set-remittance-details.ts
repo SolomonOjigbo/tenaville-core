@@ -1,6 +1,6 @@
 import type { UserClient } from '@tenaville/db';
 
-import { remittanceDetailsSchema, type RemittanceDetailsInput } from '../schema/index.js';
+import { remittanceDetailsSchema, type RemittanceDetailsInput } from '../schema/index';
 
 /**
  * Set or change where a landlord is paid (OWN-1).

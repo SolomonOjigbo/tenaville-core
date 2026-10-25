@@ -7,7 +7,7 @@ import {
   validateRows,
   type RowResult,
   type ValidationContext,
-} from '../domain/import.js';
+} from '../domain/import';
 
 const context: ValidationContext = {
   stateCodes: ['LA', 'FC', 'RI', 'KN'],

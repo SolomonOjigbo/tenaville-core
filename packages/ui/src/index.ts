@@ -21,4 +21,4 @@ export {
   cssColor,
   type ColorScheme,
   type SemanticColor,
-} from './tokens.js';
+} from './tokens';

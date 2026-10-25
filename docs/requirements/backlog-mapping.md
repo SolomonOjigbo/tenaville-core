@@ -16,7 +16,7 @@ The backlog is the planning unit: 142 tickets, 690 story points, 23 two-week spr
 | todo         | not started                                     | 120     | 594     |
 | **total**    |                                                 | **142** | **690** |
 
-**56 of 690 points** are done or backend-complete, all within Sprints 1 to 3. No user interface exists, which is the largest single gap: every sprint from 1 onwards assumes working screens.
+**59 of 690 points** are done or backend-complete, all within Sprints 1 to 3. No user interface exists, which is the largest single gap: every sprint from 1 onwards assumes working screens.
 
 ## What "done" means here
 

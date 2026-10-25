@@ -6,7 +6,7 @@ import {
   recordDepositReceiptSchema,
   type ProposeDeductionInput,
   type RecordDepositReceiptInput,
-} from '../schema/index.js';
+} from '../schema/index';
 
 /**
  * Record that a deposit has arrived (LEASE-13).

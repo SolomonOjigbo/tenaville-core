@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { darkTheme, lightTheme } from '../native/theme.js';
+import { darkTheme, lightTheme } from '../native/theme';
 import {
   cssColor,
   cssVar,
@@ -12,7 +12,7 @@ import {
   semanticColors,
   touchTargetMin,
   type SemanticColor,
-} from '../tokens.js';
+} from '../tokens';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const tokensCss = readFileSync(join(here, '../tokens/tokens.css'), 'utf8');
@@ -139,5 +139,68 @@ describe('css helpers', () => {
   it('types every semantic role', () => {
     const roles: SemanticColor[] = ['bg', 'surface', 'text', 'primary', 'danger', 'ring'];
     for (const role of roles) expect(cssVar(role)).toBe(`--tv-${role}`);
+  });
+});
+
+/**
+ * Relative luminance and contrast ratio, per WCAG 2.1.
+ *
+ * PRD §12 requires readable contrast, and a palette is the one place where that
+ * is decided for every screen at once. Checking it here means a colour tweak
+ * cannot quietly push body text below the threshold months later.
+ */
+const relativeLuminance = (hex: string): number => {
+  const h = hex.replace('#', '');
+  const channels = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+  const linear = channels.map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * linear[0]! + 0.7152 * linear[1]! + 0.0722 * linear[2]!;
+};
+
+const contrastRatio = (a: string, b: string): number => {
+  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
+  return (hi! + 0.05) / (lo! + 0.05);
+};
+
+describe('contrast', () => {
+  // Every pair a user actually reads text through. 4.5:1 is WCAG AA for body
+  // text; these are all body-sized in the product.
+  const PAIRS: readonly [SemanticColor, SemanticColor, string][] = [
+    ['text', 'bg', 'body text on the page'],
+    ['text', 'surface', 'body text on a card'],
+    ['text', 'surface2', 'body text on an alternate surface'],
+    ['muted', 'surface', 'secondary text on a card'],
+    ['subtle', 'surface', 'tertiary text on a card'],
+    ['on-primary', 'primary', 'primary button label'],
+    ['on-accent', 'accent', 'accent button label'],
+    ['success-text', 'success-soft', 'success badge'],
+    ['warning-text', 'warning-soft', 'warning badge'],
+    ['danger-text', 'danger-soft', 'danger badge'],
+    ['info-text', 'info-soft', 'info badge'],
+  ];
+
+  for (const scheme of ['light', 'dark'] as const) {
+    it(`meets WCAG AA for every text pair in ${scheme}`, () => {
+      const colors = semanticColors(scheme);
+      const failures = PAIRS.filter(([fg, bg]) => contrastRatio(colors[fg], colors[bg]) < 4.5).map(
+        ([fg, bg, label]) =>
+          `${label} (${fg} on ${bg}): ${contrastRatio(colors[fg], colors[bg]).toFixed(2)}:1`,
+      );
+      expect(failures).toEqual([]);
+    });
+  }
+
+  it('keeps the focus ring visible against both surfaces', () => {
+    // A focus ring nobody can see is the same as no keyboard support (§12).
+    // 3:1 is the WCAG threshold for non-text UI.
+    for (const scheme of ['light', 'dark'] as const) {
+      const colors = semanticColors(scheme);
+      expect(contrastRatio(colors.ring, colors.bg), `${scheme} ring on bg`).toBeGreaterThanOrEqual(
+        3,
+      );
+      expect(
+        contrastRatio(colors.ring, colors.surface),
+        `${scheme} ring on surface`,
+      ).toBeGreaterThanOrEqual(3);
+    }
   });
 });

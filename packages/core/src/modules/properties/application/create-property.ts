@@ -1,6 +1,6 @@
 import type { UserClient } from '@tenaville/db';
 
-import { createPropertySchema, type CreatePropertyInput } from '../schema/index.js';
+import { createPropertySchema, type CreatePropertyInput } from '../schema/index';
 
 /**
  * Create a property (PROP-1, PROP-5).

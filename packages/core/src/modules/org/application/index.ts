@@ -3,9 +3,9 @@
  * components call these; nothing else in this directory tree is importable
  * from outside (enforced by the ESLint boundary rule in @tenaville/config).
  */
-export { createOrganisation } from './create-organisation.js';
-export { changeMemberRole } from './change-member-role.js';
-export { resolveAccess, type Access } from './resolve-access.js';
+export { createOrganisation } from './create-organisation';
+export { changeMemberRole } from './change-member-role';
+export { resolveAccess, type Access } from './resolve-access';
 
 export {
   can,
@@ -18,7 +18,7 @@ export {
   STAFF_ROLES,
   ADMIN_ROLES,
   type Permission,
-} from '../domain/roles.js';
+} from '../domain/roles';
 
 export {
   AUDIT_ACTIONS,
@@ -26,7 +26,7 @@ export {
   assertReasonProvided,
   MissingAuditReasonError,
   type AuditAction,
-} from '../domain/audit.js';
+} from '../domain/audit';
 
 export {
   createOrganisationSchema,
@@ -39,4 +39,4 @@ export {
   type InviteMemberInput,
   type ChangeMemberRoleInput,
   type RevokeSessionInput,
-} from '../schema/index.js';
+} from '../schema/index';

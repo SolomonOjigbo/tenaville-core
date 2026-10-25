@@ -1,6 +1,6 @@
 import type { UserClient } from '@tenaville/db';
 
-import { createTenantSchema, type CreateTenantInput } from '../schema/index.js';
+import { createTenantSchema, type CreateTenantInput } from '../schema/index';
 
 /**
  * Record a tenant (LEASE-1).

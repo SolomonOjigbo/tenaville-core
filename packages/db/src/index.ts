@@ -6,13 +6,13 @@
  *   createUserClient     server-side, acting as one user, RLS applies
  *   createAdminClient    service role, RLS DOES NOT APPLY
  */
-export { createBrowserClient, type BrowserClient } from './clients/browser.js';
-export { createUserClient, type UserClient } from './clients/user.js';
-export { createAdminClient, type AdminClient } from './clients/admin.js';
+export { createBrowserClient, type BrowserClient } from './clients/browser';
+export { createUserClient, type UserClient } from './clients/user';
+export { createAdminClient, type AdminClient } from './clients/admin';
 
-export type { Database, Json } from './generated/database.types.js';
+export type { Database, Json } from './generated/database.types';
 
-import type { Database } from './generated/database.types.js';
+import type { Database } from './generated/database.types';
 
 type PublicSchema = Database['public'];
 

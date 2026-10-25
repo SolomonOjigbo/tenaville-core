@@ -5,7 +5,7 @@ import {
   MissingAuditReasonError,
   assertReasonProvided,
   requiresReason,
-} from '../domain/audit.js';
+} from '../domain/audit';
 
 describe('audit actions', () => {
   it('matches the database action key format', () => {

@@ -6,7 +6,7 @@ import {
   type ImportSummary,
   type RowResult,
   type ValidationContext,
-} from '../domain/import.js';
+} from '../domain/import';
 
 /**
  * Validate an uploaded spreadsheet and store it as a dry run (PROP-4, MIG-3).

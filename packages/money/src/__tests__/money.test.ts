@@ -14,7 +14,7 @@ import {
   parseNaira,
   subtract,
   toTransport,
-} from '../index.js';
+} from '../index';
 
 describe('parseNaira', () => {
   it('parses the forms an agency actually types', () => {

@@ -3,7 +3,7 @@
  */
 import { z } from 'zod';
 
-import { APP_ROLES } from '../domain/roles.js';
+import { APP_ROLES } from '../domain/roles';
 
 export const organisationTypeSchema = z.enum(['agency', 'individual_landlord']);
 

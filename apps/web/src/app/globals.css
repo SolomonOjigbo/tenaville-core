@@ -1,0 +1,43 @@
+@import '@tenaville/ui/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    /* The palette comes from tokens.css; these two make the page obey it
+       rather than borrowing the browser default. */
+    background-color: rgb(var(--tv-bg));
+    color: rgb(var(--tv-text));
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--tv-font-body, Inter, system-ui, sans-serif);
+  }
+
+  /* Money is read as a column — a rent roll, an arrears list, a statement.
+     Proportional digits make that impossible to scan (PRD §12). */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A visible focus ring is not decoration: §12 requires keyboard support on
+     web, and a caretaker tabbing through a form on a phone needs to see where
+     they are. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--tv-ring));
+    outline-offset: 2px;
+  }
+
+  /* Honour a reduced-motion preference everywhere rather than per component. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

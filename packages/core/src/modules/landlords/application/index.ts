@@ -1,6 +1,6 @@
 /** The landlords module's public surface (OWN-1, OWN-2). */
-export { createLandlord } from './create-landlord.js';
-export { setRemittanceDetails } from './set-remittance-details.js';
+export { createLandlord } from './create-landlord';
+export { setRemittanceDetails } from './set-remittance-details';
 
 export {
   createLandlordSchema,
@@ -9,4 +9,4 @@ export {
   type CreateLandlordInput,
   type RemittanceDetailsInput,
   type CreateMandateInput,
-} from '../schema/index.js';
+} from '../schema/index';

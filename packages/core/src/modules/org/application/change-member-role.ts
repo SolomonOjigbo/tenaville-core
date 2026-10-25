@@ -1,7 +1,7 @@
 import type { UserClient } from '@tenaville/db';
 
-import { assertReasonProvided } from '../domain/audit.js';
-import { changeMemberRoleSchema, type ChangeMemberRoleInput } from '../schema/index.js';
+import { assertReasonProvided } from '../domain/audit';
+import { changeMemberRoleSchema, type ChangeMemberRoleInput } from '../schema/index';
 
 /**
  * Change a member's role (ORG-3, ORG-4, ORG-5).

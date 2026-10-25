@@ -1,6 +1,6 @@
 import type { UserClient } from '@tenaville/db';
 
-import { createLandlordSchema, type CreateLandlordInput } from '../schema/index.js';
+import { createLandlordSchema, type CreateLandlordInput } from '../schema/index';
 
 /**
  * Record a landlord (OWN-1).

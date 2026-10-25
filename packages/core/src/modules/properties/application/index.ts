@@ -1,7 +1,7 @@
 /** The properties module's public surface (PROP-1..PROP-5). */
-export { createProperty } from './create-property.js';
-export { createUnit } from './create-unit.js';
-export { validatePropertyImport, applyPropertyImport } from './import-properties.js';
+export { createProperty } from './create-property';
+export { createUnit } from './create-unit';
+export { validatePropertyImport, applyPropertyImport } from './import-properties';
 
 export {
   createPropertySchema,
@@ -11,7 +11,7 @@ export {
   unitStatusSchema,
   type CreatePropertyInput,
   type CreateUnitInput,
-} from '../schema/index.js';
+} from '../schema/index';
 
 export {
   mapHeaders,
@@ -24,4 +24,4 @@ export {
   type ParsedPropertyRow,
   type RowResult,
   type ValidationContext,
-} from '../domain/import.js';
+} from '../domain/import';

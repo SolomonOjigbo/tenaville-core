@@ -1,7 +1,7 @@
 import type { UserClient } from '@tenaville/db';
 import { fromTransport, toSafeNumber } from '@tenaville/money';
 
-import { createUnitSchema, type CreateUnitInput } from '../schema/index.js';
+import { createUnitSchema, type CreateUnitInput } from '../schema/index';
 
 /**
  * Create a unit (PROP-2, PROP-3).

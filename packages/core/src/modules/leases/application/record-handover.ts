@@ -1,7 +1,7 @@
 import type { UserClient } from '@tenaville/db';
 import { fromTransport, toSafeNumber } from '@tenaville/money';
 
-import { recordHandoverSchema, type RecordHandoverInput } from '../schema/index.js';
+import { recordHandoverSchema, type RecordHandoverInput } from '../schema/index';
 
 /**
  * Record a move-in or move-out (LEASE-5).

@@ -1,6 +1,6 @@
 import type { AppRole, UserClient } from '@tenaville/db';
 
-import { can, isAdmin, isStaff, type Permission } from '../domain/roles.js';
+import { can, isAdmin, isStaff, type Permission } from '../domain/roles';
 
 export interface Access {
   readonly userId: string;

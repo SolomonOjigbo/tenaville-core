@@ -1,8 +1,8 @@
 import type { UserClient } from '@tenaville/db';
 import { fromTransport, toSafeNumber } from '@tenaville/money';
 
-import { generateRentPeriods } from '../domain/schedule.js';
-import { createLeaseSchema, type CreateLeaseInput } from '../schema/index.js';
+import { generateRentPeriods } from '../domain/schedule';
+import { createLeaseSchema, type CreateLeaseInput } from '../schema/index';
 
 /**
  * Create a lease directly from a tenant and a unit (LEASE-12).

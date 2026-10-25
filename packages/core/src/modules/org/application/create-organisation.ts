@@ -1,6 +1,6 @@
 import type { UserClient } from '@tenaville/db';
 
-import { createOrganisationSchema, type CreateOrganisationInput } from '../schema/index.js';
+import { createOrganisationSchema, type CreateOrganisationInput } from '../schema/index';
 
 /**
  * Create an organisation with the calling user as owner (ORG-1).

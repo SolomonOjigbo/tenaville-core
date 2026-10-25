@@ -10,7 +10,7 @@ import {
   isAdmin,
   isStaff,
   permissionsFor,
-} from '../domain/roles.js';
+} from '../domain/roles';
 import type { AppRole } from '@tenaville/db';
 
 describe('role catalogue', () => {

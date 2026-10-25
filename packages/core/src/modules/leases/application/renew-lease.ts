@@ -1,7 +1,7 @@
 import type { UserClient } from '@tenaville/db';
 import { fromTransport, toSafeNumber } from '@tenaville/money';
 
-import { renewLeaseSchema, type RenewLeaseInput } from '../schema/index.js';
+import { renewLeaseSchema, type RenewLeaseInput } from '../schema/index';
 
 /**
  * Renew a lease (LEASE-4, LEASE-11).
