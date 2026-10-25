@@ -1,0 +1,9 @@
+# Generated — regenerate with `pnpm db:types`, never hand-edit.
+packages/db/src/generated/
+
+# psql scripts, not plain SQL: prettier's SQL parser rejects meta-commands
+# such as \ir, and pgTAP tests use \gset.
+supabase/seed.sql
+supabase/tests/
+
+pnpm-lock.yaml

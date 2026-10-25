@@ -42,18 +42,18 @@ Every functional requirement in [PRD v3](../prd/Tenaville_Property_Management_PR
 
 PRD section 8.1 · owner `packages/core/src/modules/org`
 
-| ID     | Pri | Release | Requirement                                                                                                                                            | Status | Notes |
-| ------ | --- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----- |
-| ORG-1  | P0  | R1      | Signup creates an organisation of type agency or individual landlord with an owner account                                                             | todo   |       |
-| ORG-2  | P0  | R1      | Support verified email and/or phone, staff invitations and account recovery                                                                            | todo   |       |
-| ORG-3  | P0  | R1      | Provide roles including Owner/Admin, Property Manager, Letting Agent, Caretaker, Maintenance Coordinator, Accountant, Screening Reviewer, Landlord…    | todo   |       |
-| ORG-4  | P0  | R1      | Enforce role-based and property/portfolio-scoped access                                                                                                | todo   |       |
-| ORG-5  | P0  | R1      | Record audit events for financial changes, lease changes, screening decisions, sensitive document access, maintenance approvals and permission changes | todo   |       |
-| ORG-6  | P1  | R2      | Support multiple branches, teams and branch-level reporting                                                                                            | todo   |       |
-| ORG-7  | P1  | R2      | Allow organisation administrators to configure approval limits, workflow templates and notification defaults                                           | todo   |       |
-| ORG-8  | P0  | R1      | Ensure every tenant organisation’s data is isolated at the database level                                                                              | todo   |       |
-| ORG-9  | P0  | R1      | Provide session management: device list, remote sign-out, session timeout and password reset controls                                                  | todo   |       |
-| ORG-10 | P1  | R2      | Offer optional two-factor authentication for all users and make it configurable as required for owners and accountants                                 | todo   |       |
+| ID     | Pri | Release | Requirement                                                                                                                                            | Status      | Notes                                                           |
+| ------ | --- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | --------------------------------------------------------------- |
+| ORG-1  | P0  | R1      | Signup creates an organisation of type agency or individual landlord with an owner account                                                             | done        | create_organisation_with_owner + createOrganisation use case    |
+| ORG-2  | P0  | R1      | Support verified email and/or phone, staff invitations and account recovery                                                                            | in-progress | invite fields on memberships; invitation email flow not built   |
+| ORG-3  | P0  | R1      | Provide roles including Owner/Admin, Property Manager, Letting Agent, Caretaker, Maintenance Coordinator, Accountant, Screening Reviewer, Landlord…    | done        | app_role enum + permission catalogue in org/domain/roles.ts     |
+| ORG-4  | P0  | R1      | Enforce role-based and property/portfolio-scoped access                                                                                                | done        | memberships + assignments + app.has_role; resolveAccess         |
+| ORG-5  | P0  | R1      | Record audit events for financial changes, lease changes, screening decisions, sensitive document access, maintenance approvals and permission changes | done        | audit_events append-only + membership trigger carrying a reason |
+| ORG-6  | P1  | R2      | Support multiple branches, teams and branch-level reporting                                                                                            | todo        |                                                                 |
+| ORG-7  | P1  | R2      | Allow organisation administrators to configure approval limits, workflow templates and notification defaults                                           | todo        |                                                                 |
+| ORG-8  | P0  | R1      | Ensure every tenant organisation’s data is isolated at the database level                                                                              | done        | RLS on every table; schema-wide pgTAP guard + isolation tests   |
+| ORG-9  | P0  | R1      | Provide session management: device list, remote sign-out, session timeout and password reset controls                                                  | in-progress | device_sessions + own-device policies; revocation API not built |
+| ORG-10 | P1  | R2      | Offer optional two-factor authentication for all users and make it configurable as required for owners and accountants                                 | todo        |                                                                 |
 
 ## Properties & units (`PROP`)
 
@@ -322,13 +322,13 @@ PRD section 8.15 · owner `packages/core/src/modules/documents`
 
 PRD section 8.16 · owner `packages/core/src/modules/billing`
 
-| ID     | Pri | Release | Requirement                                                                                                                      | Status | Notes |
-| ------ | --- | ------- | -------------------------------------------------------------------------------------------------------------------------------- | ------ | ----- |
-| BILL-1 | P0  | R1      | Offer a trial and subscription tiers priced primarily by units under management, billed in naira                                 | todo   |       |
-| BILL-2 | P0  | R1      | Support subscription payment through an appropriate Nigerian payment gateway, with invoices and receipts                         | todo   |       |
-| BILL-3 | P0  | R1      | Show plan limits and upgrade prompts                                                                                             | todo   |       |
-| BILL-4 | P0  | R1      | Do not delete customer data solely because a subscription is unpaid; preserve export access subject to security and legal policy | todo   |       |
-| BILL-5 | P1  | R2      | Validate any optional transaction or financing-related revenue model before implementation and disclose fees clearly             | todo   |       |
+| ID     | Pri | Release | Requirement                                                                                                                      | Status      | Notes                                                         |
+| ------ | --- | ------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------- |
+| BILL-1 | P0  | R1      | Offer a trial and subscription tiers priced primarily by units under management, billed in naira                                 | in-progress | plans + subscriptions; trial starts at signup; no pricing UI  |
+| BILL-2 | P0  | R1      | Support subscription payment through an appropriate Nigerian payment gateway, with invoices and receipts                         | todo        |                                                               |
+| BILL-3 | P0  | R1      | Show plan limits and upgrade prompts                                                                                             | todo        |                                                               |
+| BILL-4 | P0  | R1      | Do not delete customer data solely because a subscription is unpaid; preserve export access subject to security and legal policy | in-progress | no cascade from subscription state; asserted in table comment |
+| BILL-5 | P1  | R2      | Validate any optional transaction or financing-related revenue model before implementation and disclose fees clearly             | todo        |                                                               |
 
 ## Migration & onboarding (`MIG`)
 

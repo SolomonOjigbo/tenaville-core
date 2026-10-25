@@ -17,7 +17,11 @@ This is the entity inventory and the invariants that constrain the schema. Concr
 
 `Organisation` · `User` · `Role` · `Permission` · `Assignment` · `Branch` · `DeviceSession` · `AuditEvent` · `Subscription` · `Plan`
 
-`Organisation` is the tenant root; `Organisation.type` is agency or individual landlord (ORG-1). `Assignment` carries property- and portfolio-scoped access, which is why organisation membership alone is not authority (ORG-4). `Branch` is R2 and adds a second scoping dimension below organisation (ORG-6) — design policies to accommodate it now rather than rewriting them later.
+`Organisation` is the tenant root; `Organisation.type` is agency or individual landlord (ORG-1). `Assignment` carries property- and portfolio-scoped access, which is why organisation membership alone is not authority (ORG-4). `Branch` exists from R1 so policies and keys are shaped for a second scoping dimension below organisation, though branch _features_ are R2 (ORG-6).
+
+Implemented as `Membership` rather than a `User`-to-`Organisation` column: one Supabase Auth identity per person, with a role per organisation, so a landlord managed by two agencies needs one account rather than two. See [ADR 0008](../decisions/0008-identity-and-membership-model.md).
+
+**`Permission` is code, not a table.** The role-to-permission catalogue lives in `packages/core/src/modules/org/domain/roles.ts`, where it is typed, diff-reviewable and testable without a database. Agency-configurable approval limits (ORG-7, R2) are genuinely data and will arrive as a table that narrows those permissions, never widens them. This is a deliberate deviation from PRD §14's `Permission` entity, recorded in ADR 0008.
 
 `AuditEvent` records actor, time, action, before/after values and the reason for sensitive overrides (ORG-5, §10.7). It is append-only.
 

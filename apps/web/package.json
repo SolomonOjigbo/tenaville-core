@@ -12,7 +12,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.5.1",
+    "@supabase/ssr": "^0.12.7",
     "@tenaville/adapters": "workspace:*",
     "@tenaville/core": "workspace:*",
     "@tenaville/db": "workspace:*",

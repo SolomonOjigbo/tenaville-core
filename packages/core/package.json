@@ -15,7 +15,8 @@
   "dependencies": {
     "@tenaville/db": "workspace:*",
     "@tenaville/money": "workspace:*",
-    "@tenaville/validation": "workspace:*"
+    "@tenaville/validation": "workspace:*",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tenaville/config": "workspace:*"

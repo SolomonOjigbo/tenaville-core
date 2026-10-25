@@ -14,10 +14,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "declaration": true,
-    "declarationMap": true,
+    // These packages are bundled by the apps rather than built as standalone
+    // libraries, so nothing emits and project references are unnecessary.
+    "noEmit": true,
     "sourceMap": true,
-    "composite": true,
     "paths": {
       "@tenaville/core/*": ["./packages/core/src/*"],
       "@tenaville/db": ["./packages/db/src/index.ts"],

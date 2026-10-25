@@ -7,6 +7,5 @@
 --
 -- Never seed from a production extract: a real customer record in a seed file
 -- is a data-protection incident, not a convenience.
--- \ir seed/01_organisations.sql
--- \ir seed/02_landlords_properties_units.sql
--- \ir seed/03_tenants_leases_charges.sql
+\ir seed/01_plans.sql
+\ir seed/02_demo_organisations.sql

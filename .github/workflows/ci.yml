@@ -39,13 +39,13 @@ jobs:
         # This image carries the extensions the schema needs (plpgsql_check for
         # `db lint`, pgtap for the policy tests) which stock postgres lacks.
         # The isolation tests need a database, not the whole local stack.
-        image: supabase/postgres:15.6.1.139
+        image: supabase/postgres:17.6.1.121
         env:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -h 127.0.0.1 -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 12
@@ -59,6 +59,14 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+
+      - name: Prepare database
+        # The image creates pg_graphql's event triggers during init but does not
+        # always install the extension, leaving them referencing
+        # graphql.increment_schema_version(). Arbitrary DDL then fails with
+        # "could not open relation with OID". Installing it repairs the
+        # dependency and matches hosted Supabase.
+        run: psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q -c 'create extension if not exists pg_graphql;'
 
       - name: Apply migrations
         run: |
@@ -74,17 +82,29 @@ jobs:
       - name: Policy tests
         run: |
           shopt -s nullglob
-          files=(supabase/tests/*.sql)
-          if [ ${#files[@]} -eq 0 ]; then
+          tests=(supabase/tests/*_test.sql)
+          if [ ${#tests[@]} -eq 0 ]; then
             echo "no pgTAP tests yet"; exit 0
           fi
-          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -c 'create extension if not exists pgtap;'
-          for f in "${files[@]}"; do
-            echo "running $f"
-            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f "$f"
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q -c 'create extension if not exists pgtap;'
+          for f in supabase/tests/*helpers*.sql; do
+            psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q -f "$f"
           done
-
-      - run: pnpm test:isolation
+          failed=0
+          for f in "${tests[@]}"; do
+            echo "-- $(basename "$f")"
+            if ! out="$(psql "$SUPABASE_DB_URL" -t -v ON_ERROR_STOP=1 -f "$f" 2>&1)"; then
+              failed=1
+            fi
+            echo "$out" | grep -E '^\s*(ok |not ok|# |1\.\.)' || true
+            # A pgTAP file can exit 0 while individual assertions fail.
+            if echo "$out" | grep -qE 'not ok|Looks like you failed'; then failed=1; fi
+            if echo "$out" | grep -qE '^psql:|ERROR:'; then
+              echo "$out" | grep -E '^psql:|ERROR:' | head -5
+              failed=1
+            fi
+          done
+          exit "$failed"
 
   traceability:
     name: PRD requirement traceability

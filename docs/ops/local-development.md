@@ -58,6 +58,29 @@ pnpm test:isolation       # cross-tenant isolation suite
 pnpm docs:reqs            # traceability vs the PRD
 ```
 
+## Verifying the schema without the full stack
+
+`pnpm db:verify` (also `pnpm test:isolation`) runs `tools/db-verify.sh`: it starts a
+throwaway `supabase/postgres` container, applies every migration, loads the seed,
+and runs the pgTAP suite. It needs Docker but not the Supabase stack — useful
+because `supabase start` pulls from `public.ecr.aws`, which rate-limits
+anonymous pulls, and because it is the same sequence CI runs.
+
+Two things that script knows which cost an afternoon to learn:
+
+**Probe readiness over TCP, not the Unix socket.** The Postgres entrypoint runs
+its init scripts against a temporary server listening only on the socket, then
+shuts it down and starts the real one. `pg_isready` over the socket reports
+ready _during_ init, so anything applied then lands on a server about to be
+discarded — surfacing later as stale relation OIDs, `tuple concurrently
+updated`, or `the database system is shutting down`. The init server never
+listens on TCP.
+
+**The image creates pg_graphql's event triggers without installing the
+extension**, leaving them referencing `graphql.increment_schema_version()`.
+Arbitrary DDL then fails with `could not open relation with OID`. Installing
+`pg_graphql` repairs it, and matches hosted Supabase.
+
 ## Working on a migration
 
 1. Change the schema locally, or write the SQL by hand.

@@ -27,7 +27,13 @@ Policy-level tests live beside the migrations in `supabase/tests/` as pgTAP, so 
 
 New table, new test. The checklist in the PR template asks for it.
 
-## Open
+## As implemented (R1 step 1)
 
-- Whether landlord and tenant portal access is modelled as Supabase Auth users with narrow policies, or as a separate `PortalAccount` linkage (PRD data model lists `PortalAccount`). Decide before the tenant portal work starts in R1 — see [ADR 0002](../decisions/0002-supabase-postgres-rls.md).
-- Branch-level scoping (ORG-6, R2) adds a second dimension below organisation. Design the policy shape now so branches do not require rewriting every policy later.
+`app.current_organisation_ids()` is the boundary: a `security definer`, `stable` function with `search_path = ''` returning the organisations where the caller has an _active_ membership. Policies restrict rows to that set; `app.has_role` answers role authority separately. `security definer` is what stops policies on `memberships` recursing into themselves.
+
+Both questions that were open here are now settled:
+
+- Identity and membership — one Supabase Auth user per person, authority through `memberships` ([ADR 0008](../decisions/0008-identity-and-membership-model.md)).
+- Branch scoping — `branches` and a nullable `memberships.branch_id` exist from R1, so ORG-6 adds features rather than reshaping every policy.
+
+One finding worth recording: the Supabase Postgres image sets default privileges that grant new `public` tables to `anon`, so the first migration picked up `anon` grants nobody asked for. RLS still blocked the rows, but an unauthenticated role holding table grants contradicts PROP-9. The migration now revokes them and resets the default privileges, and a pgTAP assertion keeps it that way.

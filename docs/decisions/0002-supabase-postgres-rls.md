@@ -28,9 +28,9 @@ Supabase as the managed platform: Postgres with RLS for data, Supabase Auth for 
 - Cost: landlord and tenant visibility is narrower than organisation membership, which RLS does not express on its own. Those policies must be keyed to the user's own linkage, and getting it wrong is a leak between parties inside one agency.
 - Cost: platform coupling. Postgres itself is portable; Auth and Storage are not. Keep storage access behind `packages/adapters/src/storage` so the second is replaceable.
 
-## Open
+## Resolved
 
-Whether landlord and tenant portal users are Supabase Auth users with narrow policies, or a separate `PortalAccount` linkage as the PRD data model suggests. Decide before tenant portal work begins in R1.
+The open question here — whether landlord and tenant portal users are Supabase Auth users or a separate `PortalAccount` linkage — is answered in [ADR 0008](0008-identity-and-membership-model.md): one Supabase Auth identity per person, with authority carried by `memberships`.
 
 ## Alternatives considered
 
