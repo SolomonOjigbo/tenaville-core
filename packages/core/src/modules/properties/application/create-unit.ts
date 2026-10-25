@@ -6,8 +6,12 @@ import { createUnitSchema, type CreateUnitInput } from '../schema/index.js';
 /**
  * Create a unit (PROP-2, PROP-3).
  *
- * Rent amounts arrive as integer-kobo strings, because bigint cannot cross
- * JSON. They are converted at the database boundary by `toSafeNumber`, which
+ * Only asking rent lives here. Contracted rent belongs to the lease, which is
+ * authoritative for it — a second stored copy could drift and bill a tenant
+ * the wrong amount, so the column was dropped in the tenancy migration.
+ *
+ * The amount arrives as an integer-kobo string, because bigint cannot cross
+ * JSON, and is converted at the database boundary by `toSafeNumber`, which
  * throws rather than silently losing precision: Supabase's generated types
  * expose bigint columns as `number`, and that is only safe while something
  * checks the range (PRD §10.1).
@@ -34,9 +38,6 @@ export const createUnit = async (
       ...(parsed.askingRentKobo === undefined
         ? {}
         : { asking_rent_kobo: toSafeNumber(fromTransport(parsed.askingRentKobo)) }),
-      ...(parsed.contractedRentKobo === undefined
-        ? {}
-        : { contracted_rent_kobo: toSafeNumber(fromTransport(parsed.contractedRentKobo)) }),
       ...(parsed.notes === undefined ? {} : { notes: parsed.notes }),
     })
     .select('id')

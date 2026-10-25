@@ -49,9 +49,19 @@ A `Property` contains one or more `Unit`. R1 links a property to one landlord; o
 
 A `Lease` joins one or more tenants (`LeaseParty`, supporting co-tenants and guarantors — LEASE-9) to a `Unit` and generates `Charge` rows from its `RentSchedule` (RENT-1).
 
+**Two active leases cannot overlap on one unit.** A Postgres exclusion constraint over `(unit_id, daterange(starts_on, ends_on))` where the status is active makes double-letting impossible rather than unlikely — and catches the overlap that a date comparison in application code would miss under concurrency.
+
+**`RentSchedule` is computed, not stored.** `generateRentPeriods` in `leases/domain/schedule.ts` derives the periods and due dates from the lease terms; step 4 turns them into `Charge` rows. Persisting the schedule as well would create two sources of truth for what a tenant owes. Period starts are computed from the original start date rather than from the previous period, so a tenancy beginning on 31 January runs 31 Jan, 28 Feb, 31 Mar — computing each from the last would clamp to the 28th and quietly move the rent day for the rest of the term.
+
+**`expiring_soon` is derived, not stored.** LEASE-3 lists it among the lease states, and `lease_overview` computes it from the end date and the organisation's own `lease_expiry_alert_days`. A stored state would need a scheduled job and would be wrong between the threshold being crossed and the next run — and "wrong" here means a renewal conversation that did not happen, which is the failure LEASE-6 and AN-5 exist to prevent. The view is `security_invoker`, so the underlying policies apply to the caller; a pgTAP assertion requires that of every view, since a view without it is a hole straight through RLS.
+
+`units.contracted_rent_kobo` was **removed** in the tenancy migration. Once a lease carries the rent the lease is authoritative, and a second stored copy can drift — which is how a tenant is billed the wrong amount. `asking_rent_kobo` remains: it is the advertised figure for a vacant unit and has no other source.
+
 Lease history survives updates and termination (LEASE-11): a terminated lease and its charges remain readable, and a renewal is a new record retaining the historical terms (LEASE-4).
 
-`DepositRecord` tracks the caution deposit as client funds through hold, deduction with evidence and approval, and refund or transfer with a ledger entry (LEASE-13).
+`lease_deposits` tracks the caution deposit as client funds through `expected` → `held` → deduction → `refunded`, `forfeited` or `transferred` (LEASE-13). `custodian` records whether the agency or the landlord holds it: PRD open decision 15 is unresolved, so both answers are representable as data and resolving it is a configuration change rather than a migration. How a deposit appears on a statement remains a step 6 question.
+
+`deposit_deductions` is **append-only**: the amount and reason cannot be rewritten and a row cannot be deleted, so a correction is a linked reversal and the history of a dispute survives it (PRD §10.2). A deduction starts unapproved, because it takes a tenant's money; the database refuses an approval that would push the approved total past the deposit held, and a reversed deduction stops counting against it. The tenant can read every deduction and reversal against their own deposit — a deposit dispute the tenant cannot inspect is the dispute this lifecycle exists to prevent.
 
 `ImportBatch` and `ImportRow` make a migration reversible — a completed import can be rolled back as a unit (MIG-3). Each row stores the parsed payload, its validation issues as `{field, code, message}` entries, and the id of what it created, which is what rollback will read. A batch moves draft → validated → applied, and `apply_property_import` refuses anything that is not validated, still has invalid rows, or has already been applied, so a retried request cannot duplicate a portfolio.
 

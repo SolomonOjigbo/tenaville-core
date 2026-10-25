@@ -62,9 +62,16 @@ export const createUnitSchema = z.object({
   bedrooms: z.number().int().min(0).max(50).optional(),
   bathrooms: z.number().int().min(0).max(50).optional(),
   floorAreaSqm: z.number().positive().optional(),
-  /** Integer kobo as a transport string — bigint cannot cross JSON. */
+  /**
+   * The agency's advertised figure for a vacant unit, as integer kobo in a
+   * transport string (bigint cannot cross JSON).
+   *
+   * There is no contracted rent here: once a lease exists it is authoritative
+   * for rent, and a second stored copy could drift from it — which is how a
+   * tenant gets billed the wrong amount. The column was dropped in the
+   * tenancy migration.
+   */
   askingRentKobo: z.string().regex(/^\d+$/).optional(),
-  contractedRentKobo: z.string().regex(/^\d+$/).optional(),
   facilities: z.array(z.string().trim().min(1).max(60)).default([]),
   notes: z.string().trim().max(2000).optional(),
 });

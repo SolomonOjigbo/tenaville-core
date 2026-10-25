@@ -65,6 +65,38 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"deposit_deductions": {
+                  Row: {
+                    "amount_kobo": number,"approved_at": string | null,"approved_by": string | null,"created_at": string,"created_by": string | null,"deposit_id": string,"evidence_paths": (string)[],"id": string,"organisation_id": string,"reason": string,"reverses_deduction_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string | null,"deposit_id": string,"evidence_paths"?: (string)[],"id"?: string,"organisation_id": string,"reason": string,"reverses_deduction_id"?: string | null
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"approved_at"?: string | null,"approved_by"?: string | null,"created_at"?: string,"created_by"?: string | null,"deposit_id"?: string,"evidence_paths"?: (string)[],"id"?: string,"organisation_id"?: string,"reason"?: string,"reverses_deduction_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "deposit_deductions_deposit_id_fkey"
+      columns: ["deposit_id"]
+isOneToOne: false
+      referencedRelation: "lease_deposits"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "deposit_deductions_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "deposit_deductions_reverses_deduction_id_fkey"
+      columns: ["reverses_deduction_id"]
+isOneToOne: false
+      referencedRelation: "deposit_deductions"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"device_sessions": {
                   Row: {
                     "app_version": string | null,"created_at": string,"device_label": string | null,"id": string,"last_seen_at": string,"organisation_id": string | null,"platform": string,"revoked_at": string | null,"revoked_by": string | null,"user_id": string
@@ -183,6 +215,158 @@ isOneToOne: false
       referencedColumns: ["code"]
     }
                   ]
+                },"lease_deposits": {
+                  Row: {
+                    "amount_kobo": number,"created_at": string,"custodian": Database["public"]['Enums']["deposit_custodian"],"id": string,"lease_id": string,"notes": string | null,"organisation_id": string,"received_on": string | null,"settled_on": string | null,"status": Database["public"]['Enums']["deposit_status"],"transferred_to_lease_id": string | null,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"created_at"?: string,"custodian"?: Database["public"]['Enums']["deposit_custodian"],"id"?: string,"lease_id": string,"notes"?: string | null,"organisation_id": string,"received_on"?: string | null,"settled_on"?: string | null,"status"?: Database["public"]['Enums']["deposit_status"],"transferred_to_lease_id"?: string | null,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"created_at"?: string,"custodian"?: Database["public"]['Enums']["deposit_custodian"],"id"?: string,"lease_id"?: string,"notes"?: string | null,"organisation_id"?: string,"received_on"?: string | null,"settled_on"?: string | null,"status"?: Database["public"]['Enums']["deposit_status"],"transferred_to_lease_id"?: string | null,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "lease_deposits_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: true
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_deposits_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: true
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_deposits_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_deposits_transferred_to_lease_id_fkey"
+      columns: ["transferred_to_lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_deposits_transferred_to_lease_id_fkey"
+      columns: ["transferred_to_lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"lease_handovers": {
+                  Row: {
+                    "created_at": string,"evidence_paths": (string)[],"happened_on": string,"id": string,"keys_returned": boolean | null,"kind": Database["public"]['Enums']["handover_kind"],"lease_id": string,"meter_readings": NonNullable<Json>,"notes": string | null,"organisation_id": string,"outstanding_balance_kobo": number | null,"recorded_by": string | null,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"evidence_paths"?: (string)[],"happened_on": string,"id"?: string,"keys_returned"?: boolean | null,"kind": Database["public"]['Enums']["handover_kind"],"lease_id": string,"meter_readings"?: NonNullable<Json>,"notes"?: string | null,"organisation_id": string,"outstanding_balance_kobo"?: number | null,"recorded_by"?: string | null,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"evidence_paths"?: (string)[],"happened_on"?: string,"id"?: string,"keys_returned"?: boolean | null,"kind"?: Database["public"]['Enums']["handover_kind"],"lease_id"?: string,"meter_readings"?: NonNullable<Json>,"notes"?: string | null,"organisation_id"?: string,"outstanding_balance_kobo"?: number | null,"recorded_by"?: string | null,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "lease_handovers_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_handovers_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_handovers_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"lease_parties": {
+                  Row: {
+                    "created_at": string,"id": string,"lease_id": string,"liability_share_bps": number | null,"organisation_id": string,"role": Database["public"]['Enums']["lease_party_role"],"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"lease_id": string,"liability_share_bps"?: number | null,"organisation_id": string,"role"?: Database["public"]['Enums']["lease_party_role"],"tenant_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"lease_id"?: string,"liability_share_bps"?: number | null,"organisation_id"?: string,"role"?: Database["public"]['Enums']["lease_party_role"],"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "lease_parties_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_parties_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_parties_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "lease_parties_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"leases": {
+                  Row: {
+                    "created_at": string,"created_by": string | null,"ends_on": string,"first_due_on": string | null,"id": string,"notes": string | null,"organisation_id": string,"reference": string | null,"renewed_from_lease_id": string | null,"rent_due_day": number | null,"rent_frequency": Database["public"]['Enums']["rent_frequency"],"rent_kobo": number,"starts_on": string,"status": Database["public"]['Enums']["lease_status"],"terminated_on": string | null,"termination_reason": string | null,"unit_id": string,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by"?: string | null,"ends_on": string,"first_due_on"?: string | null,"id"?: string,"notes"?: string | null,"organisation_id": string,"reference"?: string | null,"renewed_from_lease_id"?: string | null,"rent_due_day"?: number | null,"rent_frequency"?: Database["public"]['Enums']["rent_frequency"],"rent_kobo": number,"starts_on": string,"status"?: Database["public"]['Enums']["lease_status"],"terminated_on"?: string | null,"termination_reason"?: string | null,"unit_id": string,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string | null,"ends_on"?: string,"first_due_on"?: string | null,"id"?: string,"notes"?: string | null,"organisation_id"?: string,"reference"?: string | null,"renewed_from_lease_id"?: string | null,"rent_due_day"?: number | null,"rent_frequency"?: Database["public"]['Enums']["rent_frequency"],"rent_kobo"?: number,"starts_on"?: string,"status"?: Database["public"]['Enums']["lease_status"],"terminated_on"?: string | null,"termination_reason"?: string | null,"unit_id"?: string,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "leases_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_renewed_from_lease_id_fkey"
+      columns: ["renewed_from_lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_renewed_from_lease_id_fkey"
+      columns: ["renewed_from_lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_unit_id_fkey"
+      columns: ["unit_id"]
+isOneToOne: false
+      referencedRelation: "units"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"management_mandates": {
                   Row: {
                     "commission_basis": Database["public"]['Enums']["commission_basis"],"commission_fixed_kobo": number | null,"commission_rate_bps": number | null,"commission_type": Database["public"]['Enums']["commission_type"],"created_at": string,"ends_on": string | null,"id": string,"landlord_id": string,"notes": string | null,"organisation_id": string,"permitted_deductions": (Database["public"]['Enums']["deduction_category"])[],"reference": string | null,"remittance_schedule": Database["public"]['Enums']["remittance_schedule"],"starts_on": string,"terminated_on": string | null,"updated_at": string | null
@@ -251,14 +435,14 @@ isOneToOne: false
                   ]
                 },"organisations": {
                   Row: {
-                    "country_code": string,"created_at": string,"id": string,"name": string,"timezone": string,"type": Database["public"]['Enums']["organisation_type"],"updated_at": string | null
+                    "country_code": string,"created_at": string,"id": string,"lease_expiry_alert_days": (number)[],"name": string,"timezone": string,"type": Database["public"]['Enums']["organisation_type"],"updated_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "country_code"?: string,"created_at"?: string,"id"?: string,"name": string,"timezone"?: string,"type": Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
+                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name": string,"timezone"?: string,"type": Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
                   }
                   Update: {
-                    "country_code"?: string,"created_at"?: string,"id"?: string,"name"?: string,"timezone"?: string,"type"?: Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
+                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name"?: string,"timezone"?: string,"type"?: Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
                   }
                   Relationships: [
                     
@@ -373,16 +557,62 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"units": {
+                },"tenant_contacts": {
                   Row: {
-                    "asking_rent_kobo": number | null,"bathrooms": number | null,"bedrooms": number | null,"contracted_rent_kobo": number | null,"created_at": string,"facilities": (string)[],"floor_area_sqm": number | null,"id": string,"label": string,"notes": string | null,"organisation_id": string,"property_id": string,"reference": string | null,"status": Database["public"]['Enums']["unit_status"],"unit_type": Database["public"]['Enums']["unit_type"],"updated_at": string | null
+                    "address_line": string | null,"created_at": string,"email": string | null,"id": string,"kind": Database["public"]['Enums']["tenant_contact_kind"],"name": string,"notes": string | null,"organisation_id": string,"phone": string | null,"relationship": string | null,"tenant_id": string,"updated_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "asking_rent_kobo"?: number | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"contracted_rent_kobo"?: number | null,"created_at"?: string,"facilities"?: (string)[],"floor_area_sqm"?: number | null,"id"?: string,"label": string,"notes"?: string | null,"organisation_id": string,"property_id": string,"reference"?: string | null,"status"?: Database["public"]['Enums']["unit_status"],"unit_type": Database["public"]['Enums']["unit_type"],"updated_at"?: string | null
+                    "address_line"?: string | null,"created_at"?: string,"email"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["tenant_contact_kind"],"name": string,"notes"?: string | null,"organisation_id": string,"phone"?: string | null,"relationship"?: string | null,"tenant_id": string,"updated_at"?: string | null
                   }
                   Update: {
-                    "asking_rent_kobo"?: number | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"contracted_rent_kobo"?: number | null,"created_at"?: string,"facilities"?: (string)[],"floor_area_sqm"?: number | null,"id"?: string,"label"?: string,"notes"?: string | null,"organisation_id"?: string,"property_id"?: string,"reference"?: string | null,"status"?: Database["public"]['Enums']["unit_status"],"unit_type"?: Database["public"]['Enums']["unit_type"],"updated_at"?: string | null
+                    "address_line"?: string | null,"created_at"?: string,"email"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["tenant_contact_kind"],"name"?: string,"notes"?: string | null,"organisation_id"?: string,"phone"?: string | null,"relationship"?: string | null,"tenant_id"?: string,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenant_contacts_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tenant_contacts_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"tenants": {
+                  Row: {
+                    "business_registration": string | null,"created_at": string,"date_of_birth": string | null,"display_name": string,"email": string | null,"employer_name": string | null,"id": string,"kind": Database["public"]['Enums']["tenant_kind"],"notes": string | null,"occupation": string | null,"organisation_id": string,"phone": string | null,"preferred_channel": Database["public"]['Enums']["contact_channel"],"updated_at": string | null,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_registration"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"display_name": string,"email"?: string | null,"employer_name"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["tenant_kind"],"notes"?: string | null,"occupation"?: string | null,"organisation_id": string,"phone"?: string | null,"preferred_channel"?: Database["public"]['Enums']["contact_channel"],"updated_at"?: string | null,"user_id"?: string | null
+                  }
+                  Update: {
+                    "business_registration"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"display_name"?: string,"email"?: string | null,"employer_name"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["tenant_kind"],"notes"?: string | null,"occupation"?: string | null,"organisation_id"?: string,"phone"?: string | null,"preferred_channel"?: Database["public"]['Enums']["contact_channel"],"updated_at"?: string | null,"user_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tenants_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"units": {
+                  Row: {
+                    "asking_rent_kobo": number | null,"bathrooms": number | null,"bedrooms": number | null,"created_at": string,"facilities": (string)[],"floor_area_sqm": number | null,"id": string,"label": string,"notes": string | null,"organisation_id": string,"property_id": string,"reference": string | null,"status": Database["public"]['Enums']["unit_status"],"unit_type": Database["public"]['Enums']["unit_type"],"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "asking_rent_kobo"?: number | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"created_at"?: string,"facilities"?: (string)[],"floor_area_sqm"?: number | null,"id"?: string,"label": string,"notes"?: string | null,"organisation_id": string,"property_id": string,"reference"?: string | null,"status"?: Database["public"]['Enums']["unit_status"],"unit_type": Database["public"]['Enums']["unit_type"],"updated_at"?: string | null
+                  }
+                  Update: {
+                    "asking_rent_kobo"?: number | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"created_at"?: string,"facilities"?: (string)[],"floor_area_sqm"?: number | null,"id"?: string,"label"?: string,"notes"?: string | null,"organisation_id"?: string,"property_id"?: string,"reference"?: string | null,"status"?: Database["public"]['Enums']["unit_status"],"unit_type"?: Database["public"]['Enums']["unit_type"],"updated_at"?: string | null
                   }
                   Relationships: [
                     {
@@ -416,7 +646,39 @@ isOneToOne: false
                 }
           }
           Views: {
-            "pg_all_foreign_keys": {
+            "lease_overview": {
+                  Row: {
+                    "alert_threshold_days": number | null,"days_to_expiry": number | null,"display_status": string | null,"ends_on": string,"has_renewal": boolean | null,"id": string,"organisation_id": string,"reference": string | null,"renewed_from_lease_id": string | null,"rent_frequency": Database["public"]['Enums']["rent_frequency"],"rent_kobo": number,"starts_on": string,"status": Database["public"]['Enums']["lease_status"],"terminated_on": string | null,"unit_id": string
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "leases_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_renewed_from_lease_id_fkey"
+      columns: ["renewed_from_lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_renewed_from_lease_id_fkey"
+      columns: ["renewed_from_lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "leases_unit_id_fkey"
+      columns: ["unit_id"]
+isOneToOne: false
+      referencedRelation: "units"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"pg_all_foreign_keys": {
                   Row: {
                     "fk_columns": (unknown)[] | null,"fk_constraint_name": unknown,"fk_schema_name": unknown,"fk_table_name": unknown,"fk_table_oid": unknown,"is_deferrable": boolean | null,"is_deferred": boolean | null,"match_type": string | null,"on_delete": string | null,"on_update": string | null,"pk_columns": (unknown)[] | null,"pk_constraint_name": unknown,"pk_index_name": unknown,"pk_schema_name": unknown,"pk_table_name": unknown,"pk_table_oid": unknown
                   }
@@ -501,6 +763,9 @@ isOneToOne: false
                            } |
 { Args: { "column_name": unknown,"description"?: string,"table_name": unknown }; Returns: string
                            },
+"create_lease_with_tenant":
+{ Args: { "activate"?: boolean,"deposit_amount_kobo"?: number,"deposit_custodian"?: Database["public"]['Enums']["deposit_custodian"],"lease_ends_on": string,"lease_reference"?: string,"lease_rent_frequency"?: Database["public"]['Enums']["rent_frequency"],"lease_rent_kobo": number,"lease_starts_on": string,"target_organisation_id": string,"target_tenant_id": string,"target_unit_id": string }; Returns: string
+                           },
 "create_organisation_with_owner":
 { Args: { "organisation_name": string,"organisation_type"?: Database["public"]['Enums']["organisation_type"],"owner_full_name"?: string }; Returns: string
                            },
@@ -569,6 +834,9 @@ isOneToOne: false
 "pgtap_version":
 { Args: Record<PropertyKey, never>; Returns: number
                            },
+"renew_lease":
+{ Args: { "carry_deposit"?: boolean,"new_ends_on": string,"new_rent_kobo"?: number,"source_lease_id": string }; Returns: string
+                           },
 "runtests":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            } |
@@ -601,7 +869,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other"
+            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other"
           }
           CompositeTypes: {
             "_time_trial_type": {
@@ -735,7 +1003,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"]
+            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"]
           }
         },"storage": {
           Enums: {
