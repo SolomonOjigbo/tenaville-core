@@ -678,72 +678,11 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"pg_all_foreign_keys": {
-                  Row: {
-                    "fk_columns": (unknown)[] | null,"fk_constraint_name": unknown,"fk_schema_name": unknown,"fk_table_name": unknown,"fk_table_oid": unknown,"is_deferrable": boolean | null,"is_deferred": boolean | null,"match_type": string | null,"on_delete": string | null,"on_update": string | null,"pk_columns": (unknown)[] | null,"pk_constraint_name": unknown,"pk_index_name": unknown,"pk_schema_name": unknown,"pk_table_name": unknown,"pk_table_oid": unknown
-                  }
-                  ComputedFields: never
-                  Relationships: [
-                    
-                  ]
-                },"tap_funky": {
-                  Row: {
-                    "args": string | null,"is_definer": boolean | null,"is_strict": boolean | null,"is_visible": boolean | null,"kind": unknown,"langoid": unknown,"name": unknown,"oid": unknown,"owner": unknown,"returns": string | null,"returns_set": boolean | null,"schema": unknown,"volatility": string | null
-                  }
-                  ComputedFields: never
-                  Relationships: [
-                    
-                  ]
                 }
           }
           Functions: {
-            "_cleanup":
-{ Args: Record<PropertyKey, never>; Returns: boolean
-                           },
-"_contract_on":
-{ Args: { "": string }; Returns: unknown
-                           },
-"_currtest":
-{ Args: Record<PropertyKey, never>; Returns: number
-                           },
-"_db_privs":
-{ Args: Record<PropertyKey, never>; Returns: (unknown)[]
-                           },
-"_extensions":
-{ Args: Record<PropertyKey, never>; Returns: unknown[]
-                           },
-"_get":
-{ Args: { "": string }; Returns: number
-                           },
-"_get_latest":
-{ Args: { "": string }; Returns: (number)[]
-                           },
-"_get_note":
-{ Args: { "": string }; Returns: string
-                           },
-"_is_verbose":
-{ Args: Record<PropertyKey, never>; Returns: boolean
-                           },
-"_prokind":
-{ Args: { "p_oid": unknown }; Returns: unknown
-                           },
-"_query":
-{ Args: { "": string }; Returns: string
-                           },
-"_refine_vol":
-{ Args: { "": string }; Returns: string
-                           },
-"_retval":
-{ Args: { "": string }; Returns: string
-                           },
-"_table_privs":
-{ Args: Record<PropertyKey, never>; Returns: (unknown)[]
-                           },
-"_temptypes":
-{ Args: { "": string }; Returns: string
-                           },
-"_todo":
-{ Args: Record<PropertyKey, never>; Returns: string
+            "accept_invitation":
+{ Args: { "target_organisation_id": string }; Returns: undefined
                            },
 "apply_property_import":
 { Args: { "target_batch_id": string }; Returns: {
@@ -753,128 +692,21 @@ isOneToOne: false
 "change_membership_role":
 { Args: { "change_reason": string,"new_role": Database["public"]['Enums']["app_role"],"target_membership_id": string }; Returns: undefined
                            },
-"col_is_null":
-{ Args: { "column_name": unknown,"description"?: string,"schema_name": unknown,"table_name": unknown }; Returns: string
-                           } |
-{ Args: { "column_name": unknown,"description"?: string,"table_name": unknown }; Returns: string
-                           },
-"col_not_null":
-{ Args: { "column_name": unknown,"description"?: string,"schema_name": unknown,"table_name": unknown }; Returns: string
-                           } |
-{ Args: { "column_name": unknown,"description"?: string,"table_name": unknown }; Returns: string
-                           },
 "create_lease_with_tenant":
 { Args: { "activate"?: boolean,"deposit_amount_kobo"?: number,"deposit_custodian"?: Database["public"]['Enums']["deposit_custodian"],"lease_ends_on": string,"lease_reference"?: string,"lease_rent_frequency"?: Database["public"]['Enums']["rent_frequency"],"lease_rent_kobo": number,"lease_starts_on": string,"target_organisation_id": string,"target_tenant_id": string,"target_unit_id": string }; Returns: string
                            },
 "create_organisation_with_owner":
 { Args: { "organisation_name": string,"organisation_type"?: Database["public"]['Enums']["organisation_type"],"owner_full_name"?: string }; Returns: string
                            },
-"diag":
-{ Args: { "msg": unknown }; Returns: { error: true } & "Could not choose the best candidate function between: public.diag(msg => text), public.diag(msg => anyelement). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-                           } |
-{ Args: { "msg": string }; Returns: { error: true } & "Could not choose the best candidate function between: public.diag(msg => text), public.diag(msg => anyelement). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-                           },
-"diag_test_name":
-{ Args: { "": string }; Returns: string
-                           },
-"do_tap":
-{ Args: Record<PropertyKey, never>; Returns: string[]
-                           } |
-{ Args: { "": string }; Returns: string[]
-                           },
-"fail":
-{ Args: Record<PropertyKey, never>; Returns: string
-                           } |
-{ Args: { "": string }; Returns: string
-                           },
-"findfuncs":
-{ Args: { "": string }; Returns: (string)[]
-                           },
-"finish":
-{ Args: { "exception_on_failure"?: boolean }; Returns: string[]
-                           },
-"format_type_string":
-{ Args: { "": string }; Returns: string
-                           },
-"has_unique":
-{ Args: { "": string }; Returns: string
-                           },
-"in_todo":
-{ Args: Record<PropertyKey, never>; Returns: boolean
-                           },
-"is_empty":
-{ Args: { "": string }; Returns: string
-                           },
-"isnt_empty":
-{ Args: { "": string }; Returns: string
-                           },
-"lives_ok":
-{ Args: { "": string }; Returns: string
-                           },
-"no_plan":
-{ Args: Record<PropertyKey, never>; Returns: boolean[]
-                           },
-"num_failed":
-{ Args: Record<PropertyKey, never>; Returns: number
-                           },
-"os_name":
-{ Args: Record<PropertyKey, never>; Returns: string
-                           },
-"pass":
-{ Args: Record<PropertyKey, never>; Returns: string
-                           } |
-{ Args: { "": string }; Returns: string
-                           },
-"pg_version":
-{ Args: Record<PropertyKey, never>; Returns: string
-                           },
-"pg_version_num":
-{ Args: Record<PropertyKey, never>; Returns: number
-                           },
-"pgtap_version":
-{ Args: Record<PropertyKey, never>; Returns: number
-                           },
 "renew_lease":
 { Args: { "carry_deposit"?: boolean,"new_ends_on": string,"new_rent_kobo"?: number,"source_lease_id": string }; Returns: string
-                           },
-"runtests":
-{ Args: Record<PropertyKey, never>; Returns: string[]
-                           } |
-{ Args: { "": string }; Returns: string[]
-                           },
-"skip":
-{ Args: { "": string }; Returns: string
-                           } |
-{ Args: { "how_many": number,"why": string }; Returns: string
-                           },
-"throws_ok":
-{ Args: { "": string }; Returns: string
-                           },
-"todo":
-{ Args: { "how_many": number }; Returns: boolean[]
-                           } |
-{ Args: { "how_many": number,"why": string }; Returns: boolean[]
-                           } |
-{ Args: { "why": string }; Returns: boolean[]
-                           } |
-{ Args: { "how_many": number,"why": string }; Returns: boolean[]
-                           },
-"todo_end":
-{ Args: Record<PropertyKey, never>; Returns: boolean[]
-                           },
-"todo_start":
-{ Args: Record<PropertyKey, never>; Returns: boolean[]
-                           } |
-{ Args: { "": string }; Returns: boolean[]
                            }
           }
           Enums: {
             "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other"
           }
           CompositeTypes: {
-            "_time_trial_type": {
-                        "a_time": number | null
-                      }
+            [_ in never]: never
           }
         },"storage": {
           Tables: {

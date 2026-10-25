@@ -4,9 +4,22 @@
 **Source:** Tenaville PRD v3.0 (all P0 requirements form R1; all P1 requirements form R2)
 **Team model:** One developer working with AI coding agents
 **Sprint length:** 2 weeks
-**Plan size:** 23 sprints, 142 tickets, 690 story points (77 tickets and 378 points in R1; 65 tickets and 312 points in R2)
+**Plan size:** 23 sprints, 143 tickets, 695 story points (142 tickets and 690 points as originally supplied; see Amendments) (77 tickets and 378 points in R1; 65 tickets and 312 points in R2)
 
 ---
+
+## 0. Amendments
+
+Changes made to this plan after it was supplied. The CSV and
+`backlog.json` carry them; this section records why.
+
+| Ticket | Sprint | Points | Why                                                                                                                                                                                                                                                               |
+| ------ | ------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TV-143 | 1      | 5      | ORG-2 requires staff invitations, and no ticket covered that clause. TV-003's acceptance criteria stop at landing as Owner, and TV-004 is roles and scoped access. An agency with one owner and no way to add a property manager cannot operate, and ORG-2 is P0. |
+
+The coverage check in `tools/check-backlog.mjs` proves every P0 and P1
+requirement _id_ appears on a ticket. It cannot prove that every _clause_ of a
+requirement is in some ticket's scope, which is how this one was missed.
 
 ## 1. Planning assumptions
 

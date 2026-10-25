@@ -73,10 +73,29 @@ password after the form post.
   rules — those produce `Password1!`. Obvious words and the user's own email are
   rejected by name.
 
-Not built: phone verification and **staff invitations**, both ORG-2 clauses.
-Invitations have no ticket anywhere in the backlog, which is recorded in
-docs/requirements/backlog-mapping.md — an agency with one owner and no way to
-add a property manager cannot operate.
+## Staff invitations (TV-143)
+
+An owner or admin invites by email and role; the invitee gets a link, accepts,
+and lands in the organisation with that role. Pending invitations can be
+withdrawn. `/settings/people` is the screen.
+
+- **Only an owner can invite an owner.** `change_membership_role` already
+  enforced that for _changes_; a database trigger now enforces it at insert
+  too, or an admin could simply invite a new owner instead.
+- **Accepting is a narrow `security definer` function**, not a widened policy.
+  Policies choose rows, not columns: one permissive enough to let an invitee
+  accept would also let them change the role they were offered.
+- **An invitee sees the inviting organisation's name and nothing else.**
+  `app.current_organisation_ids()` counts only active memberships by design, so
+  a separate policy grants exactly that one fact — otherwise the acceptance
+  screen could not say what they were joining.
+- **The service-role key is used for one step only**: creating the account and
+  sending the link, which no anon-key client can do. Authorisation happens
+  through the caller's own client first, so an unauthorised request never
+  reaches the admin API.
+
+Phone verification is the remaining ORG-2 clause, which the requirement's
+"and/or" permits.
 
 Also not built: private file storage (TV-014), so photos cannot be served, and
 the screens for each area.

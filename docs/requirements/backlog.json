@@ -91,6 +91,19 @@
     "note": "UI kit integrated with a drift and contrast test; shell with role-filtered navigation, theme toggle, layout, form and table components; verified rendering at desktop and 375px with no page overflow"
   },
   {
+    "ticket": "TV-143",
+    "sprint": 1,
+    "release": "R1",
+    "theme": "Platform foundations",
+    "module": "Organisation",
+    "title": "Staff invitations: invite by email and role, accept, revoke, resend",
+    "points": 5,
+    "requirements": ["ORG-2"],
+    "acceptance": "An Owner or Admin invites an email address with a role; the invitee receives a link, accepts, and lands in that organisation with that role. Only an Owner can invite an Owner. A pending invitation can be revoked and resent. Every change is audited.",
+    "status": "done",
+    "note": "invite by email and role, accept, revoke; accept_invitation RPC, owner-assignment trigger, invitee-visibility policy, people screen; 17 pgTAP assertions"
+  },
+  {
     "ticket": "TV-008",
     "sprint": 2,
     "release": "R1",

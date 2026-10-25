@@ -28,6 +28,21 @@ export const inviteMemberSchema = z.object({
   branchId: z.string().uuid().optional(),
 });
 
+export const revokeInvitationSchema = z.object({
+  membershipId: z.string().uuid(),
+  // Revoking takes away access somebody was offered, so the trail says why
+  // (PRD §10.7).
+  reason: z.string().trim().min(3, 'Give a reason for revoking the invitation').max(500),
+});
+
+export type RevokeInvitationInput = z.infer<typeof revokeInvitationSchema>;
+
+export const acceptInvitationSchema = z.object({
+  organisationId: z.string().uuid(),
+});
+
+export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;
+
 export type InviteMemberInput = z.infer<typeof inviteMemberSchema>;
 
 export const changeMemberRoleSchema = z.object({

@@ -6,6 +6,13 @@
 export { createOrganisation } from './create-organisation';
 export { changeMemberRole } from './change-member-role';
 export { resolveAccess, type Access } from './resolve-access';
+export {
+  inviteMember,
+  acceptInvitation,
+  revokeInvitation,
+  listPendingInvitations,
+  type PendingInvitation,
+} from './invitations';
 
 export {
   can,
@@ -33,10 +40,14 @@ export {
   inviteMemberSchema,
   changeMemberRoleSchema,
   revokeSessionSchema,
+  revokeInvitationSchema,
+  acceptInvitationSchema,
   appRoleSchema,
   organisationTypeSchema,
   type CreateOrganisationInput,
   type InviteMemberInput,
   type ChangeMemberRoleInput,
   type RevokeSessionInput,
+  type RevokeInvitationInput,
+  type AcceptInvitationInput,
 } from '../schema/index';
