@@ -116,7 +116,7 @@ jobs:
           exit "$failed"
 
   traceability:
-    name: PRD requirement traceability
+    name: PRD requirements and sprint backlog
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -124,3 +124,4 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: node tools/check-traceability.mjs
+      - run: node tools/check-backlog.mjs

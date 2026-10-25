@@ -2,15 +2,20 @@
   "name": "@tenaville/ui",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared design tokens and primitives for the web app. React Native-safe tokens are exported separately for the mobile app.",
+  "description": "Tenaville design tokens and primitives. tokens.json is the source of truth; the CSS variables and React Native themes are checked against it.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./tokens": "./src/tokens.ts"
+    "./tokens": "./src/tokens.ts",
+    "./tokens.css": "./src/tokens/tokens.css",
+    "./tokens.json": "./src/tokens/tokens.json",
+    "./native": "./src/native/theme.ts",
+    "./tailwind": "./tailwind/tailwind.preset.cjs"
   },
   "scripts": {
     "lint": "eslint src --no-error-on-unmatched-pattern",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
     "@tenaville/config": "workspace:*"

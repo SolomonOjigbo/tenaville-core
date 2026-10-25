@@ -24,6 +24,27 @@ PRD §18, tracked to the work each one blocks. Several block R1 implementation, 
 | 18  | Which mobile OS versions are supported at launch?                                                                 | **Blocks R1** step 7 (MOB-9)                                                                                                                 | Eng                      |
 | 19  | Which product name is final, after trademark, domain and CAC checks?                                              | Any public use                                                                                                                               | Founder                  |
 
+## Decision gates by sprint
+
+From the [sprint backlog](../requirements/sprint-backlog.md) §5. Each must be resolved before the
+sprint that needs it starts — this is the operative schedule for the questions above.
+
+| Before sprint | Decision needed                                                             | Blocks                             |
+| ------------- | --------------------------------------------------------------------------- | ---------------------------------- |
+| 1             | Technology stack, hosting and domain; start the name, domain and CAC checks | everything                         |
+| 4             | Receipt numbering format (prefix, branch, year) agreed with pilot agencies  | TV-024 receipts                    |
+| 5             | How caution deposits are held and shown, and the commission basis           | TV-029 deposits, TV-030 commission |
+| 7             | WhatsApp, SMS and email providers chosen, with a messaging budget           | messaging tickets                  |
+| 10            | Minimum supported iOS and Android versions                                  | mobile tickets                     |
+| 14            | Payment partner shortlisted and the settlement model decided                | payment automation                 |
+| 18            | Identity-verification approach and legal basis                              | screening tickets                  |
+| 19            | Launch-state legal defaults for notices, late fees and rent review          | notices, late fees, rent review    |
+
+Sprint 1 and Sprint 4 gates are overdue relative to the work already done: Sprints 1 to 3 were built
+without the stack and hosting decision being recorded anywhere, and Sprint 4 cannot finish without the
+receipt numbering format. The rounding rule is not in the backlog's list but blocks the same sprint —
+see the engineering decisions below.
+
 ## Engineering decisions still open
 
 Not in PRD §18, but needed before the work they touch:

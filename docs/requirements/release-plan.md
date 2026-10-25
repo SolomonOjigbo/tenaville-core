@@ -2,6 +2,16 @@
 
 From PRD §6 and §16.1. Priority maps to release: **P0 → R1**, **P1 → R2**, **P2 → R3**.
 
+> **The [sprint backlog](sprint-backlog.md) is the planning unit.** 142 tickets, 690 story points,
+> 23 two-week sprints, with every P0 and P1 requirement covered by at least one ticket. This document
+> keeps the §16.1 build order, which the sprints follow — it explains _why_ the order is what it is,
+> while the backlog says what to pick up next. [backlog-mapping.md](backlog-mapping.md) tracks what is
+> built, ticket by ticket.
+>
+> Where the two disagree, the backlog decides sequencing and the PRD decides scope. The known
+> divergences are listed in the mapping document; the one that matters most is that charge generation
+> (RENT-1, TV-018) sits in Sprint 3 rather than the money sprint.
+
 Counts below are generated from the PRD — see [traceability](traceability.md).
 
 | Release                               | Theme                        | Requirements |
@@ -16,19 +26,19 @@ Features ahead of their release sit behind the `FEATURE_*` flags in `.env.exampl
 
 In PRD §16.1 order. Each step names the module directory that owns it.
 
-| #   | Step                                                                                                | Owner                                               | Key requirements                                         |
-| --- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------- |
-| 1   | Foundations: organisation, auth, roles, audit, sessions, subscription shell, isolation tests        | `core/modules/org`, `core/modules/billing`          | ORG-1…5, ORG-8, ORG-9, BILL-1…4                          |
-| 2   | Portfolio: landlords, mandates, properties, units, spreadsheet import                               | `core/modules/landlords`, `core/modules/properties` | OWN-1…3, PROP-1…5, PROP-9                                |
-| 3   | Tenancy: tenants, direct lease creation, rent schedules, renewals, expiry alerts, deposit lifecycle | `core/modules/leases`                               | LEASE-1…6, LEASE-11…13                                   |
-| 4   | Money: charges, payment records, allocation, receipts with numbering, reversals, cash-up, arrears   | `core/modules/rent`                                 | RENT-1…6, RENT-12…16                                     |
-| 5   | Migration: tenant and lease import, opening balances, dry-run and rollback                          | `core/modules/migration`                            | MIG-1…3, MIG-5                                           |
-| 6   | Landlord ledger: commission, statements with approval and revisions, remittances, exports           | `core/modules/ledger`                               | LEDGER-1…5, LEDGER-8, LEDGER-9                           |
-| 7   | Staff mobile app: payments, tenants and arrears, maintenance logging, tasks, offline sync           | `apps/mobile`                                       | MOB-1, MOB-3…8                                           |
-| 8   | Maintenance foundation: requests, assignment, statuses, attachments, vendors, costs                 | `core/modules/maintenance`                          | MAINT-1…6, MAINT-10…12, MAINT-16                         |
-| 9   | Tenant and landlord web access: lease summary, receipts, documents, repair requests, statements     | `core/modules/tenant-portal`, `apps/web`            | TENANT-1, TENANT-2, TENANT-4, TENANT-6, TENANT-14, OWN-3 |
-| 10  | Communications and tasks: templates, reminders, provider abstraction, consent                       | `core/modules/comms`, `adapters/messaging`          | COMMS-1…4, COMMS-6, COMMS-8                              |
-| 11  | Hardening and pilot: security testing, backup/restore drills, performance, onboarding               | —                                                   | §12, §16.2                                               |
+| #   | Step                                                                                                | Sprint | Owner                                               | Key requirements                                         |
+| --- | --------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------- | -------------------------------------------------------- |
+| 1   | Foundations: organisation, auth, roles, audit, sessions, subscription shell, isolation tests        | 1      | `core/modules/org`, `core/modules/billing`          | ORG-1…5, ORG-8, ORG-9, BILL-1…4                          |
+| 2   | Portfolio: landlords, mandates, properties, units, spreadsheet import                               | 2      | `core/modules/landlords`, `core/modules/properties` | OWN-1…3, PROP-1…5, PROP-9                                |
+| 3   | Tenancy: tenants, direct lease creation, rent schedules, renewals, expiry alerts, deposit lifecycle | 3      | `core/modules/leases`                               | LEASE-1…6, LEASE-11…13                                   |
+| 4   | Money: charges, payment records, allocation, receipts with numbering, reversals, cash-up, arrears   | 4      | `core/modules/rent`                                 | RENT-1…6, RENT-12…16                                     |
+| 5   | Migration: tenant and lease import, opening balances, dry-run and rollback                          | 6      | `core/modules/migration`                            | MIG-1…3, MIG-5                                           |
+| 6   | Landlord ledger: commission, statements with approval and revisions, remittances, exports           | 5-6    | `core/modules/ledger`                               | LEDGER-1…5, LEDGER-8, LEDGER-9                           |
+| 7   | Staff mobile app: payments, tenants and arrears, maintenance logging, tasks, offline sync           | 10-11  | `apps/mobile`                                       | MOB-1, MOB-3…8                                           |
+| 8   | Maintenance foundation: requests, assignment, statuses, attachments, vendors, costs                 | 8      | `core/modules/maintenance`                          | MAINT-1…6, MAINT-10…12, MAINT-16                         |
+| 9   | Tenant and landlord web access: lease summary, receipts, documents, repair requests, statements     | 9      | `core/modules/tenant-portal`, `apps/web`            | TENANT-1, TENANT-2, TENANT-4, TENANT-6, TENANT-14, OWN-3 |
+| 10  | Communications and tasks: templates, reminders, provider abstraction, consent                       | 7      | `core/modules/comms`, `adapters/messaging`          | COMMS-1…4, COMMS-6, COMMS-8                              |
+| 11  | Hardening and pilot: security testing, backup/restore drills, performance, onboarding               | 12-13  | —                                                   | §12, §16.2                                               |
 
 Documents and core reports (`DOC-1…3`, `DOC-7`, `AN-1`, `AN-13`) are cross-cutting P0 work delivered alongside the steps that need them.
 

@@ -4,9 +4,39 @@ Design tokens and shared primitives.
 
 ```
 src/
-├── tokens.ts   colour, spacing, type scale — platform-neutral values
-└── index.ts    web primitives (React DOM)
+├── tokens/tokens.json   the source of truth, from the Tenaville UI kit
+├── tokens/tokens.css    CSS variables as R G B channels: light, dark, system
+├── tokens.ts            typed, platform-neutral re-export
+├── native/theme.ts      React Native light and dark themes (imports nothing)
+└── index.ts             web primitives, added as screens are built
+
+tailwind/tailwind.preset.cjs   Tailwind 3.4+ preset keyed to the CSS variables
 ```
+
+## Three representations, one palette
+
+The kit ships the same colours three times: `tokens.json`, the CSS variables the
+web uses, and the React Native themes. They will drift, so
+`src/__tests__/tokens.test.ts` asserts all three agree on every semantic role in
+both schemes. It also checks that the spacing, radius and touch-target scales
+match, and that money uses tabular figures — proportional digits make a column
+of naira amounts impossible to scan, and a rent roll is read as a column.
+
+Colours are stored as space-separated R G B channels rather than hex so
+Tailwind's opacity modifiers resolve against them: `bg-primary/10` works off
+`--tv-primary`. `cssColor('primary', 0.1)` builds the same reference in
+TypeScript.
+
+## Consuming it
+
+Web: import `@tenaville/ui/tokens.css` once in the root layout, add
+`presets: [require('@tenaville/ui/tailwind')]` to the Tailwind config, and set
+`data-theme="dark"` on `<html>` for an explicit dark choice. Omitting the
+attribute follows the device.
+
+Mobile: `useTenavilleTheme()` in `apps/mobile/src/lib/theme.ts`. The themes
+themselves live here and import nothing from react-native, which is what lets
+the drift test read them from node and keeps react-native out of the web build.
 
 ## Split by platform
 

@@ -7,7 +7,9 @@
 | [PRD v3](prd/Tenaville_Property_Management_PRD_v3.md) | You need the authoritative scope, requirement wording or rationale           |
 | [CLAUDE.md](../CLAUDE.md)                             | Before writing any code — the invariants that are expensive to discover late |
 | [Architecture overview](architecture/overview.md)     | You are orienting in the codebase                                            |
-| [Release plan](requirements/release-plan.md)          | You are deciding what to build next                                          |
+| [Sprint backlog](requirements/sprint-backlog.md)      | You are deciding what to pick up next                                        |
+| [Backlog mapping](requirements/backlog-mapping.md)    | You want to know what is actually built                                      |
+| [Release plan](requirements/release-plan.md)          | You want the build order and why it is that order                            |
 | [Traceability](requirements/traceability.md)          | You are implementing or reviewing a requirement                              |
 
 ## Architecture
@@ -20,9 +22,11 @@
 
 ## Requirements
 
+- [Sprint backlog](requirements/sprint-backlog.md) — 142 tickets, 690 points, 23 sprints, covering every P0 and P1 requirement
+- [Backlog mapping](requirements/backlog-mapping.md) — ticket-by-ticket implementation status, and where the plans diverge
 - [Traceability matrix](requirements/traceability.md) — all 194 PRD §8 requirements, their owner module and status
-- [requirements.json](requirements/requirements.json) — machine-readable; `pnpm docs:reqs` checks it against the PRD
-- [Release plan](requirements/release-plan.md) — build order, exit criteria, cut order, pilot targets
+- [requirements.json](requirements/requirements.json) and [backlog.json](requirements/backlog.json) — machine-readable; `pnpm docs:reqs` checks both against the PRD
+- [Release plan](requirements/release-plan.md) — build order and rationale, exit criteria, cut order, pilot targets
 
 ## Data model
 
