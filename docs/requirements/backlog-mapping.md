@@ -114,6 +114,110 @@ was a human reading the requirement text beside the ticket list; the tooling
 could not have found it. Worth repeating for other multi-clause requirements —
 RENT-13, LEDGER-8 and MAINT-3 each pack several obligations into one line.
 
+## Clause-level review
+
+Requirements that pack several obligations into one line, read against the
+tickets that claim them. ORG-2 hid a missing P0 feature this way; these three
+were the next most likely to.
+
+### RENT-13 — receipts (TV-024, Sprint 4)
+
+> Issue receipts with unique, sequential numbers per organisation (per branch
+> if configured). Voided or reversed receipts keep their numbers, and numbers
+> are never reused.
+
+| Clause                                | In scope?                              |
+| ------------------------------------- | -------------------------------------- |
+| Issue receipts                        | yes                                    |
+| Unique numbers                        | yes — AC tests two concurrent payments |
+| **Sequential, with no gaps**          | **no**                                 |
+| Per organisation                      | yes                                    |
+| Per branch if configured              | yes                                    |
+| Voided receipts keep their number     | yes                                    |
+| _Reversed_ receipts keep their number | ambiguous                              |
+| Numbers never reused                  | yes                                    |
+
+**Gaplessness is a launch exit criterion that no acceptance criterion tests.**
+§16.2 requires "no gaps, duplicates or reuse in test and pilot data"; TV-024's
+AC covers duplicates and reuse only.
+
+This matters because the obvious implementation fails it. A Postgres sequence
+is non-transactional by design: `nextval` is not rolled back, so every failed
+payment transaction burns a number and leaves a gap. An implementation can pass
+TV-024's AC and fail §16.2 on the pilot's first failed save. A gapless sequence
+needs a counter row locked within the payment transaction — slower, and
+deliberately so.
+
+Two related points:
+
+- **Voided versus reversed.** TV-024 says voided; RENT-4 (TV-025) covers
+  reversals but its AC is about the payment entry, not the receipt number. If
+  an agency voids and reverses by different routes, only one is tested.
+- **Offline numbering shares the sequence.** MOB-4 (TV-064, Sprint 11) has the
+  server assign official numbers on sync. Gaplessness has to hold across both
+  paths, which neither ticket says. Sprint 4 should settle the mechanism so
+  Sprint 11 inherits it.
+
+### LEDGER-8 — statements (TV-032, Sprint 6)
+
+> Route statements through draft, reviewed and issued states. Issued statements
+> are immutable; corrections are issued as a numbered revision that references
+> the original.
+
+Every clause is in scope, and the AC tests each: the three states, immutability
+of an issued statement, a numbered revision, and the link back to the original.
+**No gap.**
+
+Two questions the requirement does not answer, so they are not omissions from
+the ticket but still need deciding before Sprint 6:
+
+- Who may move a statement from reviewed to issued? LEDGER-6 (approval and
+  batching) is R2, so R1 has a review state with no stated authority.
+- Does a revision itself pass through draft and reviewed, or is it issued
+  directly?
+
+### MAINT-3 — maintenance statuses (TV-045, Sprint 8)
+
+> Track core statuses Submitted, Acknowledged, Assigned, In Progress, On Hold,
+> Completed, Rejected and Closed. When quotation and approval workflows are
+> enabled (P1), add Triage, Awaiting Quote, Awaiting Landlord Approval and
+> Approved. Administrators may configure allowed transitions.
+
+| Clause                                                      | In scope?    |
+| ----------------------------------------------------------- | ------------ |
+| Eight core statuses                                         | yes — TV-045 |
+| **Four more when quote and approval workflows are enabled** | **no**       |
+| **Administrators configure allowed transitions**            | **no**       |
+
+**The four conditional statuses are in no ticket.** TV-045 is R1 and covers the
+core set. TV-117 (quotations) and TV-118 (approvals) are R2 and describe the
+workflows without adding the statuses they imply — a job cannot wait on a quote
+if there is no Awaiting Quote.
+
+This also slipped past the backlog's own rule that no R1 ticket may depend on a
+P1 requirement: the P1 clause is _inside_ a P0 requirement, so nothing crossed a
+ticket boundary to be caught.
+
+**Administrator-configured transitions are enforcement, not configuration.**
+TV-045's AC says "only allowed transitions are accepted", which is the engine
+obeying a rule, not an administrator setting one. ORG-7 (TV-134, Sprint 22)
+covers "workflow templates" and might be intended to carry it, but its AC names
+limits and templates, not maintenance transitions — and Sprint 22 is long after
+maintenance ships in Sprint 8.
+
+### What to do
+
+Three tickets, none urgent this week but all before their sprint:
+
+| Need                                                                                           | Sprint it blocks |
+| ---------------------------------------------------------------------------------------------- | ---------------- |
+| Gapless receipt numbering, with a test for gaps, and the mechanism shared with offline sync    | 4                |
+| The four conditional maintenance statuses, attached to TV-117 and TV-118                       | 20               |
+| Administrator-configured maintenance transitions, or an explicit decision that ORG-7 covers it | 8                |
+
+The first is the one to settle now: it changes how receipts are implemented, it
+is an exit criterion, and Sprint 4 is next.
+
 ## Where the backlog and the earlier plan diverge
 
 Four differences. The backlog is right in each case, and its sequencing now stands.
