@@ -191,8 +191,8 @@
     "points": 5,
     "requirements": ["DOC-7"],
     "acceptance": "A file link expires, cannot be guessed, and fails for a user without access to the record.",
-    "status": "todo",
-    "note": "private buckets, signed URLs, image compression and download authorisation not built; property photos and deduction evidence already store paths nothing can serve"
+    "status": "done",
+    "note": "private buckets in config; signed URLs minted only after the owning record passes the caller own RLS; access audited; path convention and browser image compression tested"
   },
   {
     "ticket": "TV-015",

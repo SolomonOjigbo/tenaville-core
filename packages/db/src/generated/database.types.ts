@@ -698,6 +698,9 @@ isOneToOne: false
 "create_organisation_with_owner":
 { Args: { "organisation_name": string,"organisation_type"?: Database["public"]['Enums']["organisation_type"],"owner_full_name"?: string }; Returns: string
                            },
+"record_document_access":
+{ Args: { "entity_id": string,"entity_type": string,"object_bucket": string,"object_path": string,"target_organisation_id": string }; Returns: undefined
+                           },
 "renew_lease":
 { Args: { "carry_deposit"?: boolean,"new_ends_on": string,"new_rent_kobo"?: number,"source_lease_id": string }; Returns: string
                            }

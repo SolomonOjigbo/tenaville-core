@@ -19,15 +19,6 @@
  */
 export const percent = (numerator: number, denominator: number): number | null => {
   if (denominator <= 0) return null;
-
-  /*
-   * Not a monetary value. The money-rounding rule directs rounding into
-   * @tenaville/money; this is a display percentage derived from two counts, and
-   * this is the only place in the codebase that rounds one. The directive below
-   * is on its own line because Prettier reflows prose comments, and a wrapped
-   * one puts the directive on the wrong line.
-   */
-  // eslint-disable-next-line no-restricted-syntax
   return Math.round((numerator / denominator) * 100);
 };
 

@@ -70,10 +70,10 @@ export const daysInMonth = (year: number, month: number): number =>
 /** Add whole months, clamping the day to the target month's length. */
 export const addMonths = (date: Ymd, months: number): Ymd => {
   const total = date.y * 12 + (date.m - 1) + months;
-  // Integer floor division written out, so it is exact for negative month
-  // counts and needs no Math.floor — which the money-rounding lint rule would
-  // otherwise flag here, and a suppression in calendar code would only train
-  // reviewers to skim past that rule where it matters.
+  // Integer floor division written out, because Math.floor rounds toward
+  // negative infinity for negative operands in a way that is easy to misread:
+  // addMonths(date, -7) has to land in the previous year, and this makes that
+  // visible rather than implied.
   const monthIndex = ((total % 12) + 12) % 12;
   const y = (total - monthIndex) / 12;
   const m = monthIndex + 1;

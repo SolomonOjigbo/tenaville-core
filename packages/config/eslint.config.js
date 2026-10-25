@@ -31,8 +31,17 @@ const invariants = {
   'no-restricted-syntax': [
     'error',
     {
+      // Narrowed to expressions that mention money. The original rule flagged
+      // every Math.round/floor/ceil and produced five false positives — two in
+      // calendar arithmetic, one on a percentage, two on pixel dimensions —
+      // and no true ones. A rule suppressed that often stops being read, which
+      // is worse than a narrower rule that is believed.
+      //
+      // The real guard is the type system: Kobo is a branded bigint, and
+      // Math.round(bigint) does not compile. This catches the untyped paths —
+      // a raw column value, a parsed string — where that protection is absent.
       selector:
-        "CallExpression[callee.object.name='Math'][callee.property.name=/^(round|floor|ceil)$/]",
+        "CallExpression[callee.object.name='Math'][callee.property.name=/^(round|floor|ceil)$/] Identifier[name=/kobo|naira|amount|price|rent|commission|fee|balance|arrears/i]",
       message:
         'Rounding a monetary value belongs in @tenaville/money, which applies the documented rule in one place (PRD §10.1, ADR 0003).',
     },

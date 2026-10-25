@@ -37,9 +37,29 @@ port = 54324
 
 [storage]
 enabled = true
-# Documents, receipts, maintenance photos. Buckets are private; access is a
-# short-lived signed URL issued after an authorisation check (PRD DOC-7).
 file_size_limit = "50MiB"
+
+# Buckets are declared here rather than inserted by a migration: they are
+# configuration, and the CLI creates them on `supabase start` and `db reset`.
+#
+# Every bucket is private. There is no public bucket and there must never be
+# one — a public bucket is a guessable URL by definition (DOC-7, PROP-9).
+
+[storage.buckets.documents]
+# Leases, receipts, statements, landlord and tenant paperwork.
+public = false
+file_size_limit = "20MiB"
+allowed_mime_types = ["application/pdf", "image/jpeg", "image/png", "image/webp"]
+objects_path = "./storage/documents"
+
+[storage.buckets.maintenance]
+# Repair photos and deposit-deduction evidence. Larger, because a caretaker
+# photographs a cracked basin on a phone and the compression happens client
+# side (MOB-7, TV-060).
+public = false
+file_size_limit = "25MiB"
+allowed_mime_types = ["image/jpeg", "image/png", "image/webp", "image/heic"]
+objects_path = "./storage/maintenance"
 
 [auth]
 enabled = true

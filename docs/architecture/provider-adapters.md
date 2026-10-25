@@ -52,7 +52,38 @@ Nothing in R1 or R2 may import from this adapter.
 
 ## Storage
 
-Private buckets only. Access is a time-limited signed URL issued after an authorisation check at download time — never a long-lived or guessable URL (DOC-7). Upload validation on type and size, with malware scanning where the provider supports it (DOC-6).
+Private buckets, declared in `supabase/config.toml`. There is no public bucket
+and there must never be one: a public bucket is a guessable URL by definition
+(DOC-7, PROP-9). Type and size limits are bucket configuration; malware
+scanning is DOC-6, in R2.
+
+DOC-7's two obligations are met in different places, which is worth knowing
+before changing any of it:
+
+- **No guessable URL** is configuration — the buckets are private.
+- **Authorisation at download time** is `issueDownloadUrl`, which reads the
+  record a file belongs to through the _caller's own client_ before signing
+  anything. The row-level policies already covered by the pgTAP suite are
+  therefore what decide access, rather than a second permission system that
+  could drift from them.
+- **Storage's own row-level policies** are a second barrier, keyed to the
+  organisation in the first path segment.
+
+One caveat and one gap.
+
+The signed URL is a bearer token. Once minted it works for whoever holds it
+until it expires, so the lifetime is minutes — five by default, one hour at
+most — and minting is the moment authorisation happens. A longer lifetime only
+widens the window in which a forwarded link or a logged referrer is still
+useful to somebody else.
+
+The storage policies are **not covered by the test suite**. `storage.objects`
+is created by the Storage service's own migrations and does not exist in the
+bare Postgres image the harness and CI run, so the policy block is guarded and
+skipped there. They are a second barrier rather than the primary control, and
+the application never hands a storage client to a browser — but if that ever
+changes they become load-bearing, and will need a test environment that can
+exercise them.
 
 ## Identity (R2+)
 

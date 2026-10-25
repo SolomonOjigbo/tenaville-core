@@ -141,6 +141,14 @@ Access to financing data is segregated from ordinary property-management permiss
 
 Report definitions and optional pre-aggregated snapshots. Source-of-truth values stay in operational records (PRD §14). Analytics applies the same organisation and property scoping as the application, including background report generation (AN-13).
 
+## Stored files
+
+Objects live at `<organisation_id>/<entity_type>/<entity_id>/<object_id>-<filename>`. The organisation comes first so a storage policy can enforce tenant isolation on the prefix alone, without joining anything, and `app.storage_organisation_id` reads it back. A path that does not begin with a uuid belongs to no organisation and is reachable by nobody.
+
+Filenames are reduced before storage: directory components and traversal sequences removed, accents folded (so `Olúwaseun` stays `oluwaseun` rather than becoming `olu-waseun`), punctuation collapsed, length capped. The `object_id` prefix means two uploads of the same name never collide.
+
+Document access is audited through `record_document_access`, which derives the actor from `auth.uid()` and refuses an organisation the caller does not belong to — ORG-5 names sensitive document access specifically, and a deposit-deduction photograph is exactly what a dispute asks about later.
+
 ## Key relationships
 
 - A landlord owns one or more properties under a management mandate.
