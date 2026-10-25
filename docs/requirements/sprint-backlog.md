@@ -4,7 +4,7 @@
 **Source:** Tenaville PRD v3.0 (all P0 requirements form R1; all P1 requirements form R2)
 **Team model:** One developer working with AI coding agents
 **Sprint length:** 2 weeks
-**Plan size:** 23 sprints, 143 tickets, 695 story points (142 tickets and 690 points as originally supplied; see Amendments) (77 tickets and 378 points in R1; 65 tickets and 312 points in R2)
+**Plan size:** 23 sprints, 146 tickets, 703 story points (142 tickets and 690 points as originally supplied; see Amendments) (77 tickets and 378 points in R1; 65 tickets and 312 points in R2)
 
 ---
 
@@ -13,13 +13,25 @@
 Changes made to this plan after it was supplied. The CSV and
 `backlog.json` carry them; this section records why.
 
-| Ticket | Sprint | Points | Why                                                                                                                                                                                                                                                               |
-| ------ | ------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TV-143 | 1      | 5      | ORG-2 requires staff invitations, and no ticket covered that clause. TV-003's acceptance criteria stop at landing as Owner, and TV-004 is roles and scoped access. An agency with one owner and no way to add a property manager cannot operate, and ORG-2 is P0. |
+| Ticket | Sprint | Points | Why                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------ | ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TV-143 | 1      | 5      | ORG-2 requires staff invitations, and no ticket covered that clause. TV-003's acceptance criteria stop at landing as Owner, and TV-004 is roles and scoped access. An agency with one owner and no way to add a property manager cannot operate, and ORG-2 is P0.                                                                                                                                                              |
+| TV-144 | 4      | 3      | RENT-13 requires _sequential_ numbers and §16.2 requires no gaps, but TV-024's criteria tested only uniqueness and reuse. The obvious implementation — a Postgres sequence — is non-transactional and leaves a gap on every rolled-back payment, so it would pass TV-024 and fail the exit criterion. Split out because offline sync draws from the same allocator (MOB-4). TV-024's criteria were amended to require no gaps. |
+| TV-145 | 20     | 2      | MAINT-3 adds Triage, Awaiting Quote, Awaiting Landlord Approval and Approved when the quote and approval workflows are enabled. TV-117 and TV-118 build those workflows without the statuses they imply.                                                                                                                                                                                                                       |
+| TV-146 | 8      | 3      | MAINT-3 requires administrators to configure allowed transitions. TV-045 enforces a transition rule; it does not let anyone set one. Whether this is MAINT-3's clause (P0) or ORG-7's workflow templates (P1) is unresolved, and the ticket resolves it.                                                                                                                                                                       |
 
 The coverage check in `tools/check-backlog.mjs` proves every P0 and P1
 requirement _id_ appears on a ticket. It cannot prove that every _clause_ of a
-requirement is in some ticket's scope, which is how this one was missed.
+requirement is in some ticket's scope, which is how all four were missed. The
+review that found the last three is in
+[backlog-mapping.md](backlog-mapping.md).
+
+MAINT-3 shows a second blind spot: a P1 clause inside a P0 requirement. The
+rule that no R1 ticket may depend on a P1 requirement cannot catch it, because
+nothing crosses a ticket boundary.
+
+Sprint totals after these additions are 32, 32 and 33 points — inside the 28 to
+34 range the rest of the plan uses.
 
 ## 1. Planning assumptions
 

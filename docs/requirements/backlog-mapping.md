@@ -205,18 +205,21 @@ covers "workflow templates" and might be intended to carry it, but its AC names
 limits and templates, not maintenance transitions — and Sprint 22 is long after
 maintenance ships in Sprint 8.
 
-### What to do
+### Tickets raised
 
-Three tickets, none urgent this week but all before their sprint:
+| Ticket | Sprint | Points | Covers                                                     |
+| ------ | ------ | ------ | ---------------------------------------------------------- |
+| TV-144 | 4      | 3      | Gapless receipt number allocator, shared with offline sync |
+| TV-145 | 20     | 2      | The four conditional maintenance statuses                  |
+| TV-146 | 8      | 3      | Administrator-configured maintenance transitions           |
 
-| Need                                                                                           | Sprint it blocks |
-| ---------------------------------------------------------------------------------------------- | ---------------- |
-| Gapless receipt numbering, with a test for gaps, and the mechanism shared with offline sync    | 4                |
-| The four conditional maintenance statuses, attached to TV-117 and TV-118                       | 20               |
-| Administrator-configured maintenance transitions, or an explicit decision that ORG-7 covers it | 8                |
+TV-024's acceptance criteria were also amended: they now require the issued
+numbers to contain no gaps, and name TV-144 as where numbers come from. That
+matters more than the new ticket does — a separate ticket can be deferred, an
+acceptance criterion cannot.
 
-The first is the one to settle now: it changes how receipts are implemented, it
-is an exit criterion, and Sprint 4 is next.
+TV-144 is the one to settle before Sprint 4 starts: it decides how receipts are
+implemented, and it is a launch exit criterion rather than a nicety.
 
 ## Where the backlog and the earlier plan diverge
 

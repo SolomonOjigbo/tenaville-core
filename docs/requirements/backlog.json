@@ -320,7 +320,7 @@
     "title": "Receipts: sequential numbering per organisation or branch, PDF, shareable link",
     "points": 8,
     "requirements": ["RENT-13", "DOC-3"],
-    "acceptance": "Two concurrent payments never receive the same number; a voided receipt keeps its number and is never reused.",
+    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD \u00a716.2). Numbers come from the allocator in TV-144.",
     "status": "todo",
     "note": ""
   },
@@ -349,6 +349,19 @@
     "acceptance": "A user's cash-up lists all payments recorded that day grouped by method and totals match the ledger.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-144",
+    "sprint": 4,
+    "release": "R1",
+    "theme": "Money I: payments and receipts",
+    "module": "Money",
+    "title": "Gapless receipt number allocator, shared by online and offline issue",
+    "points": 3,
+    "requirements": ["RENT-13"],
+    "acceptance": "Numbers are allocated with no gaps under concurrency and under rollback: a failed payment transaction consumes no number. A Postgres sequence does not satisfy this, being non-transactional. Offline receipts numbered on sync draw from the same allocator. A test asserts the set of issued numbers is contiguous after a run including failures.",
+    "status": "todo",
+    "note": "added by the clause-level review: this obligation was in no ticket"
   },
   {
     "ticket": "TV-027",
@@ -674,6 +687,19 @@
     "acceptance": "A new tenant's unit view still shows earlier repairs.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-146",
+    "sprint": 8,
+    "release": "R1",
+    "theme": "Maintenance I",
+    "module": "Maintenance",
+    "title": "Administrator-configured maintenance status transitions",
+    "points": 3,
+    "requirements": ["MAINT-3"],
+    "acceptance": "An administrator can change which status transitions are allowed, without code changes, and the change is audited. Resolve first whether this is MAINT-3's own clause (P0, here) or part of ORG-7's workflow templates (P1, TV-134) and record the decision.",
+    "status": "todo",
+    "note": "added by the clause-level review: this obligation was in no ticket"
   },
   {
     "ticket": "TV-052",
@@ -1597,6 +1623,19 @@
     "acceptance": "An emergency request notifies named contacts and records every action taken.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-145",
+    "sprint": 20,
+    "release": "R2",
+    "theme": "Maintenance expansion",
+    "module": "Maintenance",
+    "title": "Conditional maintenance statuses for quote and approval workflows",
+    "points": 2,
+    "requirements": ["MAINT-3"],
+    "acceptance": "With quotation and approval workflows enabled, Triage, Awaiting Quote, Awaiting Landlord Approval and Approved become available and appear in the allowed transitions. With those workflows off, only the eight core statuses are offered.",
+    "status": "todo",
+    "note": "added by the clause-level review: this obligation was in no ticket"
   },
   {
     "ticket": "TV-123",
