@@ -107,7 +107,7 @@ for f in supabase/tests/*_test.sql; do
   fi
   echo "$out" | grep -E '^\s*(ok |not ok|# |1\.\.)' || true
   # A pgTAP file can exit 0 while individual assertions fail.
-  if echo "$out" | grep -qE 'not ok|Looks like you failed'; then
+  if echo "$out" | grep -qE 'not ok|Looks like you failed|Looks like you planned'; then
     failed=1
   fi
   if echo "$out" | grep -qE '^psql:|ERROR:'; then

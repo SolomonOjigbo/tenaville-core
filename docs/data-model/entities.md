@@ -33,6 +33,12 @@ Implemented as `Membership` rather than a `User`-to-`Organisation` column: one S
 
 A `Landlord` owns one or more `Property` records under a `ManagementMandate` that defines commission type and rate, remittance schedule and permitted deductions — the ledger reads these terms rather than hard-coding them (OWN-2, LEDGER-9).
 
+**Remittance details are a separate table**, `landlord_remittance_details`, not columns on `landlords`. OWN-1 requires restricted access, and the restriction is by _application_ role while Postgres column grants are by _database_ role — every user connects as `authenticated`, so a column grant cannot tell an accountant from a letting agent. A separate table gets its own policy, which can. Every change is audited with the account number masked to its last four digits: the trail answers who changed it and when without becoming a second copy of the sensitive value.
+
+Commission rates are stored as **basis points** (`commission_rate_bps`, 1000 = 10.00%), an integer for the same reason amounts are integer kobo — this number divides a landlord's rent. A mandate must permit the `commission` deduction, or the agency's own fee would be unremittable; the database enforces that.
+
+`nigerian_states` is reference data in the migration rather than the seed, because `properties.state_code` is a foreign key to it and production needs the rows. LGA is free text for now: there are 774 and we have no authoritative machine-readable list, so storing an unverified one would be worse than storing the agency's own wording.
+
 A `Property` contains one or more `Unit`. R1 links a property to one landlord; ownership shares and multiple landlords are later (PROP-5).
 
 `UnitShareLink` backs agency-controlled unit sheets: unguessable token, expiry, revocation, selected fields only, `noindex` (PROP-10, [ADR 0007](../decisions/0007-no-public-marketplace-surface.md)).
@@ -47,7 +53,7 @@ Lease history survives updates and termination (LEASE-11): a terminated lease an
 
 `DepositRecord` tracks the caution deposit as client funds through hold, deduction with evidence and approval, and refund or transfer with a ledger entry (LEASE-13).
 
-`ImportBatch` makes a migration reversible — a completed import can be rolled back as a unit (MIG-3).
+`ImportBatch` and `ImportRow` make a migration reversible — a completed import can be rolled back as a unit (MIG-3). Each row stores the parsed payload, its validation issues as `{field, code, message}` entries, and the id of what it created, which is what rollback will read. A batch moves draft → validated → applied, and `apply_property_import` refuses anything that is not validated, still has invalid rows, or has already been applied, so a retried request cannot duplicate a portfolio.
 
 ## Financial records
 

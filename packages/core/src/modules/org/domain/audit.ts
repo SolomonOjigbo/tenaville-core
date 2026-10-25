@@ -19,6 +19,12 @@ export const AUDIT_ACTIONS = [
   'assignment.removed',
   'session.revoked',
   'subscription.changed',
+  'remittance_details.created',
+  'remittance_details.updated',
+  'remittance_details.removed',
+  'import.applied',
+  'import.rolled_back',
+  'import.failed',
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -35,6 +41,11 @@ const REASON_REQUIRED: readonly AuditAction[] = [
   'membership.status_changed',
   'membership.removed',
   'session.revoked',
+  // Changing where a landlord is paid redirects their money. Of everything in
+  // the system, this is the change most worth being able to explain.
+  'remittance_details.updated',
+  'remittance_details.removed',
+  'import.rolled_back',
 ];
 
 export const requiresReason = (action: AuditAction): boolean => REASON_REQUIRED.includes(action);

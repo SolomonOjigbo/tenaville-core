@@ -25,6 +25,18 @@ describe('audit actions', () => {
     expect(requiresReason('session.revoked')).toBe(true);
   });
 
+  it('requires a reason for changing where a landlord is paid', () => {
+    expect(requiresReason('remittance_details.updated')).toBe(true);
+    expect(requiresReason('remittance_details.removed')).toBe(true);
+    // Creating the first record is not a redirection of existing instructions.
+    expect(requiresReason('remittance_details.created')).toBe(false);
+  });
+
+  it('requires a reason for rolling back an import', () => {
+    expect(requiresReason('import.rolled_back')).toBe(true);
+    expect(requiresReason('import.applied')).toBe(false);
+  });
+
   it('does not demand a reason for ordinary creation', () => {
     expect(requiresReason('organisation.created')).toBe(false);
     expect(requiresReason('membership.created')).toBe(false);

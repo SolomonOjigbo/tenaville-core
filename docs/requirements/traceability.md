@@ -59,31 +59,31 @@ PRD section 8.1 · owner `packages/core/src/modules/org`
 
 PRD section 8.2 · owner `packages/core/src/modules/properties`
 
-| ID      | Pri | Release | Requirement                                                                                                                             | Status | Notes |
-| ------- | --- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----- |
-| PROP-1  | P0  | R1      | Create properties with name/reference, address, state, LGA/area, property type, photos, notes and optional map coordinates              | todo   |       |
-| PROP-2  | P0  | R1      | Create units with label/reference, type, size/bedrooms where applicable, occupancy status, asking/contracted rent, facilities and notes | todo   |       |
-| PROP-3  | P0  | R1      | Support statuses such as vacant, occupied, reserved, under maintenance and inactive                                                     | todo   |       |
-| PROP-4  | P0  | R1      | Import properties and units from spreadsheet templates with row-level validation and error reporting                                    | todo   |       |
-| PROP-5  | P0  | R1      | Link properties to one landlord; support ownership shares and multiple landlords in a later release                                     | todo   |       |
-| PROP-6  | P1  | R2      | Support custom fields per property or unit                                                                                              | todo   |       |
-| PROP-7  | P1  | R2      | Keep an internal vacancy history, including dates vacant/occupied, reason for vacancy and next action                                   | todo   |       |
-| PROP-8  | P1  | R2      | Attach property-specific operating documents, warranties, manuals and inspection records                                                | todo   |       |
-| PROP-9  | P0  | R1      | Do not expose property records in a public marketplace or public search index                                                           | todo   |       |
-| PROP-10 | P1  | R2      | Generate an agency-controlled unit sheet (PDF or private link) that staff can send to a prospect                                        | todo   |       |
+| ID      | Pri | Release | Requirement                                                                                                                             | Status | Notes                                                                 |
+| ------- | --- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------- |
+| PROP-1  | P0  | R1      | Create properties with name/reference, address, state, LGA/area, property type, photos, notes and optional map coordinates              | done   | properties with address, state FK, LGA, coordinates, photos           |
+| PROP-2  | P0  | R1      | Create units with label/reference, type, size/bedrooms where applicable, occupancy status, asking/contracted rent, facilities and notes | done   | units with type, status, rent in kobo, facilities                     |
+| PROP-3  | P0  | R1      | Support statuses such as vacant, occupied, reserved, under maintenance and inactive                                                     | done   | unit_status enum: vacant/occupied/reserved/under_maintenance/inactive |
+| PROP-4  | P0  | R1      | Import properties and units from spreadsheet templates with row-level validation and error reporting                                    | done   | header mapping, row-level validation, dry run, apply_property_import  |
+| PROP-5  | P0  | R1      | Link properties to one landlord; support ownership shares and multiple landlords in a later release                                     | done   | properties.landlord_id with same-organisation trigger                 |
+| PROP-6  | P1  | R2      | Support custom fields per property or unit                                                                                              | todo   |                                                                       |
+| PROP-7  | P1  | R2      | Keep an internal vacancy history, including dates vacant/occupied, reason for vacancy and next action                                   | todo   |                                                                       |
+| PROP-8  | P1  | R2      | Attach property-specific operating documents, warranties, manuals and inspection records                                                | todo   |                                                                       |
+| PROP-9  | P0  | R1      | Do not expose property records in a public marketplace or public search index                                                           | done   | no unauthenticated route or grant; anon revoked and asserted          |
+| PROP-10 | P1  | R2      | Generate an agency-controlled unit sheet (PDF or private link) that staff can send to a prospect                                        | todo   |                                                                       |
 
 ## Landlords & management mandates (`OWN`)
 
 PRD section 8.3 · owner `packages/core/src/modules/landlords`
 
-| ID    | Pri | Release | Requirement                                                                                                     | Status | Notes |
-| ----- | --- | ------- | --------------------------------------------------------------------------------------------------------------- | ------ | ----- |
-| OWN-1 | P0  | R1      | Store landlord contact details, preferred communication channel and remittance details with restricted access   | todo   |       |
-| OWN-2 | P0  | R1      | Configure management mandate, commission type/rate, remittance schedule and permitted deductions                | todo   |       |
-| OWN-3 | P0  | R1      | Give landlords secure read-only access to their assigned properties, statements, balances and documents         | todo   |       |
-| OWN-4 | P1  | R2      | Allow landlords to approve or reject repairs above a configurable amount                                        | todo   |       |
-| OWN-5 | P1  | R2      | Allow landlord comments, approval history and supporting attachments on relevant maintenance requests           | todo   |       |
-| OWN-6 | P1  | R2      | Show landlords agreed portfolio indicators such as occupancy, arrears, maintenance costs and remittance history | todo   |       |
+| ID    | Pri | Release | Requirement                                                                                                     | Status | Notes                                                                     |
+| ----- | --- | ------- | --------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------- |
+| OWN-1 | P0  | R1      | Store landlord contact details, preferred communication channel and remittance details with restricted access   | done   | landlords + landlord_remittance_details (restricted policy, masked audit) |
+| OWN-2 | P0  | R1      | Configure management mandate, commission type/rate, remittance schedule and permitted deductions                | done   | management_mandates with commission/deduction constraints                 |
+| OWN-3 | P0  | R1      | Give landlords secure read-only access to their assigned properties, statements, balances and documents         | done   | landlord read-only policies on properties, units, mandates                |
+| OWN-4 | P1  | R2      | Allow landlords to approve or reject repairs above a configurable amount                                        | todo   |                                                                           |
+| OWN-5 | P1  | R2      | Allow landlord comments, approval history and supporting attachments on relevant maintenance requests           | todo   |                                                                           |
+| OWN-6 | P1  | R2      | Show landlords agreed portfolio indicators such as occupancy, arrears, maintenance costs and remittance history | todo   |                                                                           |
 
 ## Tenants & lease management (`LEASE`)
 
