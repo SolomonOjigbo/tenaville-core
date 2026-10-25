@@ -23,7 +23,13 @@ Implemented as `Membership` rather than a `User`-to-`Organisation` column: one S
 
 **`Permission` is code, not a table.** The role-to-permission catalogue lives in `packages/core/src/modules/org/domain/roles.ts`, where it is typed, diff-reviewable and testable without a database. Agency-configurable approval limits (ORG-7, R2) are genuinely data and will arrive as a table that narrows those permissions, never widens them. This is a deliberate deviation from PRD §14's `Permission` entity, recorded in ADR 0008.
 
-`AuditEvent` records actor, time, action, before/after values and the reason for sensitive overrides (ORG-5, §10.7). It is append-only.
+`AuditEvent` records actor, time, action, before/after values and the reason for sensitive overrides (ORG-5, §10.7). It is append-only, and any attempt to update or delete one raises `42501`.
+
+Auditing is applied by `app.audit_row_change`, a single generic trigger taking the entity name as an argument — four near-identical trigger functions would drift. A status change gets its own action (`lease.status_changed` rather than `lease.updated`), because "the tenancy was terminated" and "the rent changed" are different questions and a reader should not have to diff two JSON blobs to tell them apart. An update that changes nothing writes nothing, so the trail stays readable.
+
+Audited today: leases, lease parties, deposits and deductions (lease changes), memberships and assignments (permission changes, including scoped access — granting someone a property is the same kind of act as giving them a role), management mandates and remittance details (what an agency takes from a landlord's rent), imports, organisation settings, and document access. Payments, the ledger, maintenance approvals and screening decisions have no tables yet; `supabase/tests/0100_audit_coverage_test.sql` makes a new table fail until somebody says whether it is audited, with a reason either way.
+
+Ordering note: `occurred_at` is the transaction timestamp, so events written together share it. Order by `(occurred_at, id)`.
 
 `Subscription`/`Plan` price by units under management (BILL-1). Non-payment never deletes customer data (BILL-4).
 

@@ -25,6 +25,26 @@ export const AUDIT_ACTIONS = [
   'import.applied',
   'import.rolled_back',
   'import.failed',
+  'document.accessed',
+  'assignment.created',
+  'assignment.updated',
+  'assignment.removed',
+  'lease.created',
+  'lease.updated',
+  'lease.status_changed',
+  'lease.removed',
+  'lease_party.created',
+  'lease_party.updated',
+  'lease_party.removed',
+  'lease_deposit.created',
+  'lease_deposit.updated',
+  'lease_deposit.status_changed',
+  'deposit_deduction.created',
+  'deposit_deduction.updated',
+  'management_mandate.created',
+  'management_mandate.updated',
+  'management_mandate.removed',
+  'organisation.updated',
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -46,6 +66,12 @@ const REASON_REQUIRED: readonly AuditAction[] = [
   'remittance_details.updated',
   'remittance_details.removed',
   'import.rolled_back',
+  // Taking a property away from someone, and changing what an agency takes
+  // from a landlord's rent, both need an explanation that outlives whoever
+  // made the change.
+  'assignment.removed',
+  'management_mandate.updated',
+  'lease.status_changed',
 ];
 
 export const requiresReason = (action: AuditAction): boolean => REASON_REQUIRED.includes(action);
