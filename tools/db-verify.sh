@@ -67,6 +67,19 @@ for f in supabase/migrations/*.sql; do
   psql_in -q -f - < "$f"
 done
 
+# Lint before pgTAP is installed, and only the schemas we own. `db lint` checks
+# every function in the database, and pgTAP's own functions carry dozens of
+# warnings and errors of their own — linting after installing it would fail on
+# third-party code. CI runs these steps in the same order for the same reason.
+echo "== schema lint (public, app)"
+if ! pnpm exec supabase db lint \
+      --db-url "postgresql://postgres:postgres@127.0.0.1:$PORT/postgres?sslmode=disable" \
+      --schema public,app --level warning --fail-on warning 2>&1 \
+      | grep -vE '^WARN: config|^A new version|^We recommend'; then
+  echo "schema lint failed"
+  exit 1
+fi
+
 echo "== seed"
 if [ -f supabase/seed.sql ]; then
   # psql \ir resolves relative to the script's directory, so run it from there.
