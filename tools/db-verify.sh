@@ -81,13 +81,13 @@ if ! pnpm exec supabase db lint \
 fi
 
 echo "== seed"
-if [ -f supabase/seed.sql ]; then
-  # psql \ir resolves relative to the script's directory, so run it from there.
-  docker exec -i "$NAME" mkdir -p /tmp/seed >/dev/null 2>&1 || true
-  docker cp supabase/seed.sql "$NAME:/tmp/seed/seed.sql" >/dev/null
-  docker cp supabase/seed "$NAME:/tmp/seed/seed" >/dev/null
-  docker exec -i "$NAME" psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -q -f /tmp/seed/seed.sql
-fi
+# The same files, in the same order, as supabase/config.toml's [db.seed]. Kept
+# in step deliberately: a seed that works here and fails under `supabase start`
+# is worse than no seed.
+for f in supabase/seed/*.sql; do
+  echo "   $f"
+  psql_in -q -f - < "$f"
+done
 
 echo "== pgtap + helpers"
 psql_in -q -c 'create extension if not exists pgtap;'

@@ -96,6 +96,23 @@ The backlog assumes about 30 points per sprint and says to re-baseline after Spr
 | 22     | R2      | Analytics and organisation settings      | 7       | 31     |
 | 23     | R2      | Automation, onboarding and R2 release    | 7       | 31     |
 
+## A coverage gap the ID check cannot see
+
+Every P0 and P1 requirement has a ticket, and `tools/check-backlog.mjs` proves
+it. What that cannot prove is that every _clause_ of a requirement is in some
+ticket's scope.
+
+**ORG-2 requires "verified email and/or phone, staff invitations and account
+recovery".** Email confirmation and password reset are built (TV-003); phone
+verification is covered by the "and/or"; **staff invitations are in no ticket at
+all** — not TV-003, whose acceptance criteria stop at landing as Owner, and not
+TV-004, which is roles and scoped access. An agency with one owner and no way to
+add a property manager cannot operate, and ORG-2 is P0.
+
+This needs a ticket before the R1 pilot. It is small — `memberships` already
+carries `status`, `invited_by` and `invited_at`, and the accept path is a status
+change — but it is not currently anybody's work.
+
 ## Where the backlog and the earlier plan diverge
 
 Four differences. The backlog is right in each case, and its sequencing now stands.

@@ -48,9 +48,38 @@ reason all three audiences live in one app rather than three.
 Verified at desktop and 375px with no horizontal page overflow, and the palette
 is checked for WCAG AA contrast in `@tenaville/ui`.
 
-Not built: authentication (TV-003), so the shell shows its signed-out state in
-development; private file storage (TV-014), so photos cannot be served; and the
-screens for each area.
+## Authentication (TV-003)
+
+Signup, email confirmation, password reset, sign-in and sign-out, then
+organisation setup. Supabase Auth holds the credentials; this app never sees a
+password after the form post.
+
+- **`middleware.ts` refreshes the session on every request.** Server components
+  cannot write cookies, so without it a token would expire mid-session and the
+  user would look signed in until their first write failed. It calls `getUser`,
+  not `getSession`, so a forged cookie does not survive.
+- **`destinationFor` decides where someone belongs** — sign in, confirm your
+  email, set up an organisation, or the app — in one tested function rather than
+  a chain of redirects across layouts. An unverified account cannot reach
+  organisation setup; a verified one with no organisation cannot reach a
+  dashboard that would show nothing.
+- **Redirects are sanitised.** `?next=` arrives from an email client, so it is
+  attacker-influenced: only same-origin paths survive, and protocol-relative,
+  backslash and control-character variants are rejected.
+- **Neither signup nor sign-in nor password reset reveals whether an address is
+  registered.** Different messages would turn any of them into an account
+  enumeration tool, and agency staff emails are easy to guess.
+- **Passwords are length-first**, 12 characters minimum, with no character-class
+  rules — those produce `Password1!`. Obvious words and the user's own email are
+  rejected by name.
+
+Not built: phone verification and **staff invitations**, both ORG-2 clauses.
+Invitations have no ticket anywhere in the backlog, which is recorded in
+docs/requirements/backlog-mapping.md — an agency with one owner and no way to
+add a property manager cannot operate.
+
+Also not built: private file storage (TV-014), so photos cannot be served, and
+the screens for each area.
 
 ## Rules
 

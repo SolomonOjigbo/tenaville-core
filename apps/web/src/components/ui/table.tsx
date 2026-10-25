@@ -34,7 +34,7 @@ export const Th = ({
   numeric = false,
 }: {
   readonly children: ReactNode;
-  readonly numeric?: boolean;
+  readonly numeric?: boolean | undefined;
 }) => (
   <th
     scope="col"
@@ -52,7 +52,7 @@ export const Td = ({
   numeric = false,
 }: {
   readonly children: ReactNode;
-  readonly numeric?: boolean;
+  readonly numeric?: boolean | undefined;
 }) => (
   <td
     className={clsx(

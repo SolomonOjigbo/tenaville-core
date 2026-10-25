@@ -14,6 +14,14 @@ port = 54322
 shadow_port = 54320
 major_version = 17
 
+[db.seed]
+# Listed explicitly rather than included from a single seed.sql with psql's
+# \ir: the CLI sends the seed as a batch over the wire, where meta-commands are
+# a syntax error. Order matters — plans before the organisations that reference
+# them.
+enabled = true
+sql_paths = ["./seed/01_plans.sql", "./seed/02_demo_organisations.sql"]
+
 [db.pooler]
 enabled = false
 

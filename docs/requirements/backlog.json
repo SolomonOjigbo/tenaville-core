@@ -35,8 +35,8 @@
     "points": 5,
     "requirements": ["ORG-1", "ORG-2"],
     "acceptance": "A new user can sign up, verify, reset a password and land in an empty organisation as Owner.",
-    "status": "partial",
-    "note": "create_organisation_with_owner done; email/phone verification and password reset flows not built"
+    "status": "done",
+    "note": "signup, email confirmation, password reset, sign-in/out, session refresh middleware and organisation setup; phone verification and staff invitations are ORG-2 clauses with no ticket"
   },
   {
     "ticket": "TV-004",

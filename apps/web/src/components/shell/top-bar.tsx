@@ -1,5 +1,6 @@
 import { Badge } from '../ui/badge';
 import { statusLabel } from '../ui/badge';
+import { SignOutButton } from './sign-out-button';
 import { ThemeToggle } from './theme-toggle';
 
 export const TopBar = ({
@@ -14,6 +15,9 @@ export const TopBar = ({
       <span className="text-sm text-text">{userLabel}</span>
       <Badge tone="info">{statusLabel(role)}</Badge>
     </div>
-    <ThemeToggle />
+    <div className="flex items-center gap-2">
+      <ThemeToggle />
+      <SignOutButton />
+    </div>
   </header>
 );

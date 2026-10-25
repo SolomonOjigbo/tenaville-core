@@ -16,10 +16,10 @@ export const Money = ({
   tone = 'default',
 }: {
   readonly kobo: string;
-  readonly className?: string;
-  readonly symbol?: boolean;
+  readonly className?: string | undefined;
+  readonly symbol?: boolean | undefined;
   /** `owed` for arrears, `paid` for settled amounts. */
-  readonly tone?: 'default' | 'owed' | 'paid';
+  readonly tone?: 'default' | 'owed' | 'paid' | undefined;
 }) => {
   const amount = fromTransport(kobo);
   const tones = {

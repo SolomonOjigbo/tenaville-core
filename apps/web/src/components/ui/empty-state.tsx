@@ -15,7 +15,7 @@ export const EmptyState = ({
 }: {
   readonly title: string;
   readonly description: string;
-  readonly action?: ReactNode;
+  readonly action?: ReactNode | undefined;
 }) => (
   <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
     <h3 className="font-display text-lg text-text">{title}</h3>

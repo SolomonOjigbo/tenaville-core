@@ -32,9 +32,9 @@ export const Field = ({
 }: {
   readonly id: string;
   readonly label: string;
-  readonly hint?: string;
-  readonly error?: string;
-  readonly required?: boolean;
+  readonly hint?: string | undefined;
+  readonly error?: string | undefined;
+  readonly required?: boolean | undefined;
   readonly children: ReactNode;
 }) => (
   <div className="space-y-1.5">
@@ -62,8 +62,8 @@ export const Field = ({
 
 export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
   readonly id: string;
-  readonly invalid?: boolean;
-  readonly describedBy?: string;
+  readonly invalid?: boolean | undefined;
+  readonly describedBy?: string | undefined;
 }
 
 export const TextInput = ({
@@ -114,8 +114,8 @@ export const MoneyInput = ({
 
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id'> {
   readonly id: string;
-  readonly invalid?: boolean;
-  readonly describedBy?: string;
+  readonly invalid?: boolean | undefined;
+  readonly describedBy?: string | undefined;
   readonly children: ReactNode;
 }
 

@@ -21,8 +21,8 @@ const SIZES: Record<ButtonSize, string> = {
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly variant?: ButtonVariant;
-  readonly size?: ButtonSize;
+  readonly variant?: ButtonVariant | undefined;
+  readonly size?: ButtonSize | undefined;
   readonly children: ReactNode;
 }
 

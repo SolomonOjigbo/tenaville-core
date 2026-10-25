@@ -1,29 +1,55 @@
-import { Card, CardBody } from '../../../components/ui/index';
+import Link from 'next/link';
 
-/**
- * Placeholder sign-in.
- *
- * The real flows — email and phone verification, invitations, password reset —
- * are TV-003, which is still partial. This page exists so the shell has
- * somewhere to send an unauthenticated visitor instead of looping, and it says
- * plainly that it is not finished rather than presenting a form that cannot
- * work.
- */
-export default function SignInPage() {
+import { SignInForm } from '../../../components/auth/sign-in-form';
+import { Card, CardBody } from '../../../components/ui';
+import { safeRedirect } from '../../../lib/auth';
+
+const LINK_MESSAGES: Record<string, string> = {
+  'link-expired': 'That link has expired or was already used. Request a new one below.',
+  'link-invalid': 'That link was not valid. Request a new one below.',
+};
+
+export default async function SignInPage({
+  searchParams,
+}: {
+  readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  // Sanitised here rather than in the form: the value arrives in a URL and must
+  // not be trusted even to render into a hidden input.
+  const next = safeRedirect(typeof params.next === 'string' ? params.next : null);
+  const linkError = typeof params.error === 'string' ? LINK_MESSAGES[params.error] : undefined;
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-md items-center px-6">
-      <Card className="w-full">
-        <CardBody className="space-y-3">
-          <h1 className="font-display text-xl text-text">Sign in to Tenaville</h1>
-          <p className="text-sm text-muted">
-            Authentication is not built yet. Signup, verification and password reset are ticket
-            TV-003; this page is a placeholder so the shell has a destination.
+    <Card>
+      <CardBody className="space-y-4">
+        <div>
+          <h1 className="font-display text-xl text-text">Sign in</h1>
+          <p className="mt-1 text-sm text-muted">
+            Agency staff, landlords and tenants sign in here.
           </p>
-          <p className="text-sm text-muted">
-            In development, create a session against the local Supabase stack and reload.
+        </div>
+
+        {linkError !== undefined && (
+          <p
+            role="alert"
+            className="rounded-md bg-warning-soft px-3 py-2 text-sm text-warning-text"
+          >
+            {linkError}
           </p>
-        </CardBody>
-      </Card>
-    </main>
+        )}
+
+        <SignInForm next={next} />
+
+        <div className="flex flex-wrap justify-between gap-2 text-sm text-muted">
+          <Link href="/forgot-password" className="text-primary underline">
+            Forgot your password?
+          </Link>
+          <Link href="/sign-up" className="text-primary underline">
+            Create an account
+          </Link>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

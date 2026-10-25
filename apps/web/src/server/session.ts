@@ -97,6 +97,42 @@ export const currentViewer = async (): Promise<Viewer | null> => {
   };
 };
 
+/**
+ * The signed-in account's state, before an organisation is involved.
+ *
+ * Separate from `currentViewer` because the onboarding pages need to know
+ * whether someone is signed in and verified *without* requiring that they
+ * already belong to an organisation — which is the whole point of those pages.
+ */
+export const currentAccount = async (): Promise<{
+  userId: string;
+  email: string | null;
+  emailConfirmed: boolean;
+  hasOrganisation: boolean;
+} | null> => {
+  const supabase = await supabaseForRequest();
+
+  let user;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    return null;
+  }
+  if (user === null || user === undefined) return null;
+
+  const { count } = await supabase
+    .from('organisations')
+    .select('id', { count: 'exact', head: true });
+
+  return {
+    userId: user.id,
+    email: user.email ?? null,
+    emailConfirmed: user.email_confirmed_at !== null && user.email_confirmed_at !== undefined,
+    hasOrganisation: (count ?? 0) > 0,
+  };
+};
+
 /** Feature flags, read once per request. R2 work stays off by default. */
 export const featureFlags = () => ({
   crm: process.env.FEATURE_CRM_ENABLED === 'true',

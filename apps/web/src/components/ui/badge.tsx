@@ -15,7 +15,7 @@ export const Badge = ({
   tone = 'neutral',
   children,
 }: {
-  readonly tone?: BadgeTone;
+  readonly tone?: BadgeTone | undefined;
   readonly children: ReactNode;
 }) => (
   <span

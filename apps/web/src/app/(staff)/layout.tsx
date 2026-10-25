@@ -4,7 +4,10 @@ import { Card, CardBody } from '../../components/ui/index';
 import { Sidebar } from '../../components/shell/sidebar';
 import { TopBar } from '../../components/shell/top-bar';
 import { groupedNavigationFor } from '../../lib/nav';
-import { currentViewer, featureFlags } from '../../server/session';
+import { redirect } from 'next/navigation';
+
+import { destinationFor } from '../../lib/auth';
+import { currentAccount, currentViewer, featureFlags } from '../../server/session';
 
 /**
  * The staff shell.
@@ -18,23 +21,26 @@ import { currentViewer, featureFlags } from '../../server/session';
  * turned away here rather than shown an agency sidebar they cannot use.
  */
 export default async function StaffLayout({ children }: { readonly children: ReactNode }) {
-  const viewer = await currentViewer();
+  const account = await currentAccount();
+  const destination = destinationFor({
+    signedIn: account !== null,
+    emailConfirmed: account?.emailConfirmed ?? false,
+    email: account?.email ?? null,
+    hasOrganisation: account?.hasOrganisation ?? false,
+  });
 
-  if (viewer === null) {
-    return (
-      <main className="mx-auto flex min-h-screen max-w-md items-center px-6">
-        <Card className="w-full">
-          <CardBody className="space-y-3">
-            <h1 className="font-display text-xl text-text">Not signed in</h1>
-            <p className="text-sm text-muted">
-              This area is for agency staff. Sign in to continue — authentication is ticket TV-003
-              and not built yet.
-            </p>
-          </CardBody>
-        </Card>
-      </main>
-    );
+  // Middleware already turns away anonymous requests. These cover the states it
+  // cannot see: whether the address is confirmed, and whether an organisation
+  // exists yet — a dashboard with no organisation behind it would show nothing
+  // and explain nothing.
+  if (destination.kind === 'sign-in') redirect('/sign-in');
+  if (destination.kind === 'verify-email') {
+    redirect(`/verify-email?email=${encodeURIComponent(destination.email)}`);
   }
+  if (destination.kind === 'create-organisation') redirect('/create-organisation');
+
+  const viewer = await currentViewer();
+  if (viewer === null) redirect('/create-organisation');
 
   if (!viewer.access.isStaff) {
     return (

@@ -6,7 +6,7 @@ export const Card = ({
   className,
 }: {
   readonly children: ReactNode;
-  readonly className?: string;
+  readonly className?: string | undefined;
 }) => (
   <div className={clsx('rounded-lg border border-border bg-surface shadow-sm', className)}>
     {children}
@@ -19,8 +19,8 @@ export const CardHeader = ({
   action,
 }: {
   readonly title: string;
-  readonly description?: string;
-  readonly action?: ReactNode;
+  readonly description?: string | undefined;
+  readonly action?: ReactNode | undefined;
 }) => (
   <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
     <div>
@@ -36,5 +36,5 @@ export const CardBody = ({
   className,
 }: {
   readonly children: ReactNode;
-  readonly className?: string;
+  readonly className?: string | undefined;
 }) => <div className={clsx('px-5 py-4', className)}>{children}</div>;

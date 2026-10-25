@@ -5,9 +5,8 @@ Postgres via Supabase. Migrations are forward-only SQL; RLS is the tenant bounda
 ```
 supabase/
 ├── config.toml     local stack configuration
-├── seed.sql        seed entrypoint — the CLI looks for this exact path
+├── seed/*.sql      seed files, listed in config.toml's [db.seed] sql_paths
 ├── migrations/     forward-only SQL, timestamp-prefixed
-├── seed/           individual seed files, included from seed.sql
 └── tests/          pgTAP tests, primarily RLS policy assertions
 ```
 
@@ -23,8 +22,11 @@ supabase/
 
 ## Seed data
 
-The CLI loads `seed.sql` only, so individual files live in `seed/` and are
-included from it with `\ir` in dependency order.
+Seed files are listed in `config.toml` under `[db.seed] sql_paths`, in
+dependency order. They are **not** included from one entrypoint with psql's
+`\ir`: the CLI sends the seed as a batch over the wire, where a meta-command is
+a syntax error — which only shows up under `supabase start`, not under a psql
+harness.
 
 Seed data creates at least two organisations with deliberately similar-looking tenants, properties and amounts, so a cross-tenant bug shows up as obviously wrong data rather than as plausible data.
 

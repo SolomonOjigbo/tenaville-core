@@ -47,7 +47,7 @@ If capacity is short, the PRD's cut order (§16.1) applies: protect money, ledge
 - Migrations are forward-only SQL in `supabase/migrations/`. Every new table arrives with RLS enabled, a policy, and a pgTAP test in `supabase/tests/`.
 - British spelling in domain names and user-facing copy, matching the PRD (`organisation`, not `organization`).
 - Nigeria-first formats: NGN, Nigerian phone numbers, state and LGA fields, WAT display.
-- Tests: Vitest for unit and integration. Isolation tests live in `packages/db/src/__tests__/isolation` and run as a required CI job.
+- Tests: Vitest for unit and integration. Database and isolation tests are pgTAP in `supabase/tests/`, run by `pnpm test:isolation` (which spins a throwaway container via `tools/db-verify.sh`) and as a required CI job.
 
 ## Commands
 
@@ -57,8 +57,8 @@ pnpm db:start         # local Supabase stack
 pnpm db:reset         # re-apply migrations + seed
 pnpm db:diff -- name  # generate a migration from local schema changes
 pnpm db:types         # regenerate Postgres types into packages/db
-pnpm test:isolation   # cross-tenant isolation suite
-pnpm docs:reqs        # verify traceability matches the PRD
+pnpm test:isolation   # migrations + seed + pgTAP in a throwaway container
+pnpm docs:reqs        # traceability and sprint backlog consistency
 ```
 
 ## Before opening a PR

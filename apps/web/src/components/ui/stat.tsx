@@ -17,7 +17,7 @@ export const Stat = ({
 }: {
   readonly label: string;
   readonly value: ReactNode;
-  readonly hint?: string;
+  readonly hint?: string | undefined;
 }) => (
   <Card className="px-5 py-4">
     <p className="text-sm text-muted">{label}</p>

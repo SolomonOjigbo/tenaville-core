@@ -6,8 +6,8 @@ export const PageHeader = ({
   action,
 }: {
   readonly title: string;
-  readonly description?: string;
-  readonly action?: ReactNode;
+  readonly description?: string | undefined;
+  readonly action?: ReactNode | undefined;
 }) => (
   <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
     <div>
