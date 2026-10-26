@@ -28,13 +28,16 @@ The limits themselves are rows in `plans`, and the checks are triggers in the da
 
 What this module adds on top is the vocabulary: the shape of an entitlement, how to recognise SQLSTATE `53400` as a plan refusal whatever client produced it, and how to say so once rather than per screen. `app.limit_verdict` is the single definition of what a limit means — `unlimited`, `within`, `billable` or `refused` — and `plan_entitlements()` returns it alongside the counts, so a usage bar and a trigger cannot disagree about whether there is room.
 
-Three things are deliberately elsewhere:
+Metering is the second half (TV-148), and it answers a different question: not "is there room now" but "what did this organisation use in the period we are about to invoice". Those must not be the same number — a live count changes whenever somebody adds a flat, and an invoice cannot.
 
-- **Warnings at 80% and 100%** are TV-148, together with what "active" means at a period boundary.
-- **Billing the overage** is TV-153. A `billable` verdict means the write is allowed, not that anyone has been charged.
+`usage_readings` holds one row per organisation per billing period. It is taken when the period ends, left provisional, and finalised three days later at the **lower** of the period-end count and the count then. That is §3.4's grace, and it cuts one way deliberately: an agency that imported 500 units by mistake on the last day of the month and fixed it on the 2nd is not invoiced for 500, and an agency that genuinely grew in those three days is invoiced for the smaller figure too. A customer forgiving a billing error is cheaper than one disputing it. A final reading is immutable and audited, because it is the basis of an invoice.
+
+Two of the five metrics the ticket names record `null`, not zero: storage needs a document registry with sizes (TV-052) and messages need the message log (TV-038). Zero is a figure an invoice would believe.
+
+Two things are deliberately elsewhere:
+
+- **Billing the overage** is TV-153. A `billable` verdict means the write is allowed, not that anyone has been charged, and nothing yet schedules the metering sweep — there is no job runner until billing needs one.
 - **Read-only locking on downgrade** is TV-152, and it is the harder half: a locked property must stay printable and exportable (BILL-4).
-
-Storage is unenforced because nothing records a document's size yet; that arrives with documents (TV-052).
 
 ## Layout
 

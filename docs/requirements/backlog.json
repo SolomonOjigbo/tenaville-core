@@ -451,8 +451,8 @@
     "points": 5,
     "requirements": ["BILL-3"],
     "acceptance": "Usage is counted at the end of the billing period with a 3-day grace, and warnings appear at 80% and 100% of a band.",
-    "status": "todo",
-    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+    "status": "partial",
+    "note": "usage_readings with the 3-day grace, provisional then final at the lower count, immutable and audited; usage_warnings() with the 80% and 100% bands, surfaced on the plan and people pages. Units, properties and users are metered; storage needs a document registry (TV-052) and messages need the message log (TV-038), and both record null rather than zero. Nothing schedules the sweep yet \u2014 no job runner until TV-153"
   },
   {
     "ticket": "TV-032",
@@ -1037,7 +1037,7 @@
     "requirements": [],
     "acceptance": "A restore from backup to a clean environment succeeds and is timed; critical dependency alerts are zero.",
     "status": "todo",
-    "note": ""
+    "note": "also: EXECUTE on public functions is still held by PUBLIC, so the `revoke ... from anon` in each migration does not actually close them. Every security-definer function guards on auth.uid() so nothing is exploitable today, but the privilege hygiene is missing \u2014 found while building TV-148"
   },
   {
     "ticket": "TV-072",

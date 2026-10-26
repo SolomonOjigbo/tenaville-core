@@ -1,6 +1,9 @@
 import { redirect } from 'next/navigation';
 
 import { APP_ROLES, canAssignRole, listPendingInvitations, statusLabelFor } from './roles';
+import { fetchUsageWarnings } from '@tenaville/core/billing';
+
+import { UsageNotice } from '../../../../components/billing/usage-notice';
 import { InviteForm } from '../../../../components/people/invite-form';
 import { RevokeButton } from '../../../../components/people/revoke-button';
 import {
@@ -42,7 +45,11 @@ export default async function PeoplePage() {
 
   const supabase = await supabaseForRequest();
 
-  const [{ data: members }, invitations] = await Promise.all([
+  // Seats are the limit this page runs into, so the prompt belongs here rather
+  // than only in settings: an agency at 3 of 3 users should learn it before
+  // typing a colleague's address, not after the invitation is refused
+  // (BILL-3 §3.7).
+  const [{ data: members }, invitations, warnings] = await Promise.all([
     supabase
       .from('memberships')
       .select('id, user_id, role, status, accepted_at')
@@ -50,6 +57,7 @@ export default async function PeoplePage() {
       .in('status', ['active', 'suspended'])
       .order('role'),
     listPendingInvitations(supabase, viewer.organisationId),
+    fetchUsageWarnings(supabase, viewer.organisationId),
   ]);
 
   const memberRows = members ?? [];
@@ -75,6 +83,8 @@ export default async function PeoplePage() {
         title="People"
         description="Who can work in this organisation, and what they can reach."
       />
+
+      <UsageNotice warnings={warnings} only="users" />
 
       <Card className="mb-6">
         <CardHeader

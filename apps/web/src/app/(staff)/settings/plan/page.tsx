@@ -3,11 +3,13 @@ import { redirect } from 'next/navigation';
 import {
   describeAllowance,
   fetchEntitlements,
+  fetchUsageWarnings,
   percentageUsed,
   type Allowance,
 } from '@tenaville/core/billing';
 
 import { UsageBar } from '../../../../components/billing/usage-bar';
+import { UsageNotice } from '../../../../components/billing/usage-notice';
 import {
   Badge,
   Card,
@@ -54,7 +56,10 @@ export default async function PlanPage() {
   }
 
   const supabase = await supabaseForRequest();
-  const entitlements = await fetchEntitlements(supabase, viewer.organisationId);
+  const [entitlements, warnings] = await Promise.all([
+    fetchEntitlements(supabase, viewer.organisationId),
+    fetchUsageWarnings(supabase, viewer.organisationId),
+  ]);
 
   if (entitlements === null) {
     return (
@@ -96,6 +101,8 @@ export default async function PlanPage() {
         title="Plan and limits"
         description="What this organisation is entitled to, and how much of it is in use."
       />
+
+      <UsageNotice warnings={warnings} />
 
       <Card className="mb-6">
         <CardHeader title={entitlements.planName} description="The plan these limits come from." />

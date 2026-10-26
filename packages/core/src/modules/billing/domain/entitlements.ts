@@ -122,3 +122,68 @@ export const percentageUsed = (allowance: Allowance): number | null => {
 /** `3 of 10` · `12 of 10` · `7` when the plan sets no limit. */
 export const describeAllowance = (allowance: Allowance): string =>
   allowance.limit === null ? `${allowance.used}` : `${allowance.used} of ${allowance.limit}`;
+
+/**
+ * How close a metered limit is to its band (BILL-3, TV-148).
+ *
+ * Mirrors `app.usage_band`, which is the single definition — 80% and 100% are
+ * set there and read from the database, never recomputed here. A threshold in
+ * two places is a threshold that will differ: the screen would warn at one
+ * number and the reminder at another, and nobody would notice until a customer
+ * asked why.
+ *
+ * Distinct from `LimitVerdict`, which answers whether a write may proceed.
+ * This answers whether a person should be told, and the two differ on purpose:
+ * a plan that sells extra units past its band still warrants a warning at 80%,
+ * because that is the point where upgrading beats paying the overage.
+ */
+export type UsageBand = 'ok' | 'approaching' | 'reached' | 'unlimited';
+
+export type UsageMetric = 'units' | 'properties' | 'users';
+
+export interface UsageWarning {
+  readonly organisationId: string;
+  readonly metric: UsageMetric;
+  readonly used: number;
+  /** Null means unlimited. */
+  readonly allowed: number | null;
+  /** Null when unlimited. Capped at 100. */
+  readonly percentage: number | null;
+  readonly band: UsageBand;
+  /** Price per extra, in kobo. Null when the limit is a wall. */
+  readonly overageKobo: bigint | null;
+}
+
+/** Whether this is worth saying out loud. */
+export const shouldPrompt = (warning: UsageWarning): boolean =>
+  warning.band === 'approaching' || warning.band === 'reached';
+
+const METRIC_NOUNS: Record<UsageMetric, string> = {
+  units: 'units',
+  properties: 'properties',
+  users: 'users',
+};
+
+/**
+ * The sentence a person reads.
+ *
+ * Says the numbers before the advice, because the number is what they came to
+ * check. The way out depends on what the plan sells: a band with a per-unit
+ * price can simply be exceeded, and saying "upgrade" there would be wrong — a
+ * growing agency wants to know it will be charged, not that it is blocked.
+ */
+export const warningHeadline = (warning: UsageWarning): string => {
+  const noun = METRIC_NOUNS[warning.metric];
+  if (warning.allowed === null) return `${warning.used} ${noun}, with no limit on this plan`;
+
+  const counts = `${warning.used} of ${warning.allowed} ${noun} used`;
+  if (warning.band === 'reached') {
+    return warning.overageKobo === null
+      ? `${counts}. This plan includes no more — upgrading is the way to add another.`
+      : `${counts}. Each additional one is charged.`;
+  }
+  if (warning.band === 'approaching') {
+    return `${counts}. Worth deciding now, before the band is full.`;
+  }
+  return counts;
+};

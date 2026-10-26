@@ -1,6 +1,13 @@
 import type { UserClient } from '@tenaville/db';
 
-import type { Allowance, Entitlements, LimitVerdict } from '../domain/entitlements';
+import type {
+  Allowance,
+  Entitlements,
+  LimitVerdict,
+  UsageBand,
+  UsageMetric,
+  UsageWarning,
+} from '../domain/entitlements';
 
 /**
  * Read what the caller's organisation is entitled to (BILL-3, TV-147).
@@ -56,4 +63,37 @@ export const fetchEntitlements = async (
     includedMessages: row.included_messages,
     features: row.features ?? [],
   };
+};
+
+/**
+ * Read the usage warnings for the caller's organisation (BILL-3, TV-148).
+ *
+ * The bands come from the database, which is also what decides when a reminder
+ * goes out. Recomputing 80% here would give the screen and the reminder two
+ * definitions of "nearly full".
+ *
+ * Storage and messages are absent from the result because nothing measures
+ * them yet — a document registry (TV-052) and the message log (TV-038). They
+ * are missing rather than reported as zero, because a zero in a usage bar
+ * reads as "plenty of room".
+ */
+export const fetchUsageWarnings = async (
+  client: UserClient,
+  organisationId?: string,
+): Promise<UsageWarning[]> => {
+  const { data, error } = await client.rpc('usage_warnings');
+
+  if (error !== null) throw new Error(`could not read usage: ${error.message}`);
+
+  return (data ?? [])
+    .filter((row) => organisationId === undefined || row.organisation_id === organisationId)
+    .map((row) => ({
+      organisationId: row.organisation_id,
+      metric: row.metric as UsageMetric,
+      used: row.used ?? 0,
+      allowed: row.allowed,
+      percentage: row.percentage,
+      band: (row.band ?? 'unlimited') as UsageBand,
+      overageKobo: row.overage_kobo === null ? null : BigInt(row.overage_kobo),
+    }));
 };

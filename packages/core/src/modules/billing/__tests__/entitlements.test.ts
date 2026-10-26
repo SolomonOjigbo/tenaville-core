@@ -7,8 +7,11 @@ import {
   isPlanLimitError,
   percentageUsed,
   planRefusalMessage,
+  shouldPrompt,
+  warningHeadline,
   type Allowance,
   type Entitlements,
+  type UsageWarning,
 } from '../domain/entitlements';
 
 const allowance = (overrides: Partial<Allowance> = {}): Allowance => ({
@@ -111,5 +114,57 @@ describe('hasFeature', () => {
   it('answers from the grants the database returned', () => {
     expect(hasFeature(entitlements, 'full_reports')).toBe(true);
     expect(hasFeature(entitlements, 'multi_landlord_ledger')).toBe(false);
+  });
+});
+
+const warning = (overrides: Partial<UsageWarning> = {}): UsageWarning => ({
+  organisationId: 'org-1',
+  metric: 'units',
+  used: 24,
+  allowed: 30,
+  percentage: 80,
+  band: 'approaching',
+  overageKobo: 30000n,
+  ...overrides,
+});
+
+describe('shouldPrompt', () => {
+  it('speaks up at 80% and when the band is full', () => {
+    expect(shouldPrompt(warning({ band: 'approaching' }))).toBe(true);
+    expect(shouldPrompt(warning({ band: 'reached' }))).toBe(true);
+  });
+
+  it('stays quiet otherwise', () => {
+    expect(shouldPrompt(warning({ band: 'ok' }))).toBe(false);
+    expect(shouldPrompt(warning({ band: 'unlimited' }))).toBe(false);
+  });
+});
+
+describe('warningHeadline', () => {
+  it('leads with the numbers, because that is what was being checked', () => {
+    expect(warningHeadline(warning())).toMatch(/^24 of 30 units used\./);
+  });
+
+  it('says charged, not blocked, when the plan sells extras', () => {
+    // A growing agency on a plan with a per-unit price is not stuck; telling
+    // them to upgrade would be wrong, and telling them nothing would be worse
+    // when the next unit costs money.
+    const headline = warningHeadline(warning({ band: 'reached', overageKobo: 30000n }));
+    expect(headline).toContain('charged');
+    expect(headline).not.toContain('upgrading');
+  });
+
+  it('says upgrade when the band is a wall', () => {
+    const headline = warningHeadline(
+      warning({ metric: 'properties', used: 1, allowed: 1, band: 'reached', overageKobo: null }),
+    );
+    expect(headline).toContain('upgrading is the way');
+  });
+
+  it('does not pretend unlimited has a fraction', () => {
+    const headline = warningHeadline(
+      warning({ used: 420, allowed: null, percentage: null, band: 'unlimited' }),
+    );
+    expect(headline).toBe('420 units, with no limit on this plan');
   });
 });
