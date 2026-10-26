@@ -243,8 +243,8 @@
     "points": 8,
     "requirements": ["RENT-1"],
     "acceptance": "Activating a lease produces the correct dated charges, including a one-off irregular schedule, with totals matching lease terms.",
-    "status": "partial",
-    "note": "generateRentPeriods computes the schedule; Charge rows are not persisted yet"
+    "status": "backend-done",
+    "note": "charges table, schedule generation for annual, half-yearly, quarterly, monthly and irregular rents, activation in one transaction, append-only and audited; no API route or UI yet, and a part period is charged in full pending the rounding rule in open decision 20"
   },
   {
     "ticket": "TV-019",
@@ -333,7 +333,7 @@
     "title": "Receipts: sequential numbering per organisation or branch, PDF, shareable link",
     "points": 8,
     "requirements": ["RENT-13", "DOC-3"],
-    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD §16.2). Numbers come from the allocator in TV-144.",
+    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD \u00a716.2). Numbers come from the allocator in TV-144.",
     "status": "todo",
     "note": ""
   },

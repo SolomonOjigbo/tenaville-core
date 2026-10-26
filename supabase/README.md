@@ -53,5 +53,6 @@ pnpm db:start                      # start the local stack
 pnpm db:reset                      # re-apply migrations and seed
 pnpm db:diff -- descriptive_name   # capture local schema changes as a migration
 pnpm db:lint                       # schema lint, including RLS checks
-pnpm db:types                      # regenerate types into packages/db
+pnpm db:types                      # regenerate types into packages/db (migrations only)
+pnpm test:isolation                # migrations + lint + seed + pgTAP in a throwaway container
 ```

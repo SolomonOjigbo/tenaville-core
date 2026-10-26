@@ -20,7 +20,7 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:diff": "supabase db diff -f",
-    "db:types": "supabase gen types typescript --local > packages/db/src/generated/database.types.ts",
+    "db:types": "bash tools/db-types.sh",
     "db:lint": "supabase db lint",
     "docs:reqs": "node tools/check-traceability.mjs && node tools/check-backlog.mjs",
     "db:verify": "bash tools/db-verify.sh",

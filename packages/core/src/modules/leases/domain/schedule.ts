@@ -13,7 +13,16 @@
  * generate the wrong due date for anyone reading it elsewhere.
  */
 
-export type RentFrequency = 'annual' | 'half_yearly' | 'quarterly' | 'monthly';
+/**
+ * A rent that falls due on a repeating interval, which is the only kind this
+ * file can compute. 'irregular' is a lease term too (see RentFrequency), but a
+ * bespoke schedule has no interval to count: its instalments are agreed, not
+ * derived, so they are supplied rather than generated.
+ */
+export type PeriodicRentFrequency = 'annual' | 'half_yearly' | 'quarterly' | 'monthly';
+
+/** Every value the database's rent_frequency enum holds. */
+export type RentFrequency = PeriodicRentFrequency | 'irregular';
 
 /** A calendar date as `YYYY-MM-DD`. */
 export type CalendarDate = string;
@@ -107,7 +116,7 @@ const firstDayOfMonthOnOrAfter = (from: Ymd, day: number): Ymd => {
   return { y: next.y, m: next.m, d: Math.min(day, daysInMonth(next.y, next.m)) };
 };
 
-const MONTHS_PER_PERIOD: Record<RentFrequency, number> = {
+const MONTHS_PER_PERIOD: Record<PeriodicRentFrequency, number> = {
   annual: 12,
   half_yearly: 6,
   quarterly: 3,
@@ -118,7 +127,7 @@ export interface ScheduleTerms {
   readonly startsOn: CalendarDate;
   /** Inclusive: a lease to 2026-12-31 covers that day. */
   readonly endsOn: CalendarDate;
-  readonly frequency: RentFrequency;
+  readonly frequency: PeriodicRentFrequency;
   /**
    * Day of month rent falls due, for periodic rents. Capped at 28 by the
    * database so that every month has the day — a "due on the 31st" term would

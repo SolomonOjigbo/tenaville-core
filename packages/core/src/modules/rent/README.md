@@ -31,6 +31,28 @@ The module that decides whether an agency can leave spreadsheets. Append-only hi
 | RENT-15 | P0  | Provide a daily cash-up per user and payment method for reconciliation against bank and cash                                      |
 | RENT-16 | P0  | Support opening balances and historical arrears at cutover (see MIG-2)                                                            |
 
+## What exists today
+
+`Charge` only, and generation from lease terms (RENT-1, TV-018).
+
+The calendar arithmetic lives in the leases module (`domain/schedule.ts`),
+because the dates are lease terms; what this module owns is the money — what
+each period is charged, and what happens to a term that is not a whole number
+of periods. The database validates the _shape_ of a generated schedule
+(coverage, contiguity, numbering, amounts) and deliberately does not recompute
+the dates: one definition of a quarter, not two that can disagree.
+
+Two things to know before building on it:
+
+- **A part period is charged in full** and flagged `covers_partial_period`.
+  Pro-rating needs a documented rounding rule, which is open decision 20. The
+  sharp edge is a term like 31 January to 30 April, which produces a one-day
+  fourth period charged at the full rent — correct per the rule, and surprising.
+  `planSchedule` exists so a caller can show the schedule before committing.
+- **Nothing stores what a charge has been paid.** The balance is derived from
+  allocations (PRD §10.4). A `paid_kobo` column would be a second truth, and the
+  two would disagree the first time an allocation was reversed.
+
 ## Layout
 
 ```

@@ -1,6 +1,20 @@
 import { z } from 'zod';
 
-export const rentFrequencySchema = z.enum(['annual', 'half_yearly', 'quarterly', 'monthly']);
+export const rentFrequencySchema = z.enum([
+  'annual',
+  'half_yearly',
+  'quarterly',
+  'monthly',
+  'irregular',
+]);
+
+/** The frequencies a schedule can be derived from. 'irregular' is supplied. */
+export const periodicRentFrequencySchema = z.enum([
+  'annual',
+  'half_yearly',
+  'quarterly',
+  'monthly',
+]);
 export const leaseStatusSchema = z.enum(['draft', 'active', 'expired', 'terminated', 'renewed']);
 export const depositCustodianSchema = z.enum(['agency', 'landlord']);
 
@@ -43,12 +57,6 @@ export const createLeaseSchema = z
     // assumed. 'agency' is the default because a deposit the agency holds is
     // client money it must account for.
     depositCustodian: depositCustodianSchema.default('agency'),
-    /**
-     * Activating immediately is opt-in. The default leaves the lease a draft,
-     * because activation occupies the unit and starts the rent clock, and a
-     * mis-keyed date should not do either behind the user's back.
-     */
-    activate: z.boolean().default(false),
   })
   .refine((v) => v.endsOn > v.startsOn, {
     message: 'The lease must end after it starts',
