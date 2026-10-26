@@ -333,7 +333,7 @@
     "title": "Receipts: sequential numbering per organisation or branch, PDF, shareable link",
     "points": 8,
     "requirements": ["RENT-13", "DOC-3"],
-    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD \u00a716.2). Numbers come from the allocator in TV-144.",
+    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD §16.2). Numbers come from the allocator in TV-144.",
     "status": "todo",
     "note": ""
   },
@@ -520,19 +520,6 @@
     "note": ""
   },
   {
-    "ticket": "TV-037",
-    "sprint": 6,
-    "release": "R1",
-    "theme": "Landlord ledger II and migration",
-    "module": "Migration",
-    "title": "Full organisation data export",
-    "points": 3,
-    "requirements": ["MIG-5"],
-    "acceptance": "An administrator can export all organisation data in documented formats at any time, including after a subscription lapses.",
-    "status": "todo",
-    "note": ""
-  },
-  {
     "ticket": "TV-150",
     "sprint": 6,
     "release": "R1",
@@ -544,6 +531,19 @@
     "acceptance": "A free-plan receipt carries the Tenaville line; a paid one carries the agency's own branding.",
     "status": "todo",
     "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
+    "ticket": "TV-154",
+    "sprint": 6,
+    "release": "R1",
+    "theme": "Landlord ledger II and migration",
+    "module": "Money",
+    "title": "Non-rent lease charges: service charge, utilities and agreed fees, one-off or recurring",
+    "points": 5,
+    "requirements": ["LEASE-2", "RENT-1"],
+    "acceptance": "A charge agreed in the tenancy but not rent — service charge, utilities, an agreed fee — is raised against the lease either once or on its own frequency, ages into arrears, appears on the landlord statement and is allocated to like any other charge. Caution deposits stay in lease_deposits; repair recharges stay with TV-050.",
+    "status": "todo",
+    "note": "LEASE-2's 'other charges' clause, found unbuilt while TV-018 landed rent charges"
   },
   {
     "ticket": "TV-038",
@@ -1064,6 +1064,19 @@
     "acceptance": "A bill is the base price plus per-unit overage, never more than the next tier's price. Annual plans bill in advance at the plan's discount.",
     "status": "todo",
     "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
+    "ticket": "TV-037",
+    "sprint": 13,
+    "release": "R1",
+    "theme": "R1 pilot and release readiness",
+    "module": "Migration",
+    "title": "Full organisation data export",
+    "points": 3,
+    "requirements": ["MIG-5"],
+    "acceptance": "An administrator can export all organisation data in documented formats at any time, including after a subscription lapses.",
+    "status": "todo",
+    "note": "moved from Sprint 6: an export written there would cover a data model without maintenance, documents or mobile data, all of which land in Sprints 8 to 11"
   },
   {
     "ticket": "TV-073",
