@@ -295,8 +295,8 @@
     "points": 5,
     "requirements": ["BILL-3"],
     "acceptance": "A request that would exceed a plan limit is refused by the API, not only hidden in the UI. Limits come from the plans table, not from code.",
-    "status": "todo",
-    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+    "status": "done",
+    "note": "limits read from the plans table and enforced by triggers on properties, units and memberships; feature catalogue, per-plan grants and assignable roles as reference data; the multi-landlord gate on landlords and mandates; plan_entitlements() for the UI and a plan and limits page. Storage is not enforced: nothing records a document size until TV-052. The 80% and 100% warnings are TV-148"
   },
   {
     "ticket": "TV-022",
@@ -333,7 +333,7 @@
     "title": "Receipts: sequential numbering per organisation or branch, PDF, shareable link",
     "points": 8,
     "requirements": ["RENT-13", "DOC-3"],
-    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD §16.2). Numbers come from the allocator in TV-144.",
+    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD \u00a716.2). Numbers come from the allocator in TV-144.",
     "status": "todo",
     "note": ""
   },
@@ -541,7 +541,7 @@
     "title": "Non-rent lease charges: service charge, utilities and agreed fees, one-off or recurring",
     "points": 5,
     "requirements": ["LEASE-2", "RENT-1"],
-    "acceptance": "A charge agreed in the tenancy but not rent — service charge, utilities, an agreed fee — is raised against the lease either once or on its own frequency, ages into arrears, appears on the landlord statement and is allocated to like any other charge. Caution deposits stay in lease_deposits; repair recharges stay with TV-050.",
+    "acceptance": "A charge agreed in the tenancy but not rent \u2014 service charge, utilities, an agreed fee \u2014 is raised against the lease either once or on its own frequency, ages into arrears, appears on the landlord statement and is allocated to like any other charge. Caution deposits stay in lease_deposits; repair recharges stay with TV-050.",
     "status": "todo",
     "note": "LEASE-2's 'other charges' clause, found unbuilt while TV-018 landed rent charges"
   },

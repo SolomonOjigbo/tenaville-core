@@ -51,6 +51,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
 
   { href: '/settings', label: 'Settings', permission: 'org.update', group: 'admin' },
   { href: '/settings/people', label: 'People', permission: 'org.member.invite', group: 'admin' },
+  {
+    href: '/settings/plan',
+    label: 'Plan and limits',
+    permission: 'org.billing.read',
+    group: 'admin',
+  },
   { href: '/settings/audit', label: 'Audit trail', permission: 'org.audit.read', group: 'admin' },
 ];
 

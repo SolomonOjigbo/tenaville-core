@@ -149,6 +149,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"features": {
+                  Row: {
+                    "created_at": string,"description": string,"is_available": boolean,"key": string,"label": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"description": string,"is_available"?: boolean,"key": string,"label": string
+                  }
+                  Update: {
+                    "created_at"?: string,"description"?: string,"is_available"?: boolean,"key"?: string,"label"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"import_batches": {
                   Row: {
                     "applied_at": string | null,"created_at": string,"created_by": string | null,"error": string | null,"file_name": string | null,"id": string,"invalid_count": number,"kind": Database["public"]['Enums']["import_kind"],"organisation_id": string,"rolled_back_at": string | null,"rolled_back_by": string | null,"row_count": number,"source_headers": (string)[] | null,"status": Database["public"]['Enums']["import_status"],"valid_count": number,"validated_at": string | null
@@ -479,6 +493,52 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"plan_features": {
+                  Row: {
+                    "feature_key": string,"plan_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "feature_key": string,"plan_id": string
+                  }
+                  Update: {
+                    "feature_key"?: string,"plan_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "plan_features_feature_key_fkey"
+      columns: ["feature_key"]
+isOneToOne: false
+      referencedRelation: "features"
+      referencedColumns: ["key"]
+    },{
+      foreignKeyName: "plan_features_plan_id_fkey"
+      columns: ["plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"plan_roles": {
+                  Row: {
+                    "plan_id": string,"role": Database["public"]['Enums']["app_role"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "plan_id": string,"role": Database["public"]['Enums']["app_role"]
+                  }
+                  Update: {
+                    "plan_id"?: string,"role"?: Database["public"]['Enums']["app_role"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "plan_roles_plan_id_fkey"
+      columns: ["plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"plans": {
                   Row: {
                     "billing_period": Database["public"]['Enums']["billing_period"],"created_at": string,"description": string | null,"extra_user_kobo": number | null,"id": string,"included_messages": number | null,"is_public": boolean,"name": string,"price_kobo": number,"property_limit": number | null,"sort_order": number,"storage_mb": number | null,"tier": Database["public"]['Enums']["plan_tier"] | null,"trial_days": number,"unit_limit": number | null,"unit_overage_kobo": number | null,"updated_at": string | null,"user_limit": number | null
@@ -732,6 +792,11 @@ isOneToOne: false
                            },
 "create_organisation_with_owner":
 { Args: { "organisation_name": string,"organisation_type"?: Database["public"]['Enums']["organisation_type"],"owner_full_name"?: string }; Returns: string
+                           },
+"plan_entitlements":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "extra_user_kobo": number,"features": (string)[],"included_messages": number,"organisation_id": string,"plan_id": string,"plan_name": string,"properties_used": number,"properties_verdict": string,"property_limit": number,"storage_mb": number,"tier": Database["public"]['Enums']["plan_tier"],"unit_limit": number,"unit_overage_kobo": number,"units_used": number,"units_verdict": string,"user_limit": number,"users_used": number,"users_verdict": string
+            }[]
                            },
 "record_document_access":
 { Args: { "entity_id": string,"entity_type": string,"object_bucket": string,"object_path": string,"target_organisation_id": string }; Returns: undefined

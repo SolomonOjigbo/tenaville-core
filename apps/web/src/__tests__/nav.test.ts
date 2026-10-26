@@ -34,6 +34,18 @@ describe('navigation', () => {
     expect(nav).not.toContain('/settings');
   });
 
+  it('shows plan and limits to whoever answers for the bill', () => {
+    // An accountant pays it and an admin runs into the seat limit when they
+    // invite someone, so both need the numbers — org.billing.read, not the
+    // manage permission that only an owner holds (TV-147).
+    for (const role of ['owner', 'admin', 'accountant'] as const) {
+      expect(hrefs(role), role).toContain('/settings/plan');
+    }
+    for (const role of ['property_manager', 'letting_agent', 'caretaker'] as const) {
+      expect(hrefs(role), role).not.toContain('/settings/plan');
+    }
+  });
+
   it('hides administration from everyone but an owner or admin', () => {
     for (const role of ['property_manager', 'accountant', 'letting_agent', 'caretaker'] as const) {
       expect(hrefs(role), role).not.toContain('/settings');

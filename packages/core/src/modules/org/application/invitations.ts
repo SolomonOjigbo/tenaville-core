@@ -1,5 +1,10 @@
 import type { AdminClient, AppRole, UserClient } from '@tenaville/db';
 
+import {
+  asPlanRefusal,
+  fetchEntitlements,
+  planRefusalMessage,
+} from '../../billing/application/index';
 import { canAssignRole, isStaff } from '../domain/roles';
 import {
   acceptInvitationSchema,
@@ -42,6 +47,14 @@ export interface PendingInvitation {
  *
  * Doing step 2 first would let an unauthorised caller create accounts.
  *
+ * The seat limit is checked between 1 and 2 as well as by the database, which
+ * looks redundant and is not. Step 2 sends an email: an invitation that was
+ * going to be refused would otherwise reach the person's inbox, give them an
+ * account, and then fail — leaving them a link that cannot work and the agency
+ * an explanation to make. The trigger remains the authority, because two
+ * administrators inviting at the same moment can both pass a check made
+ * beforehand; it should simply never be the thing a person sees (BILL-3).
+ *
  * @param admin - service-role client, used only to create the account and send
  *   the invitation email.
  */
@@ -63,6 +76,19 @@ export const inviteMember = async (
   }
   if (!isStaff(parsed.role) && parsed.role !== 'landlord' && parsed.role !== 'tenant') {
     throw new Error(`${parsed.role} is not a role that can be invited`);
+  }
+
+  // Only a staff role takes a seat. Portal access for a tenant or a landlord
+  // does not, or three tenants signing in would exhaust a plan.
+  if (isStaff(parsed.role)) {
+    const entitlements = await fetchEntitlements(client, parsed.organisationId);
+    if (entitlements !== null && entitlements.users.verdict === 'refused') {
+      throw new Error(
+        `The ${entitlements.planName} plan includes ${String(entitlements.users.limit)} users, ` +
+          `and this organisation already has ${String(entitlements.users.used)}. ` +
+          'Upgrade the plan to invite more colleagues, or suspend someone who has left.',
+      );
+    }
   }
 
   // Creates the account if it is new, or returns the existing one. Either way
@@ -106,6 +132,11 @@ export const inviteMember = async (
     if (error.code === '23505') {
       throw new Error('that person is already a member of this organisation');
     }
+    // A plan limit the check above could not see: a simultaneous invitation,
+    // or a role this plan cannot assign at all. The database phrases both
+    // halves of it, so pass its words on rather than inventing worse ones.
+    const refusal = asPlanRefusal(error);
+    if (refusal !== null) throw new Error(planRefusalMessage(refusal));
     throw new Error(`could not create the invitation: ${error.message}`);
   }
 

@@ -23,6 +23,18 @@ begin
   insert into public.organisations (name, type)
   values ('Abuja Estates', 'agency') returning id into abuja_org;
 
+  -- Subscribed before anyone is invited, which is the order signup uses too.
+  -- Plan entitlements are enforced at the write (TV-147), and an organisation
+  -- with no subscription row falls back to Free — where only the owner and a
+  -- caretaker can be added. Seeding the people first would have been refused.
+  --
+  -- Plans themselves come from the migration: they are production reference
+  -- data, like the states list, not development fixtures.
+  insert into public.subscriptions (organisation_id, plan_id, status, trial_ends_on, units_included)
+  select o.id, 'trial', 'trialing', (current_date + p.trial_days), p.unit_limit
+  from public.organisations o
+  cross join (select trial_days, unit_limit from public.plans where id = 'trial') p;
+
   for seeded in
     select * from (values
       ('owner@lagoslettings.ng',   'Adaeze Okonkwo',  'owner',            lagos_org),
@@ -46,13 +58,6 @@ begin
       values (seeded.organisation_id, u, 'organisation');
     end if;
   end loop;
-
-  -- Plans come from the migration now: they are production reference data,
-  -- like the states list, not development fixtures.
-  insert into public.subscriptions (organisation_id, plan_id, status, trial_ends_on, units_included)
-  select o.id, 'trial', 'trialing', (current_date + p.trial_days), p.unit_limit
-  from public.organisations o
-  cross join (select trial_days, unit_limit from public.plans where id = 'trial') p;
 
   raise notice 'seeded 2 organisations with 6 users';
 end
