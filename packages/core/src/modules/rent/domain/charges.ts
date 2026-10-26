@@ -225,3 +225,68 @@ export const toPayload = (rows: readonly ChargeRow[]): ChargeRowPayload[] =>
     amount_kobo: row.amountKobo.toString(),
     covers_partial_period: row.coversPartialPeriod,
   }));
+
+/**
+ * How often an agreed non-rent charge falls due (LEASE-2, TV-154).
+ *
+ * Mirrors the database's `charge_frequency`, which is deliberately not
+ * `rent_frequency`: a lease has no "one-off rent", and putting the value there
+ * would make that nonsense representable.
+ */
+export type ChargeFrequency = 'one_off' | PeriodicRentFrequency;
+
+/** Service charge, utility, agreed fee — never rent, and never a deposit. */
+export type NonRentChargeKind = 'service_charge' | 'utility' | 'agreed_fee';
+
+export interface ChargeTermTerms {
+  readonly kind: NonRentChargeKind;
+  readonly description: string;
+  /** One instalment, in kobo. For a one-off charge, the whole amount. */
+  readonly amountKobo: Kobo;
+  readonly frequency: ChargeFrequency;
+  /** The term's own dates, which need not be the lease's. */
+  readonly startsOn: CalendarDate;
+  readonly endsOn: CalendarDate;
+  readonly dueDay?: number | undefined;
+  readonly partPeriod: PartPeriodTreatment;
+}
+
+/**
+ * The instalments of an agreed charge.
+ *
+ * A one-off is one charge covering the term, due the day it starts. Anything
+ * else is the same periodic machinery rent uses — which is the point of
+ * TV-154: a service charge is a row in `charges` like any other, so
+ * allocation, arrears ageing and statements handle it without knowing it is
+ * not rent.
+ */
+export const buildTermCharges = (terms: ChargeTermTerms): ChargeRow[] => {
+  if (terms.amountKobo <= 0n) {
+    throw new ChargeScheduleError('an agreed charge must be more than nothing');
+  }
+  if (terms.endsOn < terms.startsOn) {
+    throw new ChargeScheduleError('a charge term must end on or after it starts');
+  }
+
+  if (terms.frequency === 'one_off') {
+    return [
+      {
+        sequence: 1,
+        periodStart: terms.startsOn,
+        periodEnd: terms.endsOn,
+        dueOn: terms.startsOn,
+        amountKobo: terms.amountKobo,
+        coversPartialPeriod: false,
+      },
+    ];
+  }
+
+  return buildPeriodicCharges({
+    startsOn: terms.startsOn,
+    endsOn: terms.endsOn,
+    frequency: terms.frequency,
+    rentKobo: terms.amountKobo,
+    dueDay: terms.dueDay,
+    partPeriod: terms.partPeriod,
+  });
+};

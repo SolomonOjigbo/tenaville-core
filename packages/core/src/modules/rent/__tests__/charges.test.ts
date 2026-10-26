@@ -5,6 +5,7 @@ import {
   ChargeScheduleError,
   buildIrregularCharges,
   buildPeriodicCharges,
+  buildTermCharges,
   scheduleTotal,
   toPayload,
 } from '../domain/charges';
@@ -326,5 +327,83 @@ describe('toPayload', () => {
       amount_kobo: '9007199254740993',
       covers_partial_period: false,
     });
+  });
+});
+
+describe('buildTermCharges', () => {
+  const base = {
+    kind: 'service_charge' as const,
+    description: 'Estate service charge',
+    startsOn: '2026-01-01',
+    endsOn: '2026-12-31',
+    partPeriod: 'charge_in_full' as const,
+  };
+
+  it('raises one charge for a one-off fee, due the day the term starts', () => {
+    const rows = buildTermCharges({
+      ...base,
+      kind: 'agreed_fee',
+      description: 'Legal fee',
+      amountKobo: kobo(50_000_00n),
+      frequency: 'one_off',
+    });
+
+    expect(rows).toEqual([
+      {
+        sequence: 1,
+        periodStart: '2026-01-01',
+        periodEnd: '2026-12-31',
+        dueOn: '2026-01-01',
+        amountKobo: kobo(50_000_00n),
+        coversPartialPeriod: false,
+      },
+    ]);
+  });
+
+  it('spreads a quarterly service charge across the term', () => {
+    const rows = buildTermCharges({
+      ...base,
+      amountKobo: kobo(30_000_00n),
+      frequency: 'quarterly',
+    });
+
+    expect(rows).toHaveLength(4);
+    expect(scheduleTotal(rows)).toBe(kobo(120_000_00n));
+    expect(rows.map((row) => row.periodStart)).toEqual([
+      '2026-01-01',
+      '2026-04-01',
+      '2026-07-01',
+      '2026-10-01',
+    ]);
+  });
+
+  it('starts where the agreement does, not where the tenancy does', () => {
+    // A service charge agreed halfway through a tenancy starts halfway
+    // through it. The database checks the term sits inside the lease; the
+    // schedule just follows the term.
+    const rows = buildTermCharges({
+      ...base,
+      startsOn: '2026-07-01',
+      amountKobo: kobo(10_000_00n),
+      frequency: 'monthly',
+    });
+
+    expect(rows[0]?.periodStart).toBe('2026-07-01');
+    expect(rows).toHaveLength(6);
+  });
+
+  it('refuses a charge of nothing, or one that ends before it starts', () => {
+    expect(() => buildTermCharges({ ...base, amountKobo: kobo(0n), frequency: 'one_off' })).toThrow(
+      ChargeScheduleError,
+    );
+    expect(() =>
+      buildTermCharges({
+        ...base,
+        startsOn: '2026-12-31',
+        endsOn: '2026-01-01',
+        amountKobo: kobo(100n),
+        frequency: 'one_off',
+      }),
+    ).toThrow(/end on or after it starts/);
   });
 });

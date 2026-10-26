@@ -542,8 +542,8 @@
     "points": 5,
     "requirements": ["LEASE-2", "RENT-1"],
     "acceptance": "A charge agreed in the tenancy but not rent \u2014 service charge, utilities, an agreed fee \u2014 is raised against the lease either once or on its own frequency, ages into arrears, appears on the landlord statement and is allocated to like any other charge. Caution deposits stay in lease_deposits; repair recharges stay with TV-050.",
-    "status": "todo",
-    "note": "LEASE-2's 'other charges' clause, found unbuilt while TV-018 landed rent charges"
+    "status": "backend-done",
+    "note": "lease_charge_terms with one-off and periodic frequencies, instalments raised as ordinary rows in charges so allocation, arrears and statements need no special case; terms freeze once raised; the overlap and sequence keys are now per agreement, so a lease can carry two concurrent service charges. No UI to agree a charge yet. The \"appears on the landlord statement\" clause cannot be shown until TV-032, and \"allocated to like any other charge\" until TV-023"
   },
   {
     "ticket": "TV-038",

@@ -53,6 +53,14 @@ Two things to know before building on it:
   allocations (PRD §10.4). A `paid_kobo` column would be a second truth, and the
   two would disagree the first time an allocation was reversed.
 
+## Non-rent charges
+
+A tenancy's other agreed charges (LEASE-2, TV-154) are `lease_charge_terms`: the agreement, with an amount, a frequency and its own dates. Its instalments are **ordinary rows in `charges`**, which is most of the value — allocation (TV-023), arrears ageing (TV-031) and landlord statements (TV-032) are written against `charges`, so a service charge is allocated to, aged and reported by the same code as rent without any of it knowing service charges exist.
+
+Caution deposits are deliberately not charges: they are client money with a custody lifecycle, and they live in `lease_deposits` (LEASE-13). Folding them in would put client funds in the same table as agency income, which invariant 3 forbids. Recharged repairs belong to TV-050.
+
+Two keys on `charges` are per _agreement_ rather than per kind, and both had to change for this: the overlap exclusion and the instalment sequence. A lease with an estate service charge and a waste levy covering the same quarter is ordinary, and keying on kind alone called it a double billing. `coalesce(charge_term_id, lease_id)` keeps rent — which has no term row — sharing one key, because an exclusion constraint treats two nulls as non-conflicting and keying on the nullable column directly would have silently stopped protecting rent.
+
 ## Layout
 
 ```
