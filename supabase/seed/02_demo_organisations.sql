@@ -47,8 +47,12 @@ begin
     end if;
   end loop;
 
+  -- Plans come from the migration now: they are production reference data,
+  -- like the states list, not development fixtures.
   insert into public.subscriptions (organisation_id, plan_id, status, trial_ends_on, units_included)
-  select id, 'trial', 'trialing', (current_date + 14), 10 from public.organisations;
+  select o.id, 'trial', 'trialing', (current_date + p.trial_days), p.unit_limit
+  from public.organisations o
+  cross join (select trial_days, unit_limit from public.plans where id = 'trial') p;
 
   raise notice 'seeded 2 organisations with 6 users';
 end

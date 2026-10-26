@@ -5,7 +5,7 @@ Postgres via Supabase. Migrations are forward-only SQL; RLS is the tenant bounda
 ```
 supabase/
 ├── config.toml     local stack configuration
-├── seed/*.sql      seed files, listed in config.toml's [db.seed] sql_paths
+├── seed/*.sql      development fixtures, listed in config.toml's [db.seed] sql_paths
 ├── migrations/     forward-only SQL, timestamp-prefixed
 └── tests/          pgTAP tests, primarily RLS policy assertions
 ```
@@ -19,6 +19,14 @@ supabase/
 5. **Append-only financial tables.** `payments`, `payment_allocations`, `landlord_ledger_entries` get triggers and column grants that prevent amount-changing updates and deletes — the invariant belongs in the database, not only in application code ([ADR 0004](../docs/decisions/0004-append-only-financial-history.md)).
 6. **Receipt numbers come from a server-side sequence** per organisation (per branch where configured). Never client-assigned (RENT-13).
 7. **`snake_case`, plural table names.** British spelling in domain names, matching the PRD: `organisations`, not `organizations`.
+
+## Reference data is not seed data
+
+Nigerian states and subscription plans live in **migrations**, not in `seed/`.
+Production needs both — `properties.state_code` is a foreign key, and signup
+looks up the trial plan by id — so seeding them would leave a production
+database without them. The rule: if the application would break without a row,
+it belongs in a migration.
 
 ## Seed data
 

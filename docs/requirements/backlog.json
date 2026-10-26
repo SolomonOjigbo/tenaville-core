@@ -286,6 +286,19 @@
     "note": "lease_handovers with meter readings, balance, keys and evidence"
   },
   {
+    "ticket": "TV-147",
+    "sprint": 3,
+    "release": "R1",
+    "theme": "Tenancy",
+    "module": "Billing",
+    "title": "Plan entitlements: definitions, limits and feature flags enforced in the API and UI",
+    "points": 5,
+    "requirements": ["BILL-3"],
+    "acceptance": "A request that would exceed a plan limit is refused by the API, not only hidden in the UI. Limits come from the plans table, not from code.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
     "ticket": "TV-022",
     "sprint": 4,
     "release": "R1",
@@ -320,7 +333,7 @@
     "title": "Receipts: sequential numbering per organisation or branch, PDF, shareable link",
     "points": 8,
     "requirements": ["RENT-13", "DOC-3"],
-    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD \u00a716.2). Numbers come from the allocator in TV-144.",
+    "acceptance": "Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD §16.2). Numbers come from the allocator in TV-144.",
     "status": "todo",
     "note": ""
   },
@@ -429,6 +442,19 @@
     "note": ""
   },
   {
+    "ticket": "TV-148",
+    "sprint": 5,
+    "release": "R1",
+    "theme": "Landlord ledger I",
+    "module": "Billing",
+    "title": "Usage metering: active units, properties, users, storage and messages",
+    "points": 5,
+    "requirements": ["BILL-3"],
+    "acceptance": "Usage is counted at the end of the billing period with a 3-day grace, and warnings appear at 80% and 100% of a band.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
     "ticket": "TV-032",
     "sprint": 6,
     "release": "R1",
@@ -507,6 +533,19 @@
     "note": ""
   },
   {
+    "ticket": "TV-150",
+    "sprint": 6,
+    "release": "R1",
+    "theme": "Landlord ledger II and migration",
+    "module": "Money",
+    "title": "Receipt and statement footer: Tenaville line on Free, agency branding on paid",
+    "points": 2,
+    "requirements": ["DOC-3"],
+    "acceptance": "A free-plan receipt carries the Tenaville line; a paid one carries the agency's own branding.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
     "ticket": "TV-038",
     "sprint": 7,
     "release": "R1",
@@ -583,6 +622,19 @@
     "acceptance": "Configured reminders send once per rule, stop when paid, and log each send.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-149",
+    "sprint": 7,
+    "release": "R1",
+    "theme": "Communications and tasks",
+    "module": "Communications",
+    "title": "WhatsApp click-to-chat sharing for receipts and reminders",
+    "points": 3,
+    "requirements": ["COMMS-2"],
+    "acceptance": "A receipt or reminder opens in WhatsApp on the staff member's own phone with no automated send, so the free plan costs nothing to run.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
   },
   {
     "ticket": "TV-044",
@@ -767,6 +819,19 @@
     "note": ""
   },
   {
+    "ticket": "TV-151",
+    "sprint": 9,
+    "release": "R1",
+    "theme": "Documents and portals",
+    "module": "Billing",
+    "title": "Trial lifecycle: start, reminders at day 20, 27 and 30, expiry, 7-day grace",
+    "points": 5,
+    "requirements": ["BILL-1", "BILL-3"],
+    "acceptance": "A new organisation starts a 30-day Growth trial without a card, is reminded three times, and falls to Free limits after a 7-day grace.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
+  },
+  {
     "ticket": "TV-057",
     "sprint": 10,
     "release": "R1",
@@ -830,6 +895,19 @@
     "acceptance": "An assigned task triggers a push notification that opens the task.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-152",
+    "sprint": 10,
+    "release": "R1",
+    "theme": "Staff mobile app I",
+    "module": "Billing",
+    "title": "Downgrade to Free: choose the active property, read-only locking, restore on upgrade",
+    "points": 5,
+    "requirements": ["BILL-4"],
+    "acceptance": "Over-limit data stays visible, printable and exportable but accepts no new records. Upgrading restores it immediately. Nothing is deleted.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
   },
   {
     "ticket": "TV-062",
@@ -902,12 +980,12 @@
     "release": "R1",
     "theme": "Billing, reports and hardening",
     "module": "Billing",
-    "title": "Subscription plans by units, trial, naira billing through a payment gateway, invoices",
-    "points": 8,
-    "requirements": ["BILL-1", "BILL-2"],
-    "acceptance": "A trial converts to a paid plan with an invoice and receipt; plan limits follow units under management.",
+    "title": "Subscription checkout and invoices through a Nigerian payment gateway",
+    "points": 5,
+    "requirements": ["BILL-2"],
+    "acceptance": "A plan is bought in naira through the gateway with a VAT-bearing invoice and a receipt; a failed renewal retries and is reported, not silently lapsed.",
     "status": "todo",
-    "note": ""
+    "note": "narrowed from 8 points: the plan definitions and trial it also covered are now TV-147, TV-151 and TV-153"
   },
   {
     "ticket": "TV-068",
@@ -915,12 +993,12 @@
     "release": "R1",
     "theme": "Billing, reports and hardening",
     "module": "Billing",
-    "title": "Plan limits, upgrade prompts, grace period, no deletion for non-payment",
-    "points": 5,
-    "requirements": ["BILL-3", "BILL-4"],
-    "acceptance": "Exceeding a limit shows a prompt and a grace period; data and export remain available after lapse.",
+    "title": "Upgrade and downgrade prompts: band warnings and the plan-change flow",
+    "points": 2,
+    "requirements": ["BILL-3"],
+    "acceptance": "Approaching a limit shows what the next band costs before anything changes; a plan change states plainly what is gained or locked.",
     "status": "todo",
-    "note": ""
+    "note": "narrowed from 5 points: limit enforcement is TV-147, metering is TV-148, and the no-deletion guarantee is TV-152"
   },
   {
     "ticket": "TV-069",
@@ -973,6 +1051,19 @@
     "acceptance": "Core screens meet the load target in the PRD on a mid-range phone connection.",
     "status": "todo",
     "note": ""
+  },
+  {
+    "ticket": "TV-153",
+    "sprint": 12,
+    "release": "R1",
+    "theme": "Billing, reports and hardening",
+    "module": "Billing",
+    "title": "Hybrid billing: base plan, per-unit overage capped at the next tier, annual plans",
+    "points": 8,
+    "requirements": ["BILL-1", "BILL-2"],
+    "acceptance": "A bill is the base price plus per-unit overage, never more than the next tier's price. Annual plans bill in advance at the plan's discount.",
+    "status": "todo",
+    "note": "raised by the pricing decision in sprint-4-decisions-and-pricing.md"
   },
   {
     "ticket": "TV-073",

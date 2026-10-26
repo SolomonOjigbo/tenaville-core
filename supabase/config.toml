@@ -20,7 +20,7 @@ major_version = 17
 # a syntax error. Order matters — plans before the organisations that reference
 # them.
 enabled = true
-sql_paths = ["./seed/01_plans.sql", "./seed/02_demo_organisations.sql"]
+sql_paths = ["./seed/02_demo_organisations.sql"]
 
 [db.pooler]
 enabled = false

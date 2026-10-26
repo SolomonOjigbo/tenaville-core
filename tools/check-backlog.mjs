@@ -11,6 +11,10 @@
  *      must not need anything from R2).
  *   5. A ticket claims 'done' while a requirement it covers is still 'todo' in
  *      the traceability matrix, or vice versa.
+ *   6. sprint-backlog.md disagrees with the CSV: a missing or misquoted ticket
+ *      entry, a stale per-sprint total, or a stale plan-size line. The
+ *      prose document is what people read, and its per-sprint totals had
+ *      silently drifted for four tickets before this check existed.
  *
  * Run: node tools/check-backlog.mjs
  */
@@ -56,6 +60,7 @@ const csvText = read('docs/requirements/sprint-backlog.csv');
 const backlogText = read('docs/requirements/backlog.json');
 const reqText = read('docs/requirements/requirements.json');
 const matrixText = read('docs/requirements/traceability.md');
+const proseText = read('docs/requirements/sprint-backlog.md');
 
 if (csvText && backlogText && reqText && matrixText) {
   const csv = parseCsv(csvText);
@@ -117,6 +122,69 @@ if (csvText && backlogText && reqText && matrixText) {
       if (t.status === 'todo' && status === 'done') {
         errors.push(`${t.ticket} is 'todo' but ${id} is 'done' in the traceability matrix`);
       }
+    }
+  }
+
+  // 6. The prose document must agree with the CSV.
+  if (proseText) {
+    const sprintPoints = new Map();
+    const sprintTickets = new Map();
+    for (const t of backlog) {
+      sprintPoints.set(t.sprint, (sprintPoints.get(t.sprint) ?? 0) + t.points);
+      sprintTickets.set(t.sprint, (sprintTickets.get(t.sprint) ?? 0) + 1);
+    }
+
+    for (const t of backlog) {
+      const heading = `**${t.ticket} \u00b7 ${t.title}**`;
+      const at = proseText.indexOf(heading);
+      if (at === -1) {
+        errors.push(`${t.ticket} is missing from sprint-backlog.md, or its title there differs`);
+        continue;
+      }
+      const detail = proseText.slice(at + heading.length, at + heading.length + 400);
+      const expected = `${t.module} \u00b7 ${t.points} pts \u00b7 PRD: ${t.requirements.join(', ')}`;
+      if (!detail.includes(expected)) {
+        errors.push(`${t.ticket} in sprint-backlog.md should read "${expected}"`);
+      }
+    }
+    for (const [, ticket] of proseText.matchAll(/\*\*(TV-\d+) \u00b7/g)) {
+      if (!byTicket.has(ticket)) {
+        errors.push(`sprint-backlog.md lists ${ticket}, which is not in the backlog`);
+      }
+    }
+
+    for (const [, sprint, , points] of proseText.matchAll(
+      /^#### Sprint (\d+): (.+) \((\d+) points\)$/gm,
+    )) {
+      const actual = sprintPoints.get(Number(sprint));
+      if (Number(points) !== actual) {
+        errors.push(
+          `sprint-backlog.md heading for Sprint ${sprint} says ${points} points, but its tickets total ${actual}`,
+        );
+      }
+    }
+
+    for (const [, sprint, tickets, points] of proseText.matchAll(
+      // Padding varies: Prettier aligns these columns, the generator does not.
+      /^\|\s*(\d+)\s*\|\s*[\d-]+\s*\|\s*R\d\s*\|[^|]+\|\s*(\d+)\s*\|\s*(\d+)\s*\|$/gm,
+    )) {
+      const s = Number(sprint);
+      if (Number(tickets) !== sprintTickets.get(s) || Number(points) !== sprintPoints.get(s)) {
+        errors.push(
+          `the sprint overview row for Sprint ${sprint} says ${tickets} tickets and ${points} points, ` +
+            `but the backlog has ${sprintTickets.get(s)} and ${sprintPoints.get(s)}`,
+        );
+      }
+    }
+
+    const total = backlog.reduce((a, t) => a + t.points, 0);
+    const size = /^\*\*Plan size:\*\* 23 sprints, (\d+) tickets, (\d+) story points/m.exec(proseText);
+    if (!size) errors.push('sprint-backlog.md has no recognisable plan-size line');
+    else if (Number(size[1]) !== backlog.length || Number(size[2]) !== total) {
+      errors.push(
+        `the plan-size line says ${size[1]} tickets and ${size[2]} points, ` +
+          `but the backlog has ${backlog.length} and ${total}`,
+      );
     }
   }
 

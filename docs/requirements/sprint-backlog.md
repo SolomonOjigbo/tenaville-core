@@ -4,7 +4,7 @@
 **Source:** Tenaville PRD v3.0 (all P0 requirements form R1; all P1 requirements form R2)
 **Team model:** One developer working with AI coding agents
 **Sprint length:** 2 weeks
-**Plan size:** 23 sprints, 146 tickets, 703 story points (142 tickets and 690 points as originally supplied; see Amendments) (77 tickets and 378 points in R1; 65 tickets and 312 points in R2)
+**Plan size:** 23 sprints, 153 tickets, 730 story points (142 tickets and 690 points as originally supplied; see Amendments) (87 tickets and 416 points in R1; 66 tickets and 314 points in R2)
 
 ---
 
@@ -19,6 +19,15 @@ Changes made to this plan after it was supplied. The CSV and
 | TV-144 | 4      | 3      | RENT-13 requires _sequential_ numbers and §16.2 requires no gaps, but TV-024's criteria tested only uniqueness and reuse. The obvious implementation — a Postgres sequence — is non-transactional and leaves a gap on every rolled-back payment, so it would pass TV-024 and fail the exit criterion. Split out because offline sync draws from the same allocator (MOB-4). TV-024's criteria were amended to require no gaps. |
 | TV-145 | 20     | 2      | MAINT-3 adds Triage, Awaiting Quote, Awaiting Landlord Approval and Approved when the quote and approval workflows are enabled. TV-117 and TV-118 build those workflows without the statuses they imply.                                                                                                                                                                                                                       |
 | TV-146 | 8      | 3      | MAINT-3 requires administrators to configure allowed transitions. TV-045 enforces a transition rule; it does not let anyone set one. Whether this is MAINT-3's clause (P0) or ORG-7's workflow templates (P1) is unresolved, and the ticket resolves it.                                                                                                                                                                       |
+| TV-147 | 3      | +5     | The pricing decision in [sprint-4-decisions-and-pricing.md](sprint-4-decisions-and-pricing.md) defines five plans with hard limits on properties, units, users, storage and messages. Nothing enforced them. Placed in Sprint 3 because every later limit, warning and bill reads these numbers, and because a limit discovered late is a schema change.                                                                       |
+| TV-148 | 5      | +5     | Per-unit overage cannot be billed without a defensible count of active units. The count has to settle at period end with a grace window, which is logic, not a `select count(*)`.                                                                                                                                                                                                                                              |
+| TV-149 | 7      | +3     | The Free plan includes no paid messages, so free organisations need a way to send a receipt that costs nothing to run: click-to-chat opens WhatsApp on the staff member's own phone. Without it the Free tier cannot deliver a receipt at all.                                                                                                                                                                                 |
+| TV-150 | 6      | +2     | Free-plan receipts and statements carry a Tenaville line and paid ones carry the agency's own branding. The decision treats this as the Free tier's consideration, so it is not optional polish.                                                                                                                                                                                                                               |
+| TV-151 | 9      | +5     | A 30-day trial with reminders on days 20, 27 and 30 and a 7-day grace is a dated lifecycle, not a flag. Placed after messaging (Sprint 7) and entitlements (Sprint 3), both of which it needs.                                                                                                                                                                                                                                 |
+| TV-152 | 10     | +5     | BILL-4 forbids deleting data because a subscription lapsed, so a downgrade has to lock records read-only while keeping them printable and exportable, and restore them on upgrade. Placed after metering, which tells it what is over the limit.                                                                                                                                                                               |
+| TV-153 | 12     | +8     | The bill is a base price plus per-unit overage capped at the next tier's price, and annual plans bill a year in advance at a 10 to 15 percent discount. This is the arithmetic the whole pricing model rests on and it earns its own ticket.                                                                                                                                                                                   |
+| TV-067 | 12     | −3     | Narrowed from 8 points to 5 and from BILL-1 and BILL-2 to BILL-2 alone. It had covered plans, trial and gateway together; TV-147, TV-151 and TV-153 now carry the first two. Leaving it at 8 would have counted the same work twice.                                                                                                                                                                                           |
+| TV-068 | 12     | −3     | Narrowed from 5 points to 2 and from BILL-3 and BILL-4 to BILL-3. Limit enforcement is TV-147, metering is TV-148, and the no-deletion guarantee is TV-152; what remains is the prompts and the plan-change flow.                                                                                                                                                                                                              |
 
 The coverage check in `tools/check-backlog.mjs` proves every P0 and P1
 requirement _id_ appears on a ticket. It cannot prove that every _clause_ of a
@@ -30,8 +39,18 @@ MAINT-3 shows a second blind spot: a P1 clause inside a P0 requirement. The
 rule that no R1 ticket may depend on a P1 requirement cannot catch it, because
 nothing crosses a ticket boundary.
 
-Sprint totals after these additions are 32, 32 and 33 points — inside the 28 to
-34 range the rest of the plan uses.
+TV-143 to TV-146 came from re-reading requirement text for clauses no ticket
+owned. TV-147 to TV-153 came from a different direction: a commercial decision
+(the pricing plan) that the backlog had reduced to two umbrella tickets. Both
+failures are invisible to a requirement-id coverage check.
+
+The seven additions are 36 points, which would have put Sprint 12 at 47 — well
+outside the 28 to 34 range. Narrowing TV-067 and TV-068 removed 6 points of
+double-counted scope, and TV-151 and TV-152 sit in Sprints 9 and 10, after the
+messaging and metering they depend on. Every sprint is inside the range again;
+`tools/check-backlog.mjs` now fails if this document disagrees with the CSV, so
+the per-sprint totals here cannot quietly drift as they had for TV-143 to
+TV-146.
 
 ## 1. Planning assumptions
 
@@ -56,18 +75,18 @@ Sprint totals after these additions are 32, 32 and 33 points — inside the 28 t
 
 | Sprint | Weeks | Release | Theme                                    | Tickets | Points |
 | ------ | ----- | ------- | ---------------------------------------- | ------- | ------ |
-| 1      | 1-2   | R1      | Platform foundations                     | 7       | 29     |
+| 1      | 1-2   | R1      | Platform foundations                     | 8       | 34     |
 | 2      | 3-4   | R1      | Portfolio                                | 7       | 31     |
-| 3      | 5-6   | R1      | Tenancy                                  | 7       | 28     |
-| 4      | 7-8   | R1      | Money I: payments and receipts           | 5       | 29     |
-| 5      | 9-10  | R1      | Landlord ledger I                        | 5       | 28     |
-| 6      | 11-12 | R1      | Landlord ledger II and migration         | 6       | 29     |
-| 7      | 13-14 | R1      | Communications and tasks                 | 6       | 31     |
-| 8      | 15-16 | R1      | Maintenance I                            | 8       | 29     |
-| 9      | 17-18 | R1      | Documents and portals                    | 5       | 28     |
-| 10     | 19-20 | R1      | Staff mobile app I                       | 5       | 29     |
+| 3      | 5-6   | R1      | Tenancy                                  | 8       | 33     |
+| 4      | 7-8   | R1      | Money I: payments and receipts           | 6       | 32     |
+| 5      | 9-10  | R1      | Landlord ledger I                        | 6       | 33     |
+| 6      | 11-12 | R1      | Landlord ledger II and migration         | 7       | 31     |
+| 7      | 13-14 | R1      | Communications and tasks                 | 7       | 34     |
+| 8      | 15-16 | R1      | Maintenance I                            | 9       | 32     |
+| 9      | 17-18 | R1      | Documents and portals                    | 6       | 33     |
+| 10     | 19-20 | R1      | Staff mobile app I                       | 6       | 34     |
 | 11     | 21-22 | R1      | Staff mobile app II: offline             | 5       | 29     |
-| 12     | 23-24 | R1      | Billing, reports and hardening           | 6       | 29     |
+| 12     | 23-24 | R1      | Billing, reports and hardening           | 7       | 31     |
 | 13     | 25-26 | R1      | R1 pilot and release readiness           | 5       | 29     |
 | 14     | 27-28 | R2      | Payment automation I                     | 5       | 31     |
 | 15     | 29-30 | R2      | Payment automation II                    | 6       | 32     |
@@ -75,7 +94,7 @@ Sprint totals after these additions are 32, 32 and 33 points — inside the 28 t
 | 17     | 33-34 | R2      | Appointments and leasing flow            | 7       | 32     |
 | 18     | 35-36 | R2      | Configurable screening I                 | 6       | 29     |
 | 19     | 37-38 | R2      | Screening II and lease rules             | 8       | 34     |
-| 20     | 39-40 | R2      | Maintenance expansion                    | 6       | 31     |
+| 20     | 39-40 | R2      | Maintenance expansion                    | 7       | 33     |
 | 21     | 41-42 | R2      | Inspections, documents and portal extras | 6       | 32     |
 | 22     | 43-44 | R2      | Analytics and organisation settings      | 7       | 31     |
 | 23     | 45-46 | R2      | Automation, onboarding and R2 release    | 7       | 31     |
@@ -110,13 +129,13 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 
 ### Release 1: core management
 
-#### Sprint 1: Platform foundations (29 points)
+#### Sprint 1: Platform foundations (34 points)
 
 **Goal:** A running, deployed skeleton where a new organisation can sign up and tenant isolation is proven by tests.  
 **Demo:** Sign up, invite a staff user, show that a second organisation cannot see the first one's data.
 
 - **TV-001 · Project setup: monorepo, TypeScript, lint, tests, CI, staging deploy, error tracking**  
-  Platform · 5 pts · PRD: Supporting  
+  Platform · 5 pts · PRD:  
   _Acceptance:_ A push runs CI; staging deploys automatically; a thrown test error appears in the error tracker.
 - **TV-002 · Database foundation: migrations, organisation key on every table, Row-Level Security helpers, isolation test harness**  
   Platform · 5 pts · PRD: ORG-8  
@@ -134,8 +153,11 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Organisation · 3 pts · PRD: ORG-9  
   _Acceptance:_ A user can end another device's session and it is rejected on its next request.
 - **TV-007 · Design system and web shell using the Tenaville palette**  
-  Platform · 3 pts · PRD: Supporting  
+  Platform · 3 pts · PRD:  
   _Acceptance:_ Shared layout, navigation, form and table components render on desktop and mobile widths.
+- **TV-143 · Staff invitations: invite by email and role, accept, revoke, resend**  
+  Organisation · 5 pts · PRD: ORG-2  
+  _Acceptance:_ An Owner or Admin invites an email address with a role; the invitee receives a link, accepts, and lands in that organisation with that role. Only an Owner can invite an Owner. A pending invitation can be revoked and resent. Every change is audited.
 
 #### Sprint 2: Portfolio (31 points)
 
@@ -164,7 +186,7 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Platform · 5 pts · PRD: DOC-7  
   _Acceptance:_ A file link expires, cannot be guessed, and fails for a user without access to the record.
 
-#### Sprint 3: Tenancy (28 points)
+#### Sprint 3: Tenancy (33 points)
 
 **Goal:** Tenants, leases and charge schedules work end to end for the default direct-lease path.  
 **Demo:** Create a tenant and an annual lease and see the generated charges.
@@ -190,8 +212,11 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-021 · Move-in and move-out records: handover notes, meter readings, balance**  
   Tenancy · 3 pts · PRD: LEASE-5  
   _Acceptance:_ Move-out records outstanding balance and prompts deposit handling before closing the lease.
+- **TV-147 · Plan entitlements: definitions, limits and feature flags enforced in the API and UI**  
+  Billing · 5 pts · PRD: BILL-3  
+  _Acceptance:_ A request that would exceed a plan limit is refused by the API, not only hidden in the UI. Limits come from the plans table, not from code.
 
-#### Sprint 4: Money I: payments and receipts (29 points)
+#### Sprint 4: Money I: payments and receipts (32 points)
 
 **Goal:** Staff can record and allocate payments and issue correct, numbered receipts.  
 **Demo:** Record a part payment, allocate it, issue a receipt, then reverse and correct it.
@@ -204,15 +229,18 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   _Acceptance:_ The sum of allocations always equals the payment; overpayment becomes credit; override requires permission and is audited.
 - **TV-024 · Receipts: sequential numbering per organisation or branch, PDF, shareable link**  
   Money · 8 pts · PRD: RENT-13, DOC-3  
-  _Acceptance:_ Two concurrent payments never receive the same number; a voided receipt keeps its number and is never reused.
+  _Acceptance:_ Two concurrent payments never receive the same number; a voided or reversed receipt keeps its number and is never reused; the issued numbers contain no gaps (PRD §16.2). Numbers come from the allocator in TV-144.
 - **TV-025 · Reversals and corrections without overwriting history**  
   Money · 5 pts · PRD: RENT-4  
   _Acceptance:_ Reversing a payment creates a linked reversing entry with a reason; the original stays visible.
 - **TV-026 · Daily cash-up per user and payment method**  
   Money · 3 pts · PRD: RENT-15  
   _Acceptance:_ A user's cash-up lists all payments recorded that day grouped by method and totals match the ledger.
+- **TV-144 · Gapless receipt number allocator, shared by online and offline issue**  
+  Money · 3 pts · PRD: RENT-13  
+  _Acceptance:_ Numbers are allocated with no gaps under concurrency and under rollback: a failed payment transaction consumes no number. A Postgres sequence does not satisfy this, being non-transactional. Offline receipts numbered on sync draw from the same allocator. A test asserts the set of issued numbers is contiguous after a run including failures.
 
-#### Sprint 5: Landlord ledger I (28 points)
+#### Sprint 5: Landlord ledger I (33 points)
 
 **Goal:** Client money is separated from agency income and landlord balances are always correct.  
 **Demo:** Collect rent for two landlords, see commission and net balance per landlord, record a remittance.
@@ -232,8 +260,11 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-031 · Rent roll, upcoming dues and arrears ageing views**  
   Money · 5 pts · PRD: RENT-5  
   _Acceptance:_ Arrears buckets (1-30, 31-60, 61-90, 90+) reconcile to the sum of overdue charges.
+- **TV-148 · Usage metering: active units, properties, users, storage and messages**  
+  Billing · 5 pts · PRD: BILL-3  
+  _Acceptance:_ Usage is counted at the end of the billing period with a 3-day grace, and warnings appear at 80% and 100% of a band.
 
-#### Sprint 6: Landlord ledger II and migration (29 points)
+#### Sprint 6: Landlord ledger II and migration (31 points)
 
 **Goal:** Statements are trustworthy and agencies can move their existing records in.  
 **Demo:** Issue a landlord statement, import tenants with opening balances, roll back a bad import.
@@ -256,8 +287,11 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-037 · Full organisation data export**  
   Migration · 3 pts · PRD: MIG-5  
   _Acceptance:_ An administrator can export all organisation data in documented formats at any time, including after a subscription lapses.
+- **TV-150 · Receipt and statement footer: Tenaville line on Free, agency branding on paid**  
+  Money · 2 pts · PRD: DOC-3  
+  _Acceptance:_ A free-plan receipt carries the Tenaville line; a paid one carries the agency's own branding.
 
-#### Sprint 7: Communications and tasks (31 points)
+#### Sprint 7: Communications and tasks (34 points)
 
 **Goal:** Reminders, receipts and notices go out safely through WhatsApp, SMS or email.  
 **Demo:** Send a rent reminder by WhatsApp with SMS fallback and see the delivery log.
@@ -280,8 +314,11 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-043 · Reminder and follow-up rules for upcoming and overdue charges and expiries**  
   Money · 5 pts · PRD: RENT-6  
   _Acceptance:_ Configured reminders send once per rule, stop when paid, and log each send.
+- **TV-149 · WhatsApp click-to-chat sharing for receipts and reminders**  
+  Communications · 3 pts · PRD: COMMS-2  
+  _Acceptance:_ A receipt or reminder opens in WhatsApp on the staff member's own phone with no automated send, so the free plan costs nothing to run.
 
-#### Sprint 8: Maintenance I (29 points)
+#### Sprint 8: Maintenance I (32 points)
 
 **Goal:** Repairs are logged, assigned, costed and charged to the right party.  
 **Demo:** Log a repair with photos, assign a vendor, record cost, charge it to the landlord, see it on the statement.
@@ -310,11 +347,14 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-051 · Repair history persists against the unit after a tenancy ends**  
   Maintenance · 2 pts · PRD: MAINT-16  
   _Acceptance:_ A new tenant's unit view still shows earlier repairs.
+- **TV-146 · Administrator-configured maintenance status transitions**  
+  Maintenance · 3 pts · PRD: MAINT-3  
+  _Acceptance:_ An administrator can change which status transitions are allowed, without code changes, and the change is audited. Resolve first whether this is MAINT-3's own clause (P0, here) or part of ORG-7's workflow templates (P1, TV-134) and record the decision.
 
-#### Sprint 9: Documents and portals (28 points)
+#### Sprint 9: Documents and portals (33 points)
 
 **Goal:** Landlords and tenants can see what they should, and tenants can report problems.  
-**Demo:** A landlord opens a statement; a tenant sees dues and receipts and files a repair request.
+**Demo:** A landlord opens a statement; a tenant sees dues and receipts and files a repair request; a trial reaches day 30 and falls to Free limits without losing data.
 
 - **TV-052 · Document management: attach to records, types, issue and expiry dates, audit**  
   Documents · 5 pts · PRD: DOC-1, DOC-2  
@@ -331,11 +371,14 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-056 · Tenant repair request and status notifications**  
   Portals · 5 pts · PRD: TENANT-4, MAINT-12  
   _Acceptance:_ A tenant submits a request with photos and receives acknowledgement and completion notices.
+- **TV-151 · Trial lifecycle: start, reminders at day 20, 27 and 30, expiry, 7-day grace**  
+  Billing · 5 pts · PRD: BILL-1, BILL-3  
+  _Acceptance:_ A new organisation starts a 30-day Growth trial without a card, is reminded three times, and falls to Free limits after a 7-day grace.
 
-#### Sprint 10: Staff mobile app I (29 points)
+#### Sprint 10: Staff mobile app I (34 points)
 
 **Goal:** Staff can do daily field work from a phone.  
-**Demo:** On a real phone, record a payment, send a receipt and log a repair with photos.
+**Demo:** On a real phone, record a payment, send a receipt and log a repair with photos; a downgraded organisation still prints and exports its locked records.
 
 - **TV-057 · Mobile foundation: Expo app, login, navigation, PIN or biometric lock**  
   Mobile · 8 pts · PRD: MOB-1, MOB-6  
@@ -352,6 +395,9 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-061 · Push notifications for tasks, assignments and alerts**  
   Mobile · 3 pts · PRD: MOB-8  
   _Acceptance:_ An assigned task triggers a push notification that opens the task.
+- **TV-152 · Downgrade to Free: choose the active property, read-only locking, restore on upgrade**  
+  Billing · 5 pts · PRD: BILL-4  
+  _Acceptance:_ Over-limit data stays visible, printable and exportable but accepts no new records. Upgrading restores it immediately. Nothing is deleted.
 
 #### Sprint 11: Staff mobile app II: offline (29 points)
 
@@ -374,17 +420,17 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Mobile · 5 pts · PRD: MOB-6  
   _Acceptance:_ Revoking a device from the web wipes cached data on its next connection.
 
-#### Sprint 12: Billing, reports and hardening (29 points)
+#### Sprint 12: Billing, reports and hardening (31 points)
 
-**Goal:** Agencies can subscribe, see core reports, and the system is tested for security and load.  
-**Demo:** Start a trial, upgrade a plan, run the core reports, review the security checklist results.
+**Goal:** Agencies can pay for a plan in naira, see core reports, and the system is tested for security and load.  
+**Demo:** Buy a plan through the gateway and get a VAT invoice, cross a unit band and see the overage priced, run the core reports, review the security checklist results.
 
-- **TV-067 · Subscription plans by units, trial, naira billing through a payment gateway, invoices**  
-  Billing · 8 pts · PRD: BILL-1, BILL-2  
-  _Acceptance:_ A trial converts to a paid plan with an invoice and receipt; plan limits follow units under management.
-- **TV-068 · Plan limits, upgrade prompts, grace period, no deletion for non-payment**  
-  Billing · 5 pts · PRD: BILL-3, BILL-4  
-  _Acceptance:_ Exceeding a limit shows a prompt and a grace period; data and export remain available after lapse.
+- **TV-067 · Subscription checkout and invoices through a Nigerian payment gateway**  
+  Billing · 5 pts · PRD: BILL-2  
+  _Acceptance:_ A plan is bought in naira through the gateway with a VAT-bearing invoice and a receipt; a failed renewal retries and is reported, not silently lapsed.
+- **TV-068 · Upgrade and downgrade prompts: band warnings and the plan-change flow**  
+  Billing · 2 pts · PRD: BILL-3  
+  _Acceptance:_ Approaching a limit shows what the next band costs before anything changes; a plan change states plainly what is gained or locked.
 - **TV-069 · Core operational reports with CSV and PDF export**  
   Reporting · 5 pts · PRD: AN-1  
   _Acceptance:_ Rent roll, occupancy, expiries, arrears, collections and repairs reports reconcile to ledger totals.
@@ -392,11 +438,14 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Reporting · 3 pts · PRD: AN-13  
   _Acceptance:_ A scoped manager's exports contain only their permitted properties.
 - **TV-071 · Security hardening: dependency scanning, rate limiting, backup and restore drill**  
-  Platform · 5 pts · PRD: Supporting  
+  Platform · 5 pts · PRD:  
   _Acceptance:_ A restore from backup to a clean environment succeeds and is timed; critical dependency alerts are zero.
 - **TV-072 · Performance and load testing, monitoring and alerts**  
-  Platform · 3 pts · PRD: Supporting  
+  Platform · 3 pts · PRD:  
   _Acceptance:_ Core screens meet the load target in the PRD on a mid-range phone connection.
+- **TV-153 · Hybrid billing: base plan, per-unit overage capped at the next tier, annual plans**  
+  Billing · 8 pts · PRD: BILL-1, BILL-2  
+  _Acceptance:_ A bill is the base price plus per-unit overage, never more than the next tier's price. Annual plans bill in advance at the plan's discount.
 
 #### Sprint 13: R1 pilot and release readiness (29 points)
 
@@ -404,19 +453,19 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 **Demo:** Pilot agencies produce landlord statements and remit from the product.
 
 - **TV-073 · Pilot onboarding runbook, sample templates and support routine**  
-  Migration · 3 pts · PRD: Supporting  
+  Migration · 3 pts · PRD:  
   _Acceptance:_ A new pilot agency can be loaded using the runbook without developer help beyond import support.
 - **TV-074 · Onboard three pilot agencies and import their data**  
-  Pilot · 8 pts · PRD: Supporting  
+  Pilot · 8 pts · PRD:  
   _Acceptance:_ Opening balances reconcile to each agency's own records at cutover.
 - **TV-075 · Run pilot month-end: statements, remittances, feedback triage**  
-  Pilot · 8 pts · PRD: Supporting  
+  Pilot · 8 pts · PRD:  
   _Acceptance:_ Statements are accepted by pilot agencies and landlords without manual correction; feedback is triaged into the backlog.
 - **TV-076 · App store and Play Store release preparation**  
-  Mobile · 5 pts · PRD: Supporting  
+  Mobile · 5 pts · PRD:  
   _Acceptance:_ Internal test builds distribute to pilot staff; store listings and privacy information are ready.
 - **TV-077 · R1 exit-criteria verification and defect buffer**  
-  Platform · 5 pts · PRD: Supporting  
+  Platform · 5 pts · PRD:  
   _Acceptance:_ Every exit criterion in PRD section 16.2 is checked and recorded; no critical isolation or security defects remain open.
 
 ### Release 2: workflow automation
@@ -574,7 +623,7 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Ledger · 5 pts · PRD: LEDGER-10  
   _Acceptance:_ Enabling a tax line changes statements and reports as configured and is audited; default behaviour is unchanged.
 
-#### Sprint 20: Maintenance expansion (31 points)
+#### Sprint 20: Maintenance expansion (33 points)
 
 **Goal:** Higher-value repairs get quotes, approvals and work orders.  
 **Demo:** Compare two quotes, get landlord approval in the portal, issue a work order, tenant confirms.
@@ -597,6 +646,9 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
 - **TV-122 · Emergency escalation rules and action log**  
   Maintenance · 5 pts · PRD: MAINT-17  
   _Acceptance:_ An emergency request notifies named contacts and records every action taken.
+- **TV-145 · Conditional maintenance statuses for quote and approval workflows**  
+  Maintenance · 2 pts · PRD: MAINT-3  
+  _Acceptance:_ With quotation and approval workflows enabled, Triage, Awaiting Quote, Awaiting Landlord Approval and Approved become available and appear in the allowed transitions. With those workflows off, only the eight core statuses are offered.
 
 #### Sprint 21: Inspections, documents and portal extras (32 points)
 
@@ -670,10 +722,10 @@ These are open decisions from the PRD that block specific tickets. Resolve each 
   Billing · 2 pts · PRD: BILL-5  
   _Acceptance:_ A written decision confirms legal, pricing and tenant-impact review before any fee is implemented.
 - **TV-141 · R2 security review, performance test and regression pack**  
-  Platform · 5 pts · PRD: Supporting  
+  Platform · 5 pts · PRD:  
   _Acceptance:_ No critical findings open; regression suite covers R1 and R2 money, ledger and isolation paths.
 - **TV-142 · R2 pilot rollout and exit-criteria verification**  
-  Pilot · 8 pts · PRD: Supporting  
+  Pilot · 8 pts · PRD:  
   _Acceptance:_ Pilot agencies run payments, CRM and maintenance in production and R2 exit criteria are recorded as met.
 
 ## 7. Risks to the plan and cut order
