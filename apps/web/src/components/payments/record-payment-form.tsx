@@ -1,34 +1,45 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 
 import { Button, Field, LinkButton, MoneyInput, Select, TextInput } from '../ui';
 import { PAYMENT_METHODS, paymentMethodLabel } from '../../lib/payments';
 import { recordPaymentAction } from '../../server/payment-actions';
 import type { ActionResult } from '../../server/auth-actions';
 
+export interface LeaseChargeOption {
+  readonly id: string;
+  readonly label: string;
+  readonly outstandingLabel: string;
+}
+
 export interface LeaseOption {
   readonly id: string;
   readonly label: string;
+  readonly charges: readonly LeaseChargeOption[];
 }
 
 /**
  * Record money received (RENT-2, TV-022).
  *
- * Allocation is deliberately not editable here. The default rule — oldest
- * unpaid charge first — is the one agencies use for almost every payment, and
- * a manual split is a permissioned override (RENT-14) that belongs behind its
- * own screen rather than in the path a caretaker uses twenty times a day.
+ * Allocation defaults to the oldest unpaid charge first, which is the rule
+ * agencies use for almost every payment. A manual split is a permissioned
+ * override (RENT-14) and stays collapsed: the person at the counter should not
+ * meet six amount fields unless they went looking for them.
  */
 export const RecordPaymentForm = ({
   leases,
   today,
+  canOverride,
 }: {
   readonly leases: readonly LeaseOption[];
   readonly today: string;
+  readonly canOverride: boolean;
 }) => {
   const [state, action, pending] = useActionState<ActionResult, FormData>(recordPaymentAction, {});
   const mutationRef = useRef<HTMLInputElement>(null);
+  const [selectedLeaseId, setSelectedLeaseId] = useState(leases[0]?.id ?? '');
+  const [manual, setManual] = useState(false);
 
   // A stable key for this form means a double-tapping caretaker on a slow
   // connection gets one payment, not two (PRD §10.5). Set after mount so the
@@ -38,6 +49,8 @@ export const RecordPaymentForm = ({
       mutationRef.current.value = globalThis.crypto?.randomUUID?.() ?? '';
     }
   }, []);
+
+  const selectedLease = leases.find((lease) => lease.id === selectedLeaseId) ?? leases[0];
 
   return (
     <form action={action} className="space-y-4">
@@ -60,7 +73,8 @@ export const RecordPaymentForm = ({
           id="payment-lease"
           name="leaseId"
           required
-          defaultValue={leases[0]?.id ?? ''}
+          value={selectedLeaseId}
+          onChange={(event) => setSelectedLeaseId(event.target.value)}
           invalid={state.fieldErrors?.leaseId !== undefined}
         >
           {leases.map((lease) => (
@@ -139,6 +153,60 @@ export const RecordPaymentForm = ({
           />
         </Field>
       </div>
+
+      {canOverride && (
+        <div className="rounded-md border border-border p-4">
+          <label className="flex items-start gap-2 text-sm text-text">
+            <input
+              type="checkbox"
+              checked={manual}
+              onChange={(event) => setManual(event.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-border"
+            />
+            <span>
+              Allocate manually
+              <span className="block text-xs text-muted">
+                Overrides oldest-charge-first for this payment. Leave a row blank to let the
+                remainder follow the default, and any unallocated balance becomes tenant credit.
+              </span>
+            </span>
+          </label>
+
+          {manual && (
+            <div key={selectedLeaseId} className="mt-4 space-y-4">
+              {selectedLease === undefined || selectedLease.charges.length === 0 ? (
+                <p className="text-sm text-muted">
+                  This tenancy has nothing outstanding, so the payment will be held as credit.
+                </p>
+              ) : (
+                selectedLease.charges.map((charge) => {
+                  const fieldKey = `allocation-${charge.id}`;
+                  return (
+                    <div
+                      key={charge.id}
+                      className="grid gap-3 sm:grid-cols-[1fr_12rem] sm:items-end"
+                    >
+                      <div>
+                        <p className="text-sm text-text">{charge.label}</p>
+                        <p className="text-xs text-subtle">{charge.outstandingLabel} outstanding</p>
+                      </div>
+                      <Field id={fieldKey} label="Allocate" error={state.fieldErrors?.[fieldKey]}>
+                        <MoneyInput
+                          id={fieldKey}
+                          name={`allocation_${charge.id}`}
+                          placeholder="0.00"
+                          autoComplete="off"
+                          invalid={state.fieldErrors?.[fieldKey] !== undefined}
+                        />
+                      </Field>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Button type="submit" disabled={pending}>

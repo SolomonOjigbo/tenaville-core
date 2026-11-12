@@ -3,10 +3,12 @@ import Link from 'next/link';
 
 import {
   Badge,
+  Button,
   Card,
   CardBody,
   CardHeader,
   EmptyState,
+  Field,
   LinkButton,
   Money,
   PageHeader,
@@ -14,6 +16,7 @@ import {
   Table,
   TableEmpty,
   Td,
+  TextInput,
   Th,
   paymentStatusTone,
   statusLabel,
@@ -41,7 +44,14 @@ import { currentViewer, supabaseForRequest } from '../../../server/session';
  * this screen shows the answer to "who owes what today", which is the question
  * the agency actually asks.
  */
-export default async function RentPage() {
+export default async function RentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const { q, page: pageParam } = await searchParams;
+  const search = (typeof q === 'string' ? q : '').trim();
+
   const viewer = await currentViewer();
   if (viewer === null) redirect('/sign-in');
 
@@ -107,6 +117,39 @@ export default async function RentPage() {
     lease?.lease_parties.find((party) => party.role === 'tenant')?.tenants?.display_name ??
     'Tenant';
 
+  // Searching happens after the derived balances are computed: a charge leaves
+  // this list because its allocations cover it, not because it failed a filter.
+  const matching =
+    search === ''
+      ? outstanding
+      : outstanding.filter((charge) => {
+          const haystack = [
+            tenantOf(charge.leases),
+            charge.leases?.reference ?? '',
+            charge.leases?.units?.label ?? '',
+            charge.leases?.units?.properties?.name ?? '',
+          ]
+            .join(' ')
+            .toLowerCase();
+          return haystack.includes(search.toLowerCase());
+        });
+
+  const PAGE_SIZE = 10;
+  const totalPages = Math.max(1, Math.ceil(matching.length / PAGE_SIZE));
+  const requestedPage = Number.parseInt(typeof pageParam === 'string' ? pageParam : '1', 10);
+  const currentPage = Math.min(
+    Math.max(Number.isFinite(requestedPage) ? requestedPage : 1, 1),
+    totalPages,
+  );
+  const pageRows = matching.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageHref = (target: number): string => {
+    const params = new URLSearchParams();
+    if (search !== '') params.set('q', search);
+    if (target > 1) params.set('page', String(target));
+    const queryString = params.toString();
+    return queryString === '' ? '/rent' : `/rent?${queryString}`;
+  };
+
   return (
     <>
       <PageHeader
@@ -114,6 +157,9 @@ export default async function RentPage() {
         description="Money received, and what is still owed. Amounts are allocated to the oldest unpaid charge first."
         action={
           <div className="flex flex-wrap items-center gap-2">
+            <LinkButton href="/rent/cash-up" variant="secondary">
+              Daily cash-up
+            </LinkButton>
             <LinkButton href="/rent/receipts" variant="secondary">
               All receipts
             </LinkButton>
@@ -144,13 +190,50 @@ export default async function RentPage() {
       </div>
 
       <Card className="mb-6">
+        <CardBody>
+          <form method="get" className="flex flex-wrap items-end gap-3">
+            <div className="min-w-[16rem] flex-1">
+              <Field
+                id="rent-search"
+                label="Find a charge"
+                hint="Tenant, lease reference, property or unit."
+              >
+                <TextInput
+                  id="rent-search"
+                  name="q"
+                  defaultValue={search}
+                  placeholder="e.g. QA Tenant"
+                  autoComplete="off"
+                />
+              </Field>
+            </div>
+            <Button type="submit" variant="secondary">
+              Search
+            </Button>
+            {search !== '' && (
+              <Link
+                href="/rent"
+                className="pb-3 text-sm text-info-text underline-offset-2 hover:underline"
+              >
+                Clear
+              </Link>
+            )}
+          </form>
+        </CardBody>
+      </Card>
+
+      <Card className="mb-6">
         <CardHeader
           title="What is owed"
-          description="Open charges, oldest first. A charge disappears from this list when its allocations cover it."
+          description={
+            search === ''
+              ? 'Open charges, oldest first. A charge disappears from this list when its allocations cover it.'
+              : `${matching.length} charge${matching.length === 1 ? '' : 's'} match “${search}”.`
+          }
           action={
-            outstanding.some((charge) => charge.overdueDays > 0) ? (
+            matching.some((charge) => charge.overdueDays > 0) ? (
               <Badge tone="danger">
-                {outstanding.filter((charge) => charge.overdueDays > 0).length} overdue
+                {matching.filter((charge) => charge.overdueDays > 0).length} overdue
               </Badge>
             ) : undefined
           }
@@ -159,6 +242,16 @@ export default async function RentPage() {
           <EmptyState
             title="Nothing outstanding"
             description="Every open charge has been paid. New charges appear here when a lease is activated or its next period is raised."
+          />
+        ) : matching.length === 0 ? (
+          <EmptyState
+            title="No charge matches that search"
+            description="Try a tenant name, lease reference, property or unit."
+            action={
+              <LinkButton href="/rent" variant="secondary">
+                Clear search
+              </LinkButton>
+            }
           />
         ) : (
           <CardBody className="p-0">
@@ -173,7 +266,7 @@ export default async function RentPage() {
                 </tr>
               </thead>
               <tbody>
-                {outstanding.map((charge) => (
+                {pageRows.map((charge) => (
                   <tr key={charge.id}>
                     <Td>
                       <span className="text-text">{tenantOf(charge.leases)}</span>
@@ -208,6 +301,39 @@ export default async function RentPage() {
                 ))}
               </tbody>
             </Table>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-3 text-sm">
+              <span className="text-subtle">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–
+                {Math.min(currentPage * PAGE_SIZE, matching.length)} of {matching.length}
+              </span>
+              {totalPages > 1 && (
+                <div className="flex items-center gap-3">
+                  {currentPage > 1 ? (
+                    <Link
+                      href={pageHref(currentPage - 1)}
+                      className="text-info-text underline-offset-2 hover:underline"
+                    >
+                      Previous
+                    </Link>
+                  ) : (
+                    <span className="text-subtle">Previous</span>
+                  )}
+                  <span className="text-subtle">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  {currentPage < totalPages ? (
+                    <Link
+                      href={pageHref(currentPage + 1)}
+                      className="text-info-text underline-offset-2 hover:underline"
+                    >
+                      Next
+                    </Link>
+                  ) : (
+                    <span className="text-subtle">Next</span>
+                  )}
+                </div>
+              )}
+            </div>
           </CardBody>
         )}
       </Card>
@@ -247,9 +373,21 @@ export default async function RentPage() {
                     const isReversal = payment.reversal_of_id !== null;
                     return (
                       <tr key={payment.id}>
-                        <Td>{formatDate(payment.paid_on)}</Td>
                         <Td>
-                          {tenantOf(payment.leases)}
+                          <Link
+                            href={`/rent/payments/${payment.id}`}
+                            className="text-info-text underline-offset-2 hover:underline"
+                          >
+                            {formatDate(payment.paid_on)}
+                          </Link>
+                        </Td>
+                        <Td>
+                          <Link
+                            href={`/rent/payments/${payment.id}`}
+                            className="text-text underline-offset-2 hover:underline"
+                          >
+                            {tenantOf(payment.leases)}
+                          </Link>
                           <span className="block text-xs text-subtle">
                             {payment.leases?.units?.label ?? 'Unit'}
                           </span>

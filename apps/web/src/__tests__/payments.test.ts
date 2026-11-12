@@ -7,6 +7,7 @@ import {
   outstandingKobo,
   PAYMENT_METHODS,
   paymentMethodLabel,
+  summariseCashUp,
   sumKobo,
   todayIso,
 } from '../lib/payments';
@@ -94,5 +95,51 @@ describe('date helpers', () => {
 
   it('produces an ISO date', () => {
     expect(todayIso()).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+});
+
+describe('summariseCashUp', () => {
+  it('keeps gross and reversals apart while netting the day', () => {
+    const summary = summariseCashUp([
+      { amount_kobo: 100_000, method: 'cash', status: 'recorded' },
+      { amount_kobo: 50_000, method: 'cash', status: 'confirmed' },
+      { amount_kobo: -100_000, method: 'cash', status: 'reversed' },
+      { amount_kobo: 200_000, method: 'bank_transfer', status: 'confirmed' },
+    ]);
+
+    expect(summary.grossKobo).toBe(350_000n);
+    expect(summary.reversalKobo).toBe(-100_000n);
+    expect(summary.netKobo).toBe(250_000n);
+    expect(summary.count).toBe(4);
+  });
+
+  it('groups by method in the order a cashier counts them', () => {
+    const summary = summariseCashUp([
+      { amount_kobo: 100_000, method: 'cash', status: 'recorded' },
+      { amount_kobo: 50_000, method: 'cash', status: 'confirmed' },
+      { amount_kobo: -100_000, method: 'cash', status: 'reversed' },
+      { amount_kobo: 200_000, method: 'bank_transfer', status: 'confirmed' },
+    ]);
+
+    expect(summary.methods.map((row) => row.method)).toEqual(['cash', 'bank_transfer']);
+    expect(summary.methods[0]).toMatchObject({
+      count: 3,
+      recorded: 1,
+      confirmed: 1,
+      reversed: 1,
+      netKobo: 50_000n,
+    });
+    expect(summary.methods[1]).toMatchObject({ count: 1, netKobo: 200_000n });
+  });
+
+  it('reports a day of nothing as zero rather than undefined', () => {
+    const summary = summariseCashUp([]);
+    expect(summary).toMatchObject({
+      count: 0,
+      grossKobo: 0n,
+      reversalKobo: 0n,
+      netKobo: 0n,
+      methods: [],
+    });
   });
 });

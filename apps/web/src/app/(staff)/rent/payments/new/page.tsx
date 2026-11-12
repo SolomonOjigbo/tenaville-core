@@ -9,11 +9,14 @@ import {
   EmptyState,
   LinkButton,
   PageHeader,
+  statusLabel,
 } from '../../../../../components/ui';
 import {
   RecordPaymentForm,
+  type LeaseChargeOption,
   type LeaseOption,
 } from '../../../../../components/payments/record-payment-form';
+import { formatDate } from '../../../../../lib/format';
 import { outstandingKobo, todayIso } from '../../../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../../../server/session';
 
@@ -63,14 +66,28 @@ export default async function NewPaymentPage() {
       ? { data: [] }
       : await supabase
           .from('charges')
-          .select('lease_id, amount_kobo, payment_allocations(amount_kobo)')
+          .select(
+            'id, lease_id, sequence, kind, due_on, period_start, period_end, amount_kobo, payment_allocations(amount_kobo)',
+          )
           .eq('status', 'open')
-          .in('lease_id', leaseIds);
+          .in('lease_id', leaseIds)
+          .order('due_on');
 
   const owedByLease = new Map<string, bigint>();
+  const chargesByLease = new Map<string, LeaseChargeOption[]>();
+
   for (const charge of charges ?? []) {
     const owed = outstandingKobo(charge.amount_kobo, charge.payment_allocations);
     owedByLease.set(charge.lease_id, (owedByLease.get(charge.lease_id) ?? 0n) + owed);
+    if (owed <= 0n) continue;
+
+    const list = chargesByLease.get(charge.lease_id) ?? [];
+    list.push({
+      id: charge.id,
+      label: `${statusLabel(charge.kind)} ${charge.sequence} · ${formatDate(charge.period_start)} to ${formatDate(charge.period_end)}`,
+      outstandingLabel: formatNaira(kobo(owed)),
+    });
+    chargesByLease.set(charge.lease_id, list);
   }
 
   const tenantOf = (lease: {
@@ -88,10 +105,11 @@ export default async function NewPaymentPage() {
         id: lease.id,
         owed,
         label: `${lease.reference ?? 'Lease'} · ${tenantOf(lease)}${place === '' ? '' : ` · ${place}`} — ${owed > 0n ? `${formatNaira(kobo(owed))} owed` : 'nothing outstanding'}`,
+        charges: chargesByLease.get(lease.id) ?? [],
       };
     })
     .sort((a, b) => (a.owed === b.owed ? a.label.localeCompare(b.label) : a.owed > b.owed ? -1 : 1))
-    .map(({ id, label }) => ({ id, label }));
+    .map(({ id, label, charges }) => ({ id, label, charges }));
 
   return (
     <>
@@ -121,10 +139,14 @@ export default async function NewPaymentPage() {
         <Card>
           <CardHeader
             title="Payment details"
-            description="Only what the money is for. The allocation and the receipt are created for you."
+            description="The receipt is issued for you. Allocation defaults to the oldest unpaid charge; a permitted override is available below."
           />
           <CardBody>
-            <RecordPaymentForm leases={options} today={todayIso()} />
+            <RecordPaymentForm
+              leases={options}
+              today={todayIso()}
+              canOverride={viewer.access.can('payment.allocation.override')}
+            />
           </CardBody>
         </Card>
       )}

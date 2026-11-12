@@ -26,6 +26,7 @@ describe('navigation', () => {
         '/properties',
         '/rent',
         '/rent/receipts',
+        '/rent/cash-up',
         '/settings',
         '/settings/people',
         '/settings/plan',
@@ -87,7 +88,9 @@ describe('navigation', () => {
 
   it('shows an accountant the money but not the property records they cannot edit', () => {
     const nav = hrefs('accountant');
-    expect(nav).toEqual(expect.arrayContaining(['/rent', '/rent/receipts', '/settings/plan']));
+    expect(nav).toEqual(
+      expect.arrayContaining(['/rent', '/rent/receipts', '/rent/cash-up', '/settings/plan']),
+    );
     expect(nav).not.toContain('/settings/people');
     expect(nav).not.toContain('/ledger');
   });

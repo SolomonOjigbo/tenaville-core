@@ -63,3 +63,79 @@ export const todayIso = (): string => new Date().toISOString().slice(0, 10);
 
 /** First day of the current month, for "collected this month". */
 export const monthStartIso = (today: string): string => `${today.slice(0, 7)}-01`;
+
+export interface CashUpPayment {
+  readonly amount_kobo: number;
+  readonly method: string;
+  readonly status: string;
+}
+
+export interface CashUpMethodRow {
+  readonly method: string;
+  readonly count: number;
+  readonly recorded: number;
+  readonly confirmed: number;
+  readonly reversed: number;
+  readonly netKobo: bigint;
+}
+
+export interface CashUpSummary {
+  readonly count: number;
+  readonly grossKobo: bigint;
+  readonly reversalKobo: bigint;
+  readonly netKobo: bigint;
+  readonly methods: readonly CashUpMethodRow[];
+}
+
+/**
+ * The day's take, grouped by payment method (RENT-15).
+ *
+ * Gross and reversals are kept apart rather than netted silently: a cash-up is
+ * a reconciliation against a bank statement or a cash box, and "₦50,000 in,
+ * ₦50,000 reversed" is a different day from "nothing happened". A reversal is
+ * a negative payment, so the same rows produce all three figures.
+ */
+export const summariseCashUp = (rows: readonly CashUpPayment[]): CashUpSummary => {
+  const byMethod = new Map<string, CashUpMethodRow>();
+  let gross = 0n;
+  let reversed = 0n;
+
+  for (const row of rows) {
+    const amount = BigInt(row.amount_kobo);
+    if (amount > 0n) gross += amount;
+    else reversed += amount;
+
+    const current = byMethod.get(row.method) ?? {
+      method: row.method,
+      count: 0,
+      recorded: 0,
+      confirmed: 0,
+      reversed: 0,
+      netKobo: 0n,
+    };
+
+    byMethod.set(row.method, {
+      ...current,
+      count: current.count + 1,
+      recorded: current.recorded + (row.status === 'recorded' ? 1 : 0),
+      confirmed: current.confirmed + (row.status === 'confirmed' ? 1 : 0),
+      reversed: current.reversed + (row.status === 'reversed' ? 1 : 0),
+      netKobo: current.netKobo + amount,
+    });
+  }
+
+  const order = new Map(PAYMENT_METHODS.map((method, index) => [method, index]));
+  const methods = [...byMethod.values()].sort((a, b) => {
+    const left = order.get(a.method as PaymentMethod) ?? Number.MAX_SAFE_INTEGER;
+    const right = order.get(b.method as PaymentMethod) ?? Number.MAX_SAFE_INTEGER;
+    return left === right ? a.method.localeCompare(b.method) : left - right;
+  });
+
+  return {
+    count: rows.length,
+    grossKobo: gross,
+    reversalKobo: reversed,
+    netKobo: gross + reversed,
+    methods,
+  };
+};
