@@ -62,6 +62,12 @@ export const tenantNav: readonly NavGroup[] = [
         permission: 'self.maintenance.request',
         group: 'portfolio',
       },
+      {
+        href: '/tenancy/messages',
+        label: 'Messages',
+        permission: 'self.tenancy.read',
+        group: 'portfolio',
+      },
     ],
   },
 ];

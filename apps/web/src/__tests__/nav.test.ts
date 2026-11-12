@@ -41,14 +41,29 @@ describe('navigation', () => {
     expect(nav).toContain('/reports');
   });
 
-  it('gives a caretaker maintenance without the money screens', () => {
+  it('gives a caretaker maintenance, messages and tasks without the money screens', () => {
     // A caretaker logs repairs. A Ledger link they cannot open is worse than no
     // link: it implies access that the policy will then refuse.
     const nav = hrefs('caretaker');
-    expect(nav).toEqual(['/dashboard', '/properties', '/maintenance']);
+    expect(nav).toEqual(['/dashboard', '/properties', '/maintenance', '/messages', '/tasks']);
     expect(nav).not.toContain('/ledger');
     expect(nav).not.toContain('/rent');
     expect(nav).not.toContain('/settings');
+  });
+
+  it('shows maintenance, messages and tasks to every staff role', () => {
+    for (const role of [
+      'owner',
+      'admin',
+      'property_manager',
+      'letting_agent',
+      'caretaker',
+      'maintenance_coordinator',
+      'accountant',
+    ] as const) {
+      expect(hrefs(role), role).toContain('/messages');
+      expect(hrefs(role), role).toContain('/tasks');
+    }
   });
 
   it('shows maintenance to the roles that coordinate it, and not to finance', () => {

@@ -145,6 +145,37 @@ const VENDOR_STATUS_TONES: Record<string, BadgeTone> = {
 export const vendorStatusTone = (status: string): BadgeTone =>
   VENDOR_STATUS_TONES[status] ?? 'neutral';
 
+const MESSAGE_STATUS_TONES: Record<string, BadgeTone> = {
+  queued: 'info',
+  sent: 'success',
+  delivered: 'success',
+  failed: 'danger',
+  skipped: 'neutral',
+};
+
+export const messageStatusTone = (status: string): BadgeTone =>
+  MESSAGE_STATUS_TONES[status] ?? 'neutral';
+
+const TEMPLATE_APPROVAL_TONES: Record<string, BadgeTone> = {
+  draft: 'neutral',
+  pending_approval: 'warning',
+  approved: 'success',
+  rejected: 'danger',
+};
+
+export const templateApprovalTone = (status: string): BadgeTone =>
+  TEMPLATE_APPROVAL_TONES[status] ?? 'neutral';
+
+const TASK_PRIORITY_TONES: Record<string, BadgeTone> = {
+  low: 'neutral',
+  normal: 'info',
+  high: 'warning',
+  urgent: 'danger',
+};
+
+export const taskPriorityTone = (priority: string): BadgeTone =>
+  TASK_PRIORITY_TONES[priority] ?? 'neutral';
+
 /** Human label for a status key. */
 export const statusLabel = (status: string): string =>
   status.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());

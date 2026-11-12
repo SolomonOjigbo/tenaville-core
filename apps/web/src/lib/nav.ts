@@ -50,6 +50,8 @@ export const NAV_ITEMS: readonly NavItem[] = [
     permission: 'maintenance.read',
     group: 'operations',
   },
+  { href: '/messages', label: 'Messages', permission: 'comms.read', group: 'operations' },
+  { href: '/tasks', label: 'Tasks', permission: 'comms.read', group: 'operations' },
   { href: '/crm', label: 'Leads', permission: 'lease.read', flag: 'crm', group: 'operations' },
   {
     href: '/screening',

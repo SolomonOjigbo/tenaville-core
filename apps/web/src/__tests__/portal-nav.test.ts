@@ -20,11 +20,12 @@ describe('portal navigation', () => {
     ]);
   });
 
-  it('offers a tenant their tenancy, payments and maintenance', () => {
+  it('offers a tenant their tenancy, payments, maintenance and messages', () => {
     expect(tenantNav.flatMap((group) => group.items.map((item) => item.href))).toEqual([
       '/tenancy',
       '/tenancy/payments',
       '/tenancy/maintenance',
+      '/tenancy/messages',
     ]);
   });
 });
