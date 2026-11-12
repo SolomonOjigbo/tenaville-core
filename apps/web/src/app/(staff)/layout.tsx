@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
-import { Card, CardBody } from '../../components/ui/index';
 import { StaffShell } from '../../components/shell/staff-shell';
 import { groupedNavigationFor } from '../../lib/nav';
+import { homeForRole } from '../../lib/portal-nav';
 import { redirect } from 'next/navigation';
 
 import { destinationFor } from '../../lib/auth';
@@ -41,21 +41,7 @@ export default async function StaffLayout({ children }: { readonly children: Rea
   const viewer = await currentViewer();
   if (viewer === null) redirect('/create-organisation');
 
-  if (!viewer.access.isStaff) {
-    return (
-      <main className="mx-auto flex min-h-screen max-w-md items-center px-6">
-        <Card className="w-full">
-          <CardBody className="space-y-3">
-            <h1 className="font-display text-xl text-text">No access to the staff area</h1>
-            <p className="text-sm text-muted">
-              Your account is a {viewer.access.role.replace(/_/g, ' ')} in {viewer.organisationName}
-              . Landlord and tenant views are separate and are tickets TV-053 and TV-054.
-            </p>
-          </CardBody>
-        </Card>
-      </main>
-    );
-  }
+  if (!viewer.access.isStaff) redirect(homeForRole(viewer.access.role));
 
   const groups = groupedNavigationFor(viewer.access.role, featureFlags());
 
