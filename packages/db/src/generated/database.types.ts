@@ -912,6 +912,38 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"statements": {
+                  Row: {
+                    "closing_balance_kobo": number,"created_at": string,"created_by": string | null,"id": string,"issued_at": string | null,"issued_by": string | null,"landlord_id": string,"lines": NonNullable<Json>,"opening_balance_kobo": number,"organisation_id": string,"period_end": string,"period_start": string,"reviewed_at": string | null,"reviewed_by": string | null,"revision_number": number,"status": Database["public"]['Enums']["statement_status"],"supersedes_statement_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "closing_balance_kobo": number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"issued_at"?: string | null,"issued_by"?: string | null,"landlord_id": string,"lines": NonNullable<Json>,"opening_balance_kobo": number,"organisation_id": string,"period_end": string,"period_start": string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"revision_number"?: number,"status"?: Database["public"]['Enums']["statement_status"],"supersedes_statement_id"?: string | null
+                  }
+                  Update: {
+                    "closing_balance_kobo"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"issued_at"?: string | null,"issued_by"?: string | null,"landlord_id"?: string,"lines"?: NonNullable<Json>,"opening_balance_kobo"?: number,"organisation_id"?: string,"period_end"?: string,"period_start"?: string,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"revision_number"?: number,"status"?: Database["public"]['Enums']["statement_status"],"supersedes_statement_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "statements_landlord_id_fkey"
+      columns: ["landlord_id"]
+isOneToOne: false
+      referencedRelation: "landlords"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "statements_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "statements_supersedes_statement_id_fkey"
+      columns: ["supersedes_statement_id"]
+isOneToOne: false
+      referencedRelation: "statements"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"subscriptions": {
                   Row: {
                     "cancelled_at": string | null,"created_at": string,"current_period_end": string | null,"current_period_start": string | null,"grace_ends_on": string | null,"id": string,"organisation_id": string,"plan_id": string,"status": Database["public"]['Enums']["subscription_status"],"trial_ends_on": string | null,"units_included": number | null,"updated_at": string | null
@@ -1111,6 +1143,9 @@ isOneToOne: false
 "create_organisation_with_owner":
 { Args: { "organisation_name": string,"organisation_type"?: Database["public"]['Enums']["organisation_type"],"owner_full_name"?: string }; Returns: string
                            },
+"create_statement":
+{ Args: { "period_ends_on": string,"period_starts_on": string,"source_statement_id"?: string,"target_landlord_id": string,"target_organisation_id": string }; Returns: string
+                           },
 "finalise_usage_reading":
 { Args: { "target_reading_id": string }; Returns: {
               "created_at": string,
@@ -1139,6 +1174,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"issue_statement":
+{ Args: { "target_statement_id": string }; Returns: undefined
+                           },
 "plan_entitlements":
 { Args: Record<PropertyKey, never>; Returns: {
               "extra_user_kobo": number,"features": (string)[],"included_messages": number,"organisation_id": string,"plan_id": string,"plan_name": string,"properties_used": number,"properties_verdict": string,"property_limit": number,"storage_mb": number,"tier": Database["public"]['Enums']["plan_tier"],"unit_limit": number,"unit_overage_kobo": number,"units_used": number,"units_verdict": string,"user_limit": number,"users_used": number,"users_verdict": string
@@ -1166,6 +1204,9 @@ isOneToOne: false
 "reverse_payment":
 { Args: { "reason": string,"target_payment_id": string }; Returns: string
                            },
+"review_statement":
+{ Args: { "target_statement_id": string }; Returns: undefined
+                           },
 "take_usage_reading":
 { Args: { "period_end": string,"period_start": string,"target_organisation_id": string }; Returns: string
                            },
@@ -1176,7 +1217,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","ledger_entry_kind": "rent_collected"|"commission"|"remittance"|"adjustment"|"opening_balance","ledger_funds_class": "client_funds"|"agency_income","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","payment_method": "cash"|"bank_transfer"|"pos"|"cheque"|"mobile_money"|"other","payment_status": "recorded"|"confirmed"|"reversed","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","receipt_status": "issued"|"void"|"reversed","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
+            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","ledger_entry_kind": "rent_collected"|"commission"|"remittance"|"adjustment"|"opening_balance","ledger_funds_class": "client_funds"|"agency_income","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","payment_method": "cash"|"bank_transfer"|"pos"|"cheque"|"mobile_money"|"other","payment_status": "recorded"|"confirmed"|"reversed","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","receipt_status": "issued"|"void"|"reversed","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","statement_status": "draft"|"reviewed"|"issued","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1545,7 +1586,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"ledger_entry_kind": ["rent_collected", "commission", "remittance", "adjustment", "opening_balance"],"ledger_funds_class": ["client_funds", "agency_income"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"payment_method": ["cash", "bank_transfer", "pos", "cheque", "mobile_money", "other"],"payment_status": ["recorded", "confirmed", "reversed"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"receipt_status": ["issued", "void", "reversed"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
+            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"ledger_entry_kind": ["rent_collected", "commission", "remittance", "adjustment", "opening_balance"],"ledger_funds_class": ["client_funds", "agency_income"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"payment_method": ["cash", "bank_transfer", "pos", "cheque", "mobile_money", "other"],"payment_status": ["recorded", "confirmed", "reversed"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"receipt_status": ["issued", "void", "reversed"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"statement_status": ["draft", "reviewed", "issued"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
           }
         },"storage": {
           Enums: {

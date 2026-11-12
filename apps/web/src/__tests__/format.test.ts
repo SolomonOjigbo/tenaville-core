@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDate } from '../lib/format';
+import { formatDate, monthBounds } from '../lib/format';
 
 describe('formatDate', () => {
   it('turns a contractual date into a readable one', () => {
@@ -19,5 +19,13 @@ describe('formatDate', () => {
   it('returns a malformed value unchanged instead of inventing a date', () => {
     expect(formatDate('not-a-date')).toBe('not-a-date');
     expect(formatDate('')).toBe('');
+  });
+});
+
+describe('monthBounds', () => {
+  it('returns the first and last day of the month', () => {
+    expect(monthBounds('2026-11-12')).toEqual({ start: '2026-11-01', end: '2026-11-30' });
+    expect(monthBounds('2026-02-01')).toEqual({ start: '2026-02-01', end: '2026-02-28' });
+    expect(monthBounds('2028-02-10')).toEqual({ start: '2028-02-01', end: '2028-02-29' });
   });
 });

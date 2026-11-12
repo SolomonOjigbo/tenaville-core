@@ -20,6 +20,7 @@ import {
   statusLabel,
 } from '../../../../components/ui';
 import { RemittanceForm } from '../../../../components/forms/remittance-form';
+import { LandlordStatements } from '../../../../components/statements/landlord-statements';
 import { formatDate } from '../../../../lib/format';
 import { paymentMethodLabel, sumKobo, todayIso } from '../../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../../server/session';
@@ -179,6 +180,12 @@ export default async function LandlordLedgerPage({
           </Table>
         </CardBody>
       </Card>
+
+      <LandlordStatements
+        landlordId={landlord.id}
+        canIssue={viewer.access.can('statement.issue')}
+        today={todayIso()}
+      />
 
       <Card>
         <CardHeader

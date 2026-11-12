@@ -48,3 +48,16 @@ export const formatDate = (isoDate: string): string => {
   const parsed = Date.parse(`${isoDate}T00:00:00Z`);
   return Number.isNaN(parsed) ? isoDate : DISPLAY_DATE.format(parsed);
 };
+
+/** The first and last day of the month containing a date, as `YYYY-MM-DD`. */
+export const monthBounds = (isoDate: string): { start: string; end: string } => {
+  const [yearString, monthString] = isoDate.split('-');
+  const year = Number(yearString);
+  const month = Number(monthString);
+  if (!Number.isInteger(year) || !Number.isInteger(month)) {
+    return { start: isoDate, end: isoDate };
+  }
+  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const prefix = `${year.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}`;
+  return { start: `${prefix}-01`, end: `${prefix}-${lastDay.toString().padStart(2, '0')}` };
+};

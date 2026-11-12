@@ -83,6 +83,15 @@ const RECEIPT_STATUS_TONES: Record<string, BadgeTone> = {
 export const receiptStatusTone = (status: string): BadgeTone =>
   RECEIPT_STATUS_TONES[status] ?? 'neutral';
 
+const STATEMENT_STATUS_TONES: Record<string, BadgeTone> = {
+  draft: 'neutral',
+  reviewed: 'info',
+  issued: 'success',
+};
+
+export const statementStatusTone = (status: string): BadgeTone =>
+  STATEMENT_STATUS_TONES[status] ?? 'neutral';
+
 /** Human label for a status key. */
 export const statusLabel = (status: string): string =>
   status.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());

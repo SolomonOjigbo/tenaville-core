@@ -11,6 +11,7 @@ export {
   leaseStatusTone,
   paymentStatusTone,
   receiptStatusTone,
+  statementStatusTone,
   statusLabel,
   unitStatusTone,
   type BadgeTone,
