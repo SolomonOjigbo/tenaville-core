@@ -1,23 +1,26 @@
+import Link from 'next/link';
+
 import {
   Badge,
   Card,
   CardBody,
   EmptyState,
+  LinkButton,
   Money,
   PageHeader,
   statusLabel,
   unitStatusTone,
 } from '../../../components/ui/index';
-import { supabaseForRequest } from '../../../server/session';
+import { currentViewer, supabaseForRequest } from '../../../server/session';
 
 /**
- * Properties and their units.
+ * Properties and their units (PROP-1, PROP-2).
  *
- * A list, not an editor: create and edit screens are TV-009, and private file
- * storage for photos is TV-014. This page exists so the shell has a second
- * route to navigate to and the sidebar's active state is exercised.
+ * The list links into each property's screen, where units are added. Private
+ * file storage for photos is TV-014.
  */
 export default async function PropertiesPage() {
+  const viewer = await currentViewer();
   const supabase = await supabaseForRequest();
 
   const { data: properties } = await supabase
@@ -34,13 +37,28 @@ export default async function PropertiesPage() {
       <PageHeader
         title="Properties"
         description="What you manage, and the units inside each one. Internal records only — never published anywhere."
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <LinkButton href="/landlords" variant="secondary">
+              Landlords
+            </LinkButton>
+            {viewer?.access.can('property.write') === true && (
+              <LinkButton href="/properties/new">Add property</LinkButton>
+            )}
+          </div>
+        }
       />
 
       {rows.length === 0 ? (
         <Card>
           <EmptyState
             title="No properties yet"
-            description="Import your portfolio from a spreadsheet, or add a property and its units. Every import is a dry run first, so you see exactly what will be created."
+            description="Add a landlord, then their property and units. An import is a dry run first, so you see exactly what will be created."
+            action={
+              viewer?.access.can('property.write') === true ? (
+                <LinkButton href="/properties/new">Add property</LinkButton>
+              ) : undefined
+            }
           />
         </Card>
       ) : (
@@ -50,7 +68,14 @@ export default async function PropertiesPage() {
               <CardBody className="space-y-3">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h2 className="font-display text-lg text-text">{property.name}</h2>
+                    <h2 className="font-display text-lg text-text">
+                      <Link
+                        href={`/properties/${property.id}`}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {property.name}
+                      </Link>
+                    </h2>
                     <p className="text-sm text-muted">
                       {property.address_line}
                       {property.lga !== null && `, ${property.lga}`} · {property.state_code}

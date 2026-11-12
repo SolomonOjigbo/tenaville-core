@@ -34,20 +34,9 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', permission: 'property.read', group: 'portfolio' },
   { href: '/properties', label: 'Properties', permission: 'property.read', group: 'portfolio' },
-  {
-    href: '/tenants',
-    label: 'Tenants',
-    permission: 'lease.read',
-    group: 'portfolio',
-    status: 'planned',
-  },
-  {
-    href: '/leases',
-    label: 'Leases',
-    permission: 'lease.read',
-    group: 'portfolio',
-    status: 'planned',
-  },
+  { href: '/landlords', label: 'Landlords', permission: 'landlord.read', group: 'portfolio' },
+  { href: '/tenants', label: 'Tenants', permission: 'lease.read', group: 'portfolio' },
+  { href: '/leases', label: 'Leases', permission: 'lease.read', group: 'portfolio' },
 
   { href: '/rent', label: 'Rent and arrears', permission: 'payment.read', group: 'money' },
   { href: '/rent/receipts', label: 'Receipts', permission: 'payment.read', group: 'money' },

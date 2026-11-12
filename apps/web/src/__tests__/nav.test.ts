@@ -24,6 +24,9 @@ describe('navigation', () => {
       expect.arrayContaining([
         '/dashboard',
         '/properties',
+        '/landlords',
+        '/tenants',
+        '/leases',
         '/rent',
         '/rent/receipts',
         '/rent/cash-up',
