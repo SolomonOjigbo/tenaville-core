@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import Link from 'next/link';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -20,6 +21,23 @@ const SIZES: Record<ButtonSize, string> = {
   md: 'min-h-[44px] px-4 text-base',
 };
 
+const buttonClasses = ({
+  variant,
+  size,
+  className,
+}: {
+  readonly variant: ButtonVariant;
+  readonly size: ButtonSize;
+  readonly className: string | undefined;
+}): string =>
+  clsx(
+    'inline-flex items-center justify-center gap-2 rounded-md font-medium',
+    'transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+    VARIANTS[variant],
+    SIZES[size],
+    className,
+  );
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant | undefined;
   readonly size?: ButtonSize | undefined;
@@ -33,16 +51,32 @@ export const Button = ({
   children,
   ...rest
 }: ButtonProps) => (
-  <button
-    className={clsx(
-      'inline-flex items-center justify-center gap-2 rounded-md font-medium',
-      'transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-      VARIANTS[variant],
-      SIZES[size],
-      className,
-    )}
-    {...rest}
-  >
+  <button className={buttonClasses({ variant, size, className })} {...rest}>
     {children}
   </button>
+);
+
+/**
+ * The same shape as a button, for navigation.
+ *
+ * A screen that offers "Record a payment" should not make the user learn that
+ * one of the two identical-looking controls is a link; using an anchor also
+ * keeps middle-click and open-in-new-tab working, which a button would break.
+ */
+export const LinkButton = ({
+  href,
+  variant = 'primary',
+  size = 'md',
+  className,
+  children,
+}: {
+  readonly href: string;
+  readonly variant?: ButtonVariant | undefined;
+  readonly size?: ButtonSize | undefined;
+  readonly className?: string | undefined;
+  readonly children: ReactNode;
+}) => (
+  <Link href={href} className={buttonClasses({ variant, size, className })}>
+    {children}
+  </Link>
 );

@@ -27,3 +27,24 @@ export const percentLabel = (numerator: number, denominator: number): string => 
   const value = percent(numerator, denominator);
   return value === null ? '—' : `${value}%`;
 };
+
+const DISPLAY_DATE = new Intl.DateTimeFormat('en-NG', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+/**
+ * A contractual date for display: `2026-11-01` becomes `1 Nov 2026`.
+ *
+ * Parsed and formatted as UTC because these are date-only values (PRD §10.6):
+ * an operator in Lagos and one in London must read the same day, and a
+ * `Date` built from the local timezone shifts it for one of them. Inputs that
+ * arrive malformed are returned unchanged rather than rendered as "Invalid
+ * Date" — a wrong string is easier to trace than a plausible-looking one.
+ */
+export const formatDate = (isoDate: string): string => {
+  const parsed = Date.parse(`${isoDate}T00:00:00Z`);
+  return Number.isNaN(parsed) ? isoDate : DISPLAY_DATE.format(parsed);
+};

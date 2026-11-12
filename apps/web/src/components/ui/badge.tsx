@@ -57,6 +57,32 @@ const LEASE_STATUS_TONES: Record<string, BadgeTone> = {
 export const leaseStatusTone = (status: string): BadgeTone =>
   LEASE_STATUS_TONES[status] ?? 'neutral';
 
+/**
+ * Tone for a payment status.
+ *
+ * `recorded` is a warning because the money has been entered but not yet
+ * reconciled against a bank statement — the state RENT-2 exists to distinguish
+ * from `confirmed`. A reversal is neutral: it is a correction with a trail,
+ * not a failure.
+ */
+const PAYMENT_STATUS_TONES: Record<string, BadgeTone> = {
+  recorded: 'warning',
+  confirmed: 'success',
+  reversed: 'neutral',
+};
+
+export const paymentStatusTone = (status: string): BadgeTone =>
+  PAYMENT_STATUS_TONES[status] ?? 'neutral';
+
+const RECEIPT_STATUS_TONES: Record<string, BadgeTone> = {
+  issued: 'success',
+  void: 'warning',
+  reversed: 'neutral',
+};
+
+export const receiptStatusTone = (status: string): BadgeTone =>
+  RECEIPT_STATUS_TONES[status] ?? 'neutral';
+
 /** Human label for a status key. */
 export const statusLabel = (status: string): string =>
   status.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());

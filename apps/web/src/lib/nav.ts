@@ -20,6 +20,13 @@ export interface NavItem {
   readonly permission: Permission;
   /** Feature flag that must be on, for work ahead of its release. */
   readonly flag?: 'crm' | 'screening';
+  /**
+   * Whether the screen exists yet. A `planned` item stays in this catalogue —
+   * so the intended shape of the product is visible in code and in review —
+   * but is never sent to the browser, because a link to a 404 is worse than
+   * no link at all.
+   */
+  readonly status?: 'live' | 'planned';
   /** Grouping in the sidebar. */
   readonly group: 'portfolio' | 'money' | 'operations' | 'admin';
 }
@@ -27,18 +34,44 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', permission: 'property.read', group: 'portfolio' },
   { href: '/properties', label: 'Properties', permission: 'property.read', group: 'portfolio' },
-  { href: '/tenants', label: 'Tenants', permission: 'lease.read', group: 'portfolio' },
-  { href: '/leases', label: 'Leases', permission: 'lease.read', group: 'portfolio' },
+  {
+    href: '/tenants',
+    label: 'Tenants',
+    permission: 'lease.read',
+    group: 'portfolio',
+    status: 'planned',
+  },
+  {
+    href: '/leases',
+    label: 'Leases',
+    permission: 'lease.read',
+    group: 'portfolio',
+    status: 'planned',
+  },
 
   { href: '/rent', label: 'Rent and arrears', permission: 'payment.read', group: 'money' },
-  { href: '/ledger', label: 'Landlord ledger', permission: 'ledger.read', group: 'money' },
-  { href: '/reports', label: 'Reports', permission: 'statement.read', group: 'money' },
+  { href: '/rent/receipts', label: 'Receipts', permission: 'payment.read', group: 'money' },
+  {
+    href: '/ledger',
+    label: 'Landlord ledger',
+    permission: 'ledger.read',
+    group: 'money',
+    status: 'planned',
+  },
+  {
+    href: '/reports',
+    label: 'Reports',
+    permission: 'statement.read',
+    group: 'money',
+    status: 'planned',
+  },
 
   {
     href: '/maintenance',
     label: 'Maintenance',
     permission: 'maintenance.read',
     group: 'operations',
+    status: 'planned',
   },
   { href: '/crm', label: 'Leads', permission: 'lease.read', flag: 'crm', group: 'operations' },
   {
@@ -57,7 +90,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
     permission: 'org.billing.read',
     group: 'admin',
   },
-  { href: '/settings/audit', label: 'Audit trail', permission: 'org.audit.read', group: 'admin' },
+  {
+    href: '/settings/audit',
+    label: 'Audit trail',
+    permission: 'org.audit.read',
+    group: 'admin',
+    status: 'planned',
+  },
 ];
 
 export const NAV_GROUP_LABELS: Record<NavItem['group'], string> = {
@@ -84,6 +123,7 @@ export const navigationFor = (role: AppRole, flags: NavFeatureFlags): readonly N
   if (!isStaff(role)) return [];
 
   return NAV_ITEMS.filter((item) => {
+    if (item.status === 'planned') return false;
     if (item.flag !== undefined && !flags[item.flag]) return false;
     return can(role, item.permission);
   });

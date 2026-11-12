@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Card, CardBody } from '../../components/ui/index';
-import { Sidebar } from '../../components/shell/sidebar';
-import { TopBar } from '../../components/shell/top-bar';
+import { StaffShell } from '../../components/shell/staff-shell';
 import { groupedNavigationFor } from '../../lib/nav';
 import { redirect } from 'next/navigation';
 
@@ -61,12 +60,13 @@ export default async function StaffLayout({ children }: { readonly children: Rea
   const groups = groupedNavigationFor(viewer.access.role, featureFlags());
 
   return (
-    <div className="flex min-h-screen bg-bg">
-      <Sidebar groups={groups} organisationName={viewer.organisationName} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar userLabel={viewer.email ?? 'Signed in'} role={viewer.access.role} />
-        <main className="min-w-0 flex-1 px-6 py-6">{children}</main>
-      </div>
-    </div>
+    <StaffShell
+      groups={groups}
+      organisationName={viewer.organisationName}
+      userLabel={viewer.email ?? 'Signed in'}
+      role={viewer.access.role}
+    >
+      {children}
+    </StaffShell>
   );
 }

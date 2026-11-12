@@ -18,20 +18,52 @@ const hrefs = (role: AppRole, flags: NavFeatureFlags = allOff) =>
   navigationFor(role, flags).map((i) => i.href);
 
 describe('navigation', () => {
-  it('gives an owner everything that is switched on', () => {
-    expect(hrefs('owner')).toContain('/ledger');
-    expect(hrefs('owner')).toContain('/settings');
-    expect(hrefs('owner')).toContain('/settings/audit');
+  it('gives an owner every screen that is built and switched on', () => {
+    const nav = hrefs('owner');
+    expect(nav).toEqual(
+      expect.arrayContaining([
+        '/dashboard',
+        '/properties',
+        '/rent',
+        '/rent/receipts',
+        '/settings',
+        '/settings/people',
+        '/settings/plan',
+      ]),
+    );
+    expect(nav).not.toContain('/ledger');
+    expect(nav).not.toContain('/reports');
   });
 
   it('hides the ledger from a caretaker', () => {
     // A caretaker logs repairs. A Ledger link they cannot open is worse than no
     // link: it implies access that the policy will then refuse.
     const nav = hrefs('caretaker');
-    expect(nav).toContain('/maintenance');
+    expect(nav).toEqual(['/dashboard', '/properties']);
     expect(nav).not.toContain('/ledger');
     expect(nav).not.toContain('/rent');
     expect(nav).not.toContain('/settings');
+  });
+
+  it('never shows a screen that has not been built', () => {
+    // A planned item is a decision recorded in the catalogue, not a promise to
+    // the user. Every role must be free of 404 links, however senior.
+    const planned = NAV_ITEMS.filter((item) => item.status === 'planned').map((item) => item.href);
+    expect(planned.length).toBeGreaterThan(0);
+    for (const role of [
+      'owner',
+      'admin',
+      'property_manager',
+      'letting_agent',
+      'caretaker',
+      'maintenance_coordinator',
+      'accountant',
+      'screening_reviewer',
+    ] as const) {
+      for (const href of planned) {
+        expect(hrefs(role, allOn), `${role} ${href}`).not.toContain(href);
+      }
+    }
   });
 
   it('shows plan and limits to whoever answers for the bill', () => {
@@ -55,10 +87,9 @@ describe('navigation', () => {
 
   it('shows an accountant the money but not the property records they cannot edit', () => {
     const nav = hrefs('accountant');
-    expect(nav).toEqual(
-      expect.arrayContaining(['/rent', '/ledger', '/reports', '/settings/audit']),
-    );
+    expect(nav).toEqual(expect.arrayContaining(['/rent', '/rent/receipts', '/settings/plan']));
     expect(nav).not.toContain('/settings/people');
+    expect(nav).not.toContain('/ledger');
   });
 
   it('gives a tenant and a landlord no staff navigation at all', () => {
@@ -87,7 +118,8 @@ describe('navigation', () => {
 
   it('drops empty groups rather than rendering a bare heading', () => {
     const groups = groupedNavigationFor('caretaker', allOff);
-    expect(groups.map((g) => g.group)).toEqual(['portfolio', 'operations']);
+    // Maintenance is planned, so the operations group has nothing live in it.
+    expect(groups.map((g) => g.group)).toEqual(['portfolio']);
     expect(groups.every((g) => g.items.length > 0)).toBe(true);
   });
 

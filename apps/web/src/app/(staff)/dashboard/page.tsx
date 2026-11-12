@@ -4,14 +4,22 @@ import {
   CardBody,
   CardHeader,
   EmptyState,
+  LinkButton,
   Money,
   PageHeader,
   Stat,
   leaseStatusTone,
   statusLabel,
   unitStatusTone,
-} from '../../../components/ui/index';
-import { percentLabel } from '../../../lib/format';
+} from '../../../components/ui';
+import { formatDate, percentLabel } from '../../../lib/format';
+import {
+  daysOverdue,
+  monthStartIso,
+  outstandingKobo,
+  sumKobo,
+  todayIso,
+} from '../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../server/session';
 
 /**
@@ -21,17 +29,20 @@ import { currentViewer, supabaseForRequest } from '../../../server/session';
  * assignments allow (ORG-4) — a property manager scoped to one building sees
  * one building's numbers, not the agency's.
  *
- * Every query here is a count or a small page. The rent roll, arrears ageing
- * and collections figures (AN-1, AN-4) arrive with the money work; showing a
- * zero for them now would read as "nothing owed" rather than "not built".
+ * Outstanding is derived from allocations, never read from a stored balance
+ * (PRD §10.4). The rent roll and ageing buckets (AN-1, AN-4) still belong to
+ * the reporting work; the figures here are the three questions an agency asks
+ * on opening the app: what is let, what is owed, what came in.
  */
 export default async function DashboardPage() {
   const viewer = await currentViewer();
   if (viewer === null) return null; // The layout has already handled this.
 
   const supabase = await supabaseForRequest();
+  const today = todayIso();
+  const monthStart = monthStartIso(today);
 
-  const [units, leases, landlords] = await Promise.all([
+  const [units, leases, landlords, charges, collected] = await Promise.all([
     supabase.from('units').select('id, label, status, asking_rent_kobo'),
     supabase
       .from('lease_overview')
@@ -39,6 +50,11 @@ export default async function DashboardPage() {
       .order('ends_on')
       .limit(5),
     supabase.from('landlords').select('id', { count: 'exact', head: true }),
+    supabase
+      .from('charges')
+      .select('due_on, amount_kobo, payment_allocations(amount_kobo)')
+      .eq('status', 'open'),
+    supabase.from('payments').select('amount_kobo, paid_on').gte('paid_on', monthStart),
   ]);
 
   const unitRows = units.data ?? [];
@@ -51,13 +67,34 @@ export default async function DashboardPage() {
     .filter((u) => u.status === 'vacant')
     .reduce((total, u) => total + BigInt(u.asking_rent_kobo ?? 0), 0n);
 
+  const outstanding = (charges.data ?? []).reduce(
+    (total, charge) => total + outstandingKobo(charge.amount_kobo, charge.payment_allocations),
+    0n,
+  );
+  const overdueCount = (charges.data ?? []).filter(
+    (charge) =>
+      daysOverdue(charge.due_on, today) > 0 &&
+      outstandingKobo(charge.amount_kobo, charge.payment_allocations) > 0n,
+  ).length;
+  const collectedKobo = sumKobo((collected.data ?? []).map((payment) => payment.amount_kobo));
+
   const expiring = (leases.data ?? []).filter((l) => l.display_status === 'expiring_soon');
 
   return (
     <>
       <PageHeader
         title={`Good day, ${viewer.organisationName}`}
-        description="Your portfolio at a glance. Collections and arrears arrive with the money work."
+        description="Your portfolio at a glance, with what is outstanding and what came in this month."
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <LinkButton href="/rent" variant="secondary">
+              Rent and arrears
+            </LinkButton>
+            {viewer.access.can('payment.record') && (
+              <LinkButton href="/rent/payments/new">Record a payment</LinkButton>
+            )}
+          </div>
+        }
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -67,11 +104,19 @@ export default async function DashboardPage() {
           value={percentLabel(occupied, lettable)}
           hint="Excludes units marked inactive"
         />
-        <Stat label="Landlords" value={landlords.count ?? 0} />
         <Stat
-          label="Asking rent, vacant units"
-          value={<Money kobo={askingTotal.toString()} />}
-          hint="Annualised, as advertised"
+          label="Outstanding"
+          value={<Money kobo={outstanding.toString()} />}
+          hint={
+            overdueCount === 0
+              ? 'Nothing overdue'
+              : `${overdueCount} charge${overdueCount === 1 ? '' : 's'} overdue`
+          }
+        />
+        <Stat
+          label="Collected this month"
+          value={<Money kobo={collectedKobo.toString()} />}
+          hint="Net of reversals"
         />
       </div>
 
@@ -100,7 +145,7 @@ export default async function DashboardPage() {
                       {lease.reference ?? 'No reference'}
                     </p>
                     <p className="text-xs text-subtle">
-                      Ends {lease.ends_on}
+                      Ends {formatDate(lease.ends_on)}
                       {lease.days_to_expiry !== null && ` · ${lease.days_to_expiry} days`}
                     </p>
                   </div>
@@ -135,6 +180,10 @@ export default async function DashboardPage() {
                   {statusLabel(status)}: {count}
                 </Badge>
               ))}
+              <span className="w-full pt-2 text-xs text-subtle">
+                {landlords.count ?? 0} landlord{landlords.count === 1 ? '' : 's'} · Vacant asking
+                rent <Money kobo={askingTotal.toString()} />
+              </span>
             </CardBody>
           )}
         </Card>
