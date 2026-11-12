@@ -29,7 +29,8 @@ insert into audit_exempt values
   ('tenants',           'contact details; the tenancy itself is audited through leases'),
   ('tenant_contacts',   'third-party contact details, collected and removed freely by design'),
   ('property_photos',   'DOC-7 audits access; the row is a path, not a decision'),
-  ('lease_handovers',   'evidence recorded once at move-in or move-out; the lease status change is audited');
+  ('lease_handovers',   'evidence recorded once at move-in or move-out; the lease status change is audited'),
+  ('receipt_counters',  'internal gapless allocator; the receipt that consumes a number is audited');
 
 -- Every base table is either audited or explicitly exempt.
 select is_empty(

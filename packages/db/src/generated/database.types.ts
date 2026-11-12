@@ -1,4 +1,3 @@
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
@@ -519,17 +518,111 @@ isOneToOne: false
                   ]
                 },"organisations": {
                   Row: {
-                    "country_code": string,"created_at": string,"id": string,"lease_expiry_alert_days": (number)[],"name": string,"timezone": string,"type": Database["public"]['Enums']["organisation_type"],"updated_at": string | null
+                    "country_code": string,"created_at": string,"id": string,"lease_expiry_alert_days": (number)[],"name": string,"receipt_prefix": string,"timezone": string,"type": Database["public"]['Enums']["organisation_type"],"updated_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name": string,"timezone"?: string,"type": Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
+                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name": string,"receipt_prefix"?: string,"timezone"?: string,"type": Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
                   }
                   Update: {
-                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name"?: string,"timezone"?: string,"type"?: Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
+                    "country_code"?: string,"created_at"?: string,"id"?: string,"lease_expiry_alert_days"?: (number)[],"name"?: string,"receipt_prefix"?: string,"timezone"?: string,"type"?: Database["public"]['Enums']["organisation_type"],"updated_at"?: string | null
                   }
                   Relationships: [
                     
+                  ]
+                },"payment_allocations": {
+                  Row: {
+                    "amount_kobo": number,"charge_id": string | null,"created_at": string,"created_by": string | null,"id": string,"lease_id": string,"note": string | null,"organisation_id": string,"payment_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"charge_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"lease_id": string,"note"?: string | null,"organisation_id": string,"payment_id": string
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"charge_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"lease_id"?: string,"note"?: string | null,"organisation_id"?: string,"payment_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payment_allocations_charge_id_fkey"
+      columns: ["charge_id"]
+isOneToOne: false
+      referencedRelation: "charges"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_payment_id_fkey"
+      columns: ["payment_id"]
+isOneToOne: false
+      referencedRelation: "payments"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"payments": {
+                  Row: {
+                    "amount_kobo": number,"branch_id": string | null,"client_mutation_id": string | null,"confirmed_at": string | null,"confirmed_by": string | null,"created_at": string,"id": string,"lease_id": string,"method": Database["public"]['Enums']["payment_method"],"notes": string | null,"organisation_id": string,"paid_on": string,"recorded_at": string,"recorded_by": string | null,"reference": string | null,"reversal_of_id": string | null,"reversal_reason": string | null,"reversed_at": string | null,"reversed_by": string | null,"status": Database["public"]['Enums']["payment_status"],"tenant_id": string | null,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"branch_id"?: string | null,"client_mutation_id"?: string | null,"confirmed_at"?: string | null,"confirmed_by"?: string | null,"created_at"?: string,"id"?: string,"lease_id": string,"method": Database["public"]['Enums']["payment_method"],"notes"?: string | null,"organisation_id": string,"paid_on": string,"recorded_at"?: string,"recorded_by"?: string | null,"reference"?: string | null,"reversal_of_id"?: string | null,"reversal_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: Database["public"]['Enums']["payment_status"],"tenant_id"?: string | null,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"branch_id"?: string | null,"client_mutation_id"?: string | null,"confirmed_at"?: string | null,"confirmed_by"?: string | null,"created_at"?: string,"id"?: string,"lease_id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"notes"?: string | null,"organisation_id"?: string,"paid_on"?: string,"recorded_at"?: string,"recorded_by"?: string | null,"reference"?: string | null,"reversal_of_id"?: string | null,"reversal_reason"?: string | null,"reversed_at"?: string | null,"reversed_by"?: string | null,"status"?: Database["public"]['Enums']["payment_status"],"tenant_id"?: string | null,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payments_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_reversal_of_id_fkey"
+      columns: ["reversal_of_id"]
+isOneToOne: false
+      referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"plan_features": {
                   Row: {
@@ -658,6 +751,82 @@ isOneToOne: false
       columns: ["unit_id"]
 isOneToOne: false
       referencedRelation: "units"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"receipt_counters": {
+                  Row: {
+                    "branch_id": string | null,"branch_key": string | null,"id": string,"last_number": number,"organisation_id": string,"updated_at": string,"year": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "branch_id"?: string | null,"branch_key"?: never,"id"?: string,"last_number"?: number,"organisation_id": string,"updated_at"?: string,"year": number
+                  }
+                  Update: {
+                    "branch_id"?: string | null,"branch_key"?: never,"id"?: string,"last_number"?: number,"organisation_id"?: string,"updated_at"?: string,"year"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "receipt_counters_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipt_counters_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"receipts": {
+                  Row: {
+                    "branch_code": string | null,"branch_id": string | null,"branch_key": string | null,"created_at": string,"id": string,"issued_at": string,"issued_by": string | null,"issued_on": string,"lease_id": string,"organisation_id": string,"payment_id": string,"prefix": string,"receipt_number": string,"replaces_receipt_id": string | null,"sequence": number,"status": Database["public"]['Enums']["receipt_status"],"verification_code": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null,"year": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "branch_code"?: string | null,"branch_id"?: string | null,"branch_key"?: never,"created_at"?: string,"id"?: string,"issued_at"?: string,"issued_by"?: string | null,"issued_on": string,"lease_id": string,"organisation_id": string,"payment_id": string,"prefix": string,"receipt_number": string,"replaces_receipt_id"?: string | null,"sequence": number,"status"?: Database["public"]['Enums']["receipt_status"],"verification_code"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null,"year": number
+                  }
+                  Update: {
+                    "branch_code"?: string | null,"branch_id"?: string | null,"branch_key"?: never,"created_at"?: string,"id"?: string,"issued_at"?: string,"issued_by"?: string | null,"issued_on"?: string,"lease_id"?: string,"organisation_id"?: string,"payment_id"?: string,"prefix"?: string,"receipt_number"?: string,"replaces_receipt_id"?: string | null,"sequence"?: number,"status"?: Database["public"]['Enums']["receipt_status"],"verification_code"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null,"year"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "receipts_branch_id_fkey"
+      columns: ["branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipts_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "lease_overview"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipts_lease_id_fkey"
+      columns: ["lease_id"]
+isOneToOne: false
+      referencedRelation: "leases"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipts_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipts_payment_id_fkey"
+      columns: ["payment_id"]
+isOneToOne: true
+      referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "receipts_replaces_receipt_id_fkey"
+      columns: ["replaces_receipt_id"]
+isOneToOne: false
+      referencedRelation: "receipts"
       referencedColumns: ["id"]
     }
                   ]
@@ -901,8 +1070,16 @@ isOneToOne: false
               "finalised": number,"taken": number
             }[]
                            },
+"record_payment":
+{ Args: { "explicit_allocations"?: Json,"payment_amount_kobo": number,"payment_branch_id"?: string,"payment_client_mutation_id"?: string,"payment_method": Database["public"]['Enums']["payment_method"],"payment_paid_on"?: string,"payment_reference"?: string,"payment_tenant_id"?: string,"target_lease_id": string,"target_organisation_id": string }; Returns: {
+              "payment_id": string,"receipt_id": string,"receipt_number": string
+            }[]
+                           },
 "renew_lease":
 { Args: { "carry_deposit"?: boolean,"new_ends_on": string,"new_rent_kobo"?: number,"source_lease_id": string }; Returns: string
+                           },
+"reverse_payment":
+{ Args: { "reason": string,"target_payment_id": string }; Returns: string
                            },
 "take_usage_reading":
 { Args: { "period_end": string,"period_start": string,"target_organisation_id": string }; Returns: string
@@ -914,7 +1091,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
+            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","payment_method": "cash"|"bank_transfer"|"pos"|"cheque"|"mobile_money"|"other","payment_status": "recorded"|"confirmed"|"reversed","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","receipt_status": "issued"|"void"|"reversed","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1046,7 +1223,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
+            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"payment_method": ["cash", "bank_transfer", "pos", "cheque", "mobile_money", "other"],"payment_status": ["recorded", "confirmed", "reversed"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"receipt_status": ["issued", "void", "reversed"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
           }
         },"storage": {
           Enums: {

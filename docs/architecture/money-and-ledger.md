@@ -20,11 +20,11 @@ Practically: no `UPDATE` touching an amount column, no `DELETE` on these tables.
 
 A charge's paid balance is **derived from its allocations** (§10.4). It may be cached for query performance, but the allocations remain the source of truth and a reconciliation job must be able to prove the cache correct. A stored balance that can drift from its allocations is how a tenant gets chased for rent they paid.
 
-Default allocation is oldest charge first, with a permissioned manual override (RENT-14). Part payments, overpayments and tenant credit all fall out of this rule — credit is an unallocated balance, not a negative charge.
+Default allocation is oldest charge first, with a permissioned manual override (RENT-14). Part payments, overpayments and tenant credit all fall out of this rule — credit is an unallocated balance, not a negative charge. Both paths live behind `public.record_payment`, which inserts the payment, its allocations and its receipt in one transaction; a deferred constraint refuses a payment whose allocations do not sum to it, even when inserted outside that function.
 
 ## Receipt numbering
 
-Sequential per organisation, per branch where configured (RENT-13). Numbers are allocated by the server from a `ReceiptSequence`, never by a client. Voided or reversed receipts keep their number; numbers are never reused.
+Sequential per organisation, per branch where configured (RENT-13), in the format `{prefix}-{branch code}-{year}-{sequence}`. Numbers are allocated by the server from `receipt_counters` — one row per organisation, branch and year, incremented in the same transaction that inserts the receipt, so a failed issue rolls the number back instead of leaving a gap. The year is the issue date in the organisation's timezone, not the payment date. Voided or reversed receipts keep their number; numbers are never reused. The prefix is locked once the first receipt exists.
 
 This interacts with offline capture: an offline payment gets a provisional receipt marked _pending sync_, and the official number is assigned on sync (MOB-4). See [offline sync](offline-sync.md).
 

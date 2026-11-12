@@ -5,6 +5,8 @@ import {
   toSafeNumber,
   ZERO,
   add,
+  allocate,
+  applyRate,
   compare,
   formatNaira,
   fromNaira,
@@ -147,5 +149,97 @@ describe('toSafeNumber', () => {
 
   it('accepts the largest safe amount', () => {
     expect(toSafeNumber(kobo(BigInt(Number.MAX_SAFE_INTEGER)))).toBe(Number.MAX_SAFE_INTEGER);
+  });
+});
+
+describe('applyRate', () => {
+  it('matches the four worked examples in the Sprint 4 decision record', () => {
+    // These are the examples pilot agencies will be shown, so they are tests
+    // before they are documentation.
+    expect(applyRate(parseNaira('1,200,000.00'), 1000)).toBe(parseNaira('120,000.00'));
+    expect(applyRate(parseNaira('333,333.33'), 750)).toBe(parseNaira('25,000.00'));
+    expect(applyRate(parseNaira('150,000.55'), 500)).toBe(parseNaira('7,500.03'));
+    expect(applyRate(parseNaira('0.05'), 1000)).toBe(parseNaira('0.01'));
+  });
+
+  it('rounds half a kobo up, and anything below it down', () => {
+    // 1 kobo at 5000 bps is exactly half a kobo.
+    expect(applyRate(kobo(1n), 5000)).toBe(kobo(1n));
+    // 1 kobo at 4999 bps is just under half, so it rounds to nothing.
+    expect(applyRate(kobo(1n), 4999)).toBe(ZERO);
+  });
+
+  it('keeps whole-kobo amounts exact', () => {
+    expect(applyRate(parseNaira('1,250,000.00'), 1000)).toBe(parseNaira('125,000.00'));
+    expect(applyRate(parseNaira('1,250,000.00'), 0)).toBe(ZERO);
+    expect(applyRate(ZERO, 1000)).toBe(ZERO);
+  });
+
+  it('refuses inputs that would mean recomputing a reversal', () => {
+    expect(() => applyRate(parseNaira('-500'), 1000)).toThrow(MoneyParseError);
+    expect(() => applyRate(parseNaira('500'), -1)).toThrow(MoneyParseError);
+    expect(() => applyRate(parseNaira('500'), 12.5)).toThrow(MoneyParseError);
+  });
+
+  it('does not lose precision on an amount beyond a float', () => {
+    const huge = parseNaira('99,999,999,999,999.99');
+    expect(applyRate(huge, 10000)).toBe(huge);
+  });
+});
+
+describe('allocate', () => {
+  it('splits an amount so the parts sum back to it', () => {
+    const parts = allocate(parseNaira('1,000,000.00'), [
+      parseNaira('1'),
+      parseNaira('1'),
+      parseNaira('1'),
+    ]);
+    expect(parts.reduce<bigint>((sum, part) => sum + part, 0n)).toBe(parseNaira('1,000,000.00'));
+    // 100,000,000 kobo / 3 leaves one kobo over, which goes to the first tie.
+    expect(parts).toEqual([kobo(33_333_334n), kobo(33_333_333n), kobo(33_333_333n)]);
+  });
+
+  it('allocates in proportion to the weights, not equally', () => {
+    const parts = allocate(parseNaira('1,000.00'), [
+      parseNaira('600'),
+      parseNaira('300'),
+      parseNaira('100'),
+    ]);
+    expect(parts).toEqual([parseNaira('600'), parseNaira('300'), parseNaira('100')]);
+  });
+
+  it('gives leftover kobo to the largest fractional shares, ties by position', () => {
+    // Total 3, amount 10: exact shares are 3.33, 3.33, 3.33 with 1 kobo spare.
+    const parts = allocate(kobo(10n), [kobo(1n), kobo(1n), kobo(1n)]);
+    expect(parts).toEqual([kobo(4n), kobo(3n), kobo(3n)]);
+    expect(parts.reduce<bigint>((sum, part) => sum + part, 0n)).toBe(10n);
+  });
+
+  it('never awards a kobo to a zero weight', () => {
+    const parts = allocate(kobo(5n), [kobo(1n), kobo(0n), kobo(1n)]);
+    expect(parts).toEqual([kobo(3n), kobo(0n), kobo(2n)]);
+  });
+
+  it('handles a single weight and an amount smaller than the weight count', () => {
+    expect(allocate(kobo(7n), [kobo(3n)])).toEqual([kobo(7n)]);
+    expect(allocate(kobo(2n), [kobo(5n), kobo(5n), kobo(5n)])).toEqual([
+      kobo(1n),
+      kobo(1n),
+      kobo(0n),
+    ]);
+  });
+
+  it('rejects inputs it cannot split without inventing or losing money', () => {
+    expect(() => allocate(parseNaira('-1'), [kobo(1n)])).toThrow(MoneyParseError);
+    expect(() => allocate(kobo(1n), [])).toThrow(MoneyParseError);
+    expect(() => allocate(kobo(1n), [kobo(0n)])).toThrow(MoneyParseError);
+    expect(() => allocate(kobo(1n), [kobo(1n), kobo(-1n)])).toThrow(MoneyParseError);
+  });
+
+  it('sums exactly on a large split', () => {
+    const amount = parseNaira('99,999,999.99');
+    const weights = [kobo(1n), kobo(7n), kobo(11n), kobo(13n), kobo(17n)];
+    const parts = allocate(amount, weights);
+    expect(parts.reduce<bigint>((sum, part) => sum + part, 0n)).toBe(amount);
   });
 });

@@ -4,6 +4,11 @@
  * Every monetary value in Tenaville passes through here. The branded type makes
  * an amount impossible to confuse with a plain number at a call site, which is
  * the mistake that produces a figure 100× wrong in a landlord statement.
+ *
+ * Rounding is the one place a decision, not an algorithm, lives: commission is
+ * round-half-up per receipt, in basis points (docs/requirements/
+ * sprint-4-decisions-and-pricing.md §2.2). `applyRate` and `allocate` implement
+ * it, and nothing else in the product may round money.
  */
 
 /** An amount in kobo. ₦1,250,000.00 is 125_000_000 kobo. */
@@ -140,15 +145,88 @@ export const toSafeNumber = (amount: Kobo): number => {
   return Number(amount);
 };
 
-/*
- * Deliberately not implemented yet:
+/**
+ * Apply a rate held in basis points: commission, VAT, withholding tax.
  *
- *   applyRate(amount, basisPoints)  — commission, VAT, withholding tax
- *   allocate(amount, weights)       — splitting a payment across charges
+ * 1000 bps is 10%; 750 is 7.5%. The rounding rule is round-half-up to the
+ * nearest kobo, per amount, as agreed in the Sprint 4 decision record:
  *
- * Both need a documented rounding rule, and that rule is an unresolved product
- * decision (docs/ops/open-decisions.md). It blocks the landlord ledger in R1
- * step 6, not the portfolio work that needs the functions above. Guessing a
- * rule now and discovering later that pilot agencies expect a different one
- * would mean reissuing statements.
+ *   commission = (amount_kobo * rate_bps + 5000) / 10000
+ *
+ * Integer division does the rounding because the constant 5000 shifts every
+ * fraction of half a kobo or more up, and nothing below it. No floating point
+ * appears at any point, and BigInt keeps the multiplication exact.
+ *
+ * Only a non-negative amount is accepted. A reversal negates the stored result
+ * rather than recalculating it (LEDGER-9), so there is no negative commission
+ * to compute and a caller who tries is making a mistake worth surfacing.
  */
+export const applyRate = (amount: Kobo, rateBps: number): Kobo => {
+  if (!Number.isInteger(rateBps)) {
+    throw new MoneyParseError(String(rateBps), 'basis points must be a whole number');
+  }
+  if (rateBps < 0) {
+    throw new MoneyParseError(String(rateBps), 'basis points cannot be negative');
+  }
+  if (amount < 0n) {
+    throw new MoneyParseError(
+      amount.toString(),
+      'a rate applies to a non-negative amount; reversals negate the stored result instead',
+    );
+  }
+  return kobo((amount * BigInt(rateBps) + 5_000n) / 10_000n);
+};
+
+/**
+ * Split an amount across weights so that the parts sum back to the amount.
+ *
+ * This is largest-remainder apportionment. Each part gets the whole-kobo share
+ * of `amount * weight / total`; the few kobo left over by integer division go
+ * one each to the shares with the largest fractional remainder, ties broken by
+ * position. The rule is deterministic, which matters because the same payment
+ * split two ways would show two different statements.
+ *
+ * Splitting ₦1,000,000 across three equal charges must lose nothing — a kobo
+ * that disappears in the split is a dispute months later — so the function
+ * asserts the result totals the input rather than trusting the arithmetic.
+ */
+export const allocate = (amount: Kobo, weights: readonly Kobo[]): Kobo[] => {
+  if (amount < 0n) {
+    throw new MoneyParseError(amount.toString(), 'a negative amount cannot be allocated');
+  }
+  if (weights.length === 0) {
+    throw new MoneyParseError('[]', 'at least one weight is required');
+  }
+  if (weights.some((weight) => weight < 0n)) {
+    throw new MoneyParseError('[]', 'weights cannot be negative');
+  }
+
+  const total = weights.reduce<bigint>((sum, weight) => sum + weight, 0n);
+  if (total === 0n) {
+    throw new MoneyParseError('[]', 'the weights total zero, so there is nothing to split by');
+  }
+
+  const shares = weights.map((weight) => (amount * weight) / total);
+  const assigned = shares.reduce<bigint>((sum, share) => sum + share, 0n);
+
+  // Integer division leaves fewer than one kobo per weight behind, so the
+  // remainder always fits in a plain number.
+  const remainder = Number(amount - assigned);
+  const order = weights
+    .map((weight, index) => ({ index, fraction: (amount * weight) % total }))
+    .sort((a, b) => {
+      if (a.fraction === b.fraction) return a.index - b.index;
+      return a.fraction > b.fraction ? -1 : 1;
+    });
+
+  const result = shares.map((share) => kobo(share));
+  for (let i = 0; i < remainder; i += 1) {
+    const target = order[i];
+    if (target === undefined) break;
+    const share = result[target.index];
+    if (share === undefined) break;
+    result[target.index] = kobo(share + 1n);
+  }
+
+  return result;
+};
