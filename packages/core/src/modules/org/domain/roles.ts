@@ -69,6 +69,10 @@ export const PERMISSIONS = [
   'maintenance.write',
   'maintenance.approve',
 
+  // Communications and tasks (R1 step 10). Every staff role needs the queue and
+  // the message log; a caretaker fixes what a message reports.
+  'comms.read',
+
   // Own records only — what a tenant or landlord may reach about themselves.
   'self.tenancy.read',
   'self.maintenance.request',
@@ -99,17 +103,19 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'statement.read',
     'maintenance.read',
     'maintenance.write',
+    'comms.read',
   ],
 
-  letting_agent: ['property.read', 'lease.read', 'maintenance.read'],
+  letting_agent: ['property.read', 'lease.read', 'maintenance.read', 'comms.read'],
 
-  caretaker: ['property.read', 'maintenance.read', 'maintenance.write'],
+  caretaker: ['property.read', 'maintenance.read', 'maintenance.write', 'comms.read'],
 
   maintenance_coordinator: [
     'property.read',
     'maintenance.read',
     'maintenance.write',
     'maintenance.approve',
+    'comms.read',
   ],
 
   // An accountant reads the money and may reverse a payment, but does not
@@ -128,6 +134,7 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'statement.issue',
     'org.audit.read',
     'org.billing.read',
+    'comms.read',
   ],
 
   screening_reviewer: ['property.read', 'lease.read'],
