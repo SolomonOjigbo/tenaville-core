@@ -30,6 +30,7 @@ insert into audit_exempt values
   ('tenant_contacts',   'third-party contact details, collected and removed freely by design'),
   ('property_photos',   'DOC-7 audits access; the row is a path, not a decision'),
   ('lease_handovers',   'evidence recorded once at move-in or move-out; the lease status change is audited'),
+  ('maintenance_events','the maintenance timeline itself, append-only; approvals and costs are audited separately'),
   ('receipt_counters',  'internal gapless allocator; the receipt that consumes a number is audited');
 
 -- Every base table is either audited or explicitly exempt.
