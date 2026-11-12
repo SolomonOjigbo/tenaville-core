@@ -15,20 +15,32 @@ export interface Access {
 /**
  * Resolve what the calling user may do in one organisation (ORG-4).
  *
- * The membership is read through the user's own client, so RLS decides whether
- * they can see it at all. A caller who names an organisation they do not belong
- * to gets no rows, and this returns null — the same answer as for an
- * organisation that does not exist, which is deliberate: distinguishing the two
- * would confirm the existence of another tenant's organisation.
+ * The membership is read through the user's own client, but RLS alone is not
+ * enough: staff may read every membership in their organisation, so an
+ * unfiltered `.maybeSingle()` throws as soon as a second active member exists.
+ * The query therefore pins `user_id` to the caller. A caller who names an
+ * organisation they do not belong to gets no rows, and this returns null — the
+ * same answer as for an organisation that does not exist, which is deliberate:
+ * distinguishing the two would confirm the existence of another tenant's
+ * organisation.
  */
 export const resolveAccess = async (
   client: UserClient,
   organisationId: string,
+  callerUserId?: string,
 ): Promise<Access | null> => {
+  let userId = callerUserId;
+  if (userId === undefined) {
+    const { data: auth } = await client.auth.getUser();
+    userId = auth.user?.id;
+  }
+  if (userId === undefined) return null;
+
   const { data, error } = await client
     .from('memberships')
     .select('user_id, organisation_id, role, branch_id')
     .eq('organisation_id', organisationId)
+    .eq('user_id', userId)
     .eq('status', 'active')
     .maybeSingle();
 

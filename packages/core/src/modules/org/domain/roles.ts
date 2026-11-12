@@ -133,8 +133,8 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
   screening_reviewer: ['property.read', 'lease.read'],
 
   // A landlord sees their own portfolio and approves repairs above a threshold
-  // (OWN-4, R2). They are not staff.
-  landlord: ['self.portfolio.read', 'statement.read', 'maintenance.read'],
+  // (OWN-4, MAINT-8). They are not staff.
+  landlord: ['self.portfolio.read', 'statement.read', 'maintenance.read', 'maintenance.approve'],
 
   // A tenant reaches only their own tenancy (TENANT-1).
   tenant: ['self.tenancy.read', 'self.maintenance.request'],
