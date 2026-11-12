@@ -1624,6 +1624,212 @@ export type Database = {
           },
         ];
       };
+      message_deliveries: {
+        Row: {
+          attempted_at: string;
+          channel: Database['public']['Enums']['message_channel'];
+          error: string | null;
+          id: string;
+          message_id: string;
+          organisation_id: string;
+          provider: string | null;
+          provider_message_id: string | null;
+          status: Database['public']['Enums']['message_status'];
+        };
+        ComputedFields: never;
+        Insert: {
+          attempted_at?: string;
+          channel: Database['public']['Enums']['message_channel'];
+          error?: string | null;
+          id?: string;
+          message_id: string;
+          organisation_id: string;
+          provider?: string | null;
+          provider_message_id?: string | null;
+          status: Database['public']['Enums']['message_status'];
+        };
+        Update: {
+          attempted_at?: string;
+          channel?: Database['public']['Enums']['message_channel'];
+          error?: string | null;
+          id?: string;
+          message_id?: string;
+          organisation_id?: string;
+          provider?: string | null;
+          provider_message_id?: string | null;
+          status?: Database['public']['Enums']['message_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'message_deliveries_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'message_deliveries_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      message_templates: {
+        Row: {
+          active: boolean;
+          approval_status: Database['public']['Enums']['message_template_status'];
+          body: string;
+          channel: Database['public']['Enums']['message_channel'];
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          key: string;
+          name: string;
+          organisation_id: string;
+          subject: string | null;
+          updated_at: string | null;
+          whatsapp_template_name: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          approval_status?: Database['public']['Enums']['message_template_status'];
+          body: string;
+          channel: Database['public']['Enums']['message_channel'];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          key: string;
+          name: string;
+          organisation_id: string;
+          subject?: string | null;
+          updated_at?: string | null;
+          whatsapp_template_name?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          approval_status?: Database['public']['Enums']['message_template_status'];
+          body?: string;
+          channel?: Database['public']['Enums']['message_channel'];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          key?: string;
+          name?: string;
+          organisation_id?: string;
+          subject?: string | null;
+          updated_at?: string | null;
+          whatsapp_template_name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'message_templates_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      messages: {
+        Row: {
+          body: string;
+          channel: Database['public']['Enums']['message_channel'];
+          cost_kobo: number;
+          created_at: string;
+          created_by: string | null;
+          error: string | null;
+          id: string;
+          organisation_id: string;
+          provider: string | null;
+          provider_message_id: string | null;
+          purpose: Database['public']['Enums']['message_purpose'];
+          recipient_address: string;
+          recipient_id: string | null;
+          recipient_name: string;
+          recipient_type: string;
+          recipient_user_id: string | null;
+          related_id: string | null;
+          related_type: string | null;
+          sent_at: string | null;
+          sent_channel: Database['public']['Enums']['message_channel'] | null;
+          status: Database['public']['Enums']['message_status'];
+          subject: string | null;
+          template_id: string | null;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          body: string;
+          channel: Database['public']['Enums']['message_channel'];
+          cost_kobo?: number;
+          created_at?: string;
+          created_by?: string | null;
+          error?: string | null;
+          id?: string;
+          organisation_id: string;
+          provider?: string | null;
+          provider_message_id?: string | null;
+          purpose?: Database['public']['Enums']['message_purpose'];
+          recipient_address: string;
+          recipient_id?: string | null;
+          recipient_name: string;
+          recipient_type: string;
+          recipient_user_id?: string | null;
+          related_id?: string | null;
+          related_type?: string | null;
+          sent_at?: string | null;
+          sent_channel?: Database['public']['Enums']['message_channel'] | null;
+          status?: Database['public']['Enums']['message_status'];
+          subject?: string | null;
+          template_id?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          body?: string;
+          channel?: Database['public']['Enums']['message_channel'];
+          cost_kobo?: number;
+          created_at?: string;
+          created_by?: string | null;
+          error?: string | null;
+          id?: string;
+          organisation_id?: string;
+          provider?: string | null;
+          provider_message_id?: string | null;
+          purpose?: Database['public']['Enums']['message_purpose'];
+          recipient_address?: string;
+          recipient_id?: string | null;
+          recipient_name?: string;
+          recipient_type?: string;
+          recipient_user_id?: string | null;
+          related_id?: string | null;
+          related_type?: string | null;
+          sent_at?: string | null;
+          sent_channel?: Database['public']['Enums']['message_channel'] | null;
+          status?: Database['public']['Enums']['message_status'];
+          subject?: string | null;
+          template_id?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_template_id_fkey';
+            columns: ['template_id'];
+            isOneToOne: false;
+            referencedRelation: 'message_templates';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       nigerian_states: {
         Row: {
           code: string;
@@ -1642,6 +1848,45 @@ export type Database = {
           zone?: string;
         };
         Relationships: [];
+      };
+      notification_preferences: {
+        Row: {
+          channel: Database['public']['Enums']['message_channel'];
+          id: string;
+          opted_in: boolean;
+          organisation_id: string;
+          purpose: Database['public']['Enums']['message_purpose'];
+          updated_at: string | null;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          channel: Database['public']['Enums']['message_channel'];
+          id?: string;
+          opted_in?: boolean;
+          organisation_id: string;
+          purpose?: Database['public']['Enums']['message_purpose'];
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          channel?: Database['public']['Enums']['message_channel'];
+          id?: string;
+          opted_in?: boolean;
+          organisation_id?: string;
+          purpose?: Database['public']['Enums']['message_purpose'];
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'notification_preferences_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       organisations: {
         Row: {
@@ -2501,6 +2746,72 @@ export type Database = {
           },
         ];
       };
+      tasks: {
+        Row: {
+          completed_at: string | null;
+          completed_by: string | null;
+          created_at: string;
+          created_by: string | null;
+          dedupe_key: string | null;
+          due_on: string | null;
+          id: string;
+          notes: string | null;
+          organisation_id: string;
+          owner_user_id: string | null;
+          priority: Database['public']['Enums']['task_priority'];
+          related_id: string | null;
+          related_type: string | null;
+          status: Database['public']['Enums']['task_status'];
+          title: string;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          completed_at?: string | null;
+          completed_by?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          dedupe_key?: string | null;
+          due_on?: string | null;
+          id?: string;
+          notes?: string | null;
+          organisation_id: string;
+          owner_user_id?: string | null;
+          priority?: Database['public']['Enums']['task_priority'];
+          related_id?: string | null;
+          related_type?: string | null;
+          status?: Database['public']['Enums']['task_status'];
+          title: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          completed_at?: string | null;
+          completed_by?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          dedupe_key?: string | null;
+          due_on?: string | null;
+          id?: string;
+          notes?: string | null;
+          organisation_id?: string;
+          owner_user_id?: string | null;
+          priority?: Database['public']['Enums']['task_priority'];
+          related_id?: string | null;
+          related_type?: string | null;
+          status?: Database['public']['Enums']['task_status'];
+          title?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'tasks_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tenant_contacts: {
         Row: {
           address_line: string | null;
@@ -3051,6 +3362,14 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      generate_reminder_tasks: {
+        Args: {
+          p_lease_days_ahead?: number;
+          p_organisation_id: string;
+          p_rent_days_ahead?: number;
+        };
+        Returns: number;
+      };
       issue_statement: { Args: { target_statement_id: string }; Returns: undefined };
       plan_entitlements: {
         Args: Record<PropertyKey, never>;
@@ -3103,6 +3422,18 @@ export type Database = {
           p_request_id: string;
         };
         Returns: string;
+      };
+      record_message_result: {
+        Args: {
+          p_channel: Database['public']['Enums']['message_channel'];
+          p_cost_kobo?: number;
+          p_error?: string;
+          p_message_id: string;
+          p_provider?: string;
+          p_provider_message_id?: string;
+          p_status: Database['public']['Enums']['message_status'];
+        };
+        Returns: undefined;
       };
       record_payment: {
         Args: {
@@ -3245,6 +3576,10 @@ export type Database = {
       maintenance_submitted_by: 'staff' | 'tenant';
       maintenance_urgency: 'low' | 'normal' | 'high' | 'emergency';
       membership_status: 'invited' | 'active' | 'suspended';
+      message_channel: 'whatsapp' | 'sms' | 'email';
+      message_purpose: 'operational' | 'marketing';
+      message_status: 'queued' | 'sent' | 'delivered' | 'failed' | 'skipped';
+      message_template_status: 'draft' | 'pending_approval' | 'approved' | 'rejected';
       organisation_type: 'agency' | 'individual_landlord';
       payment_method: 'cash' | 'bank_transfer' | 'pos' | 'cheque' | 'mobile_money' | 'other';
       payment_status: 'recorded' | 'confirmed' | 'reversed';
@@ -3256,6 +3591,8 @@ export type Database = {
       rent_frequency: 'annual' | 'half_yearly' | 'quarterly' | 'monthly' | 'irregular';
       statement_status: 'draft' | 'reviewed' | 'issued';
       subscription_status: 'trialing' | 'active' | 'past_due' | 'grace' | 'suspended' | 'cancelled';
+      task_priority: 'low' | 'normal' | 'high' | 'urgent';
+      task_status: 'open' | 'done' | 'cancelled';
       tenant_contact_kind: 'next_of_kin' | 'employer' | 'business' | 'emergency' | 'referee';
       tenant_kind: 'individual' | 'organisation';
       unit_status: 'vacant' | 'occupied' | 'reserved' | 'under_maintenance' | 'inactive';
@@ -3480,6 +3817,10 @@ export const Constants = {
       maintenance_submitted_by: ['staff', 'tenant'],
       maintenance_urgency: ['low', 'normal', 'high', 'emergency'],
       membership_status: ['invited', 'active', 'suspended'],
+      message_channel: ['whatsapp', 'sms', 'email'],
+      message_purpose: ['operational', 'marketing'],
+      message_status: ['queued', 'sent', 'delivered', 'failed', 'skipped'],
+      message_template_status: ['draft', 'pending_approval', 'approved', 'rejected'],
       organisation_type: ['agency', 'individual_landlord'],
       payment_method: ['cash', 'bank_transfer', 'pos', 'cheque', 'mobile_money', 'other'],
       payment_status: ['recorded', 'confirmed', 'reversed'],
@@ -3497,6 +3838,8 @@ export const Constants = {
       rent_frequency: ['annual', 'half_yearly', 'quarterly', 'monthly', 'irregular'],
       statement_status: ['draft', 'reviewed', 'issued'],
       subscription_status: ['trialing', 'active', 'past_due', 'grace', 'suspended', 'cancelled'],
+      task_priority: ['low', 'normal', 'high', 'urgent'],
+      task_status: ['open', 'done', 'cancelled'],
       tenant_contact_kind: ['next_of_kin', 'employer', 'business', 'emergency', 'referee'],
       tenant_kind: ['individual', 'organisation'],
       unit_status: ['vacant', 'occupied', 'reserved', 'under_maintenance', 'inactive'],

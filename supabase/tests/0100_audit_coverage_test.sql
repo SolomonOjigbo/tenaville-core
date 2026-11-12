@@ -31,6 +31,8 @@ insert into audit_exempt values
   ('property_photos',   'DOC-7 audits access; the row is a path, not a decision'),
   ('lease_handovers',   'evidence recorded once at move-in or move-out; the lease status change is audited'),
   ('maintenance_events','the maintenance timeline itself, append-only; approvals and costs are audited separately'),
+  ('messages',          'the communications log itself; templates and preferences are audited'),
+  ('message_deliveries','append-only provider attempts belonging to the audited message log'),
   ('receipt_counters',  'internal gapless allocator; the receipt that consumes a number is audited');
 
 -- Every base table is either audited or explicitly exempt.
