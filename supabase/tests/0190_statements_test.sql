@@ -208,8 +208,8 @@ select tests.authenticate(:'landlord_user'::uuid, 'statement-landlord@yabalets.n
 
 select is(
   (select count(*) from public.statements),
-  3::bigint,
-  'LEDGER-5: the landlord sees their own statements'
+  1::bigint,
+  'LEDGER-5: the landlord sees their issued statement, not the working drafts'
 );
 
 select tests.authenticate(:'owner'::uuid, 'statement-owner@yabalets.ng');
