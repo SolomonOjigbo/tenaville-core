@@ -30,13 +30,15 @@ describe('navigation', () => {
         '/rent',
         '/rent/receipts',
         '/rent/cash-up',
+        '/ledger',
+        '/reports',
         '/settings',
         '/settings/people',
         '/settings/plan',
       ]),
     );
-    expect(nav).not.toContain('/ledger');
-    expect(nav).not.toContain('/reports');
+    expect(nav).toContain('/ledger');
+    expect(nav).toContain('/reports');
   });
 
   it('hides the ledger from a caretaker', () => {
@@ -95,7 +97,7 @@ describe('navigation', () => {
       expect.arrayContaining(['/rent', '/rent/receipts', '/rent/cash-up', '/settings/plan']),
     );
     expect(nav).not.toContain('/settings/people');
-    expect(nav).not.toContain('/ledger');
+    expect(nav).toContain('/ledger');
   });
 
   it('gives a tenant and a landlord no staff navigation at all', () => {

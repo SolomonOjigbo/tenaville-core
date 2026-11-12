@@ -214,6 +214,62 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"landlord_ledger_entries": {
+                  Row: {
+                    "amount_kobo": number,"charge_id": string | null,"commission_base_kobo": number | null,"commission_rate_bps": number | null,"created_at": string,"created_by": string | null,"description": string,"entry_kind": Database["public"]['Enums']["ledger_entry_kind"],"funds_class": Database["public"]['Enums']["ledger_funds_class"],"id": string,"landlord_id": string,"occurred_on": string,"organisation_id": string,"payment_id": string | null,"property_id": string | null,"remittance_id": string | null,"reverses_entry_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"charge_id"?: string | null,"commission_base_kobo"?: number | null,"commission_rate_bps"?: number | null,"created_at"?: string,"created_by"?: string | null,"description": string,"entry_kind": Database["public"]['Enums']["ledger_entry_kind"],"funds_class": Database["public"]['Enums']["ledger_funds_class"],"id"?: string,"landlord_id": string,"occurred_on": string,"organisation_id": string,"payment_id"?: string | null,"property_id"?: string | null,"remittance_id"?: string | null,"reverses_entry_id"?: string | null
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"charge_id"?: string | null,"commission_base_kobo"?: number | null,"commission_rate_bps"?: number | null,"created_at"?: string,"created_by"?: string | null,"description"?: string,"entry_kind"?: Database["public"]['Enums']["ledger_entry_kind"],"funds_class"?: Database["public"]['Enums']["ledger_funds_class"],"id"?: string,"landlord_id"?: string,"occurred_on"?: string,"organisation_id"?: string,"payment_id"?: string | null,"property_id"?: string | null,"remittance_id"?: string | null,"reverses_entry_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "landlord_ledger_entries_charge_id_fkey"
+      columns: ["charge_id"]
+isOneToOne: false
+      referencedRelation: "charges"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_landlord_id_fkey"
+      columns: ["landlord_id"]
+isOneToOne: false
+      referencedRelation: "landlords"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_payment_id_fkey"
+      columns: ["payment_id"]
+isOneToOne: false
+      referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_property_id_fkey"
+      columns: ["property_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_remittance_id_fkey"
+      columns: ["remittance_id"]
+isOneToOne: false
+      referencedRelation: "remittances"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "landlord_ledger_entries_reverses_entry_id_fkey"
+      columns: ["reverses_entry_id"]
+isOneToOne: false
+      referencedRelation: "landlord_ledger_entries"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"landlord_remittance_details": {
                   Row: {
                     "account_name": string,"account_number": string,"bank_name": string,"created_at": string,"landlord_id": string,"organisation_id": string,"updated_at": string | null,"updated_by": string | null
@@ -830,6 +886,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"remittances": {
+                  Row: {
+                    "amount_kobo": number,"created_at": string,"id": string,"landlord_id": string,"method": Database["public"]['Enums']["payment_method"],"notes": string | null,"organisation_id": string,"paid_on": string,"recorded_by": string | null,"reference": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_kobo": number,"created_at"?: string,"id"?: string,"landlord_id": string,"method": Database["public"]['Enums']["payment_method"],"notes"?: string | null,"organisation_id": string,"paid_on": string,"recorded_by"?: string | null,"reference"?: string | null
+                  }
+                  Update: {
+                    "amount_kobo"?: number,"created_at"?: string,"id"?: string,"landlord_id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"notes"?: string | null,"organisation_id"?: string,"paid_on"?: string,"recorded_by"?: string | null,"reference"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "remittances_landlord_id_fkey"
+      columns: ["landlord_id"]
+isOneToOne: false
+      referencedRelation: "landlords"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "remittances_organisation_id_fkey"
+      columns: ["organisation_id"]
+isOneToOne: false
+      referencedRelation: "organisations"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"subscriptions": {
                   Row: {
                     "cancelled_at": string | null,"created_at": string,"current_period_end": string | null,"current_period_start": string | null,"grace_ends_on": string | null,"id": string,"organisation_id": string,"plan_id": string,"status": Database["public"]['Enums']["subscription_status"],"trial_ends_on": string | null,"units_included": number | null,"updated_at": string | null
@@ -1075,6 +1157,9 @@ isOneToOne: false
               "payment_id": string,"receipt_id": string,"receipt_number": string
             }[]
                            },
+"record_remittance":
+{ Args: { "remittance_amount_kobo": number,"remittance_method": Database["public"]['Enums']["payment_method"],"remittance_paid_on": string,"remittance_reference"?: string,"target_landlord_id": string,"target_organisation_id": string }; Returns: string
+                           },
 "renew_lease":
 { Args: { "carry_deposit"?: boolean,"new_ends_on": string,"new_rent_kobo"?: number,"source_lease_id": string }; Returns: string
                            },
@@ -1091,23 +1176,260 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","payment_method": "cash"|"bank_transfer"|"pos"|"cheque"|"mobile_money"|"other","payment_status": "recorded"|"confirmed"|"reversed","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","receipt_status": "issued"|"void"|"reversed","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
+            "app_role": "owner"|"admin"|"property_manager"|"letting_agent"|"caretaker"|"maintenance_coordinator"|"accountant"|"screening_reviewer"|"landlord"|"tenant","assignment_scope": "organisation"|"branch"|"property"|"landlord","billing_period": "monthly"|"annual","charge_frequency": "one_off"|"monthly"|"quarterly"|"half_yearly"|"annual","charge_kind": "rent"|"service_charge"|"utility"|"agreed_fee","charge_status": "open"|"cancelled","commission_basis": "on_receipt"|"on_invoice","commission_type": "percentage"|"fixed","contact_channel": "phone"|"sms"|"whatsapp"|"email","deduction_category": "commission"|"maintenance"|"service_charge"|"utilities"|"statutory_fee"|"agency_expense"|"other","deposit_custodian": "agency"|"landlord","deposit_status": "expected"|"held"|"partially_refunded"|"refunded"|"forfeited"|"transferred","handover_kind": "move_in"|"move_out","import_kind": "properties_units"|"landlords"|"tenants_leases"|"opening_balances","import_row_status": "pending"|"valid"|"invalid"|"applied","import_status": "draft"|"validated"|"applied"|"rolled_back"|"failed","lease_party_role": "tenant"|"co_tenant"|"guarantor","lease_status": "draft"|"active"|"expired"|"terminated"|"renewed","ledger_entry_kind": "rent_collected"|"commission"|"remittance"|"adjustment"|"opening_balance","ledger_funds_class": "client_funds"|"agency_income","membership_status": "invited"|"active"|"suspended","organisation_type": "agency"|"individual_landlord","payment_method": "cash"|"bank_transfer"|"pos"|"cheque"|"mobile_money"|"other","payment_status": "recorded"|"confirmed"|"reversed","plan_tier": "free"|"landlord"|"agent"|"growth"|"enterprise","property_type": "residential"|"commercial"|"mixed_use"|"estate"|"land","receipt_status": "issued"|"void"|"reversed","remittance_schedule": "on_receipt"|"weekly"|"fortnightly"|"monthly"|"quarterly"|"annually","rent_frequency": "annual"|"half_yearly"|"quarterly"|"monthly"|"irregular","subscription_status": "trialing"|"active"|"past_due"|"grace"|"suspended"|"cancelled","tenant_contact_kind": "next_of_kin"|"employer"|"business"|"emergency"|"referee","tenant_kind": "individual"|"organisation","unit_status": "vacant"|"occupied"|"reserved"|"under_maintenance"|"inactive","unit_type": "flat"|"self_contained"|"room"|"duplex"|"bungalow"|"shop"|"office"|"warehouse"|"other","usage_reading_status": "provisional"|"final"
           }
           CompositeTypes: {
             [_ in never]: never
           }
         },"storage": {
           Tables: {
-            [_ in never]: never
+            "bucket_lifecycle_states": {
+                  Row: {
+                    "bucket_id": string,"claim_id": string | null,"claim_until": string | null,"continuation": Json | null,"failure_count": number,"generation": string | null,"last_completed_at": string | null,"last_error": Json | null,"last_result": Json | null,"last_started_at": string | null,"last_success_at": string | null,"next_run_at": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket_id": string,"claim_id"?: string | null,"claim_until"?: string | null,"continuation"?: Json | null,"failure_count"?: number,"generation"?: string | null,"last_completed_at"?: string | null,"last_error"?: Json | null,"last_result"?: Json | null,"last_started_at"?: string | null,"last_success_at"?: string | null,"next_run_at"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "bucket_id"?: string,"claim_id"?: string | null,"claim_until"?: string | null,"continuation"?: Json | null,"failure_count"?: number,"generation"?: string | null,"last_completed_at"?: string | null,"last_error"?: Json | null,"last_result"?: Json | null,"last_started_at"?: string | null,"last_success_at"?: string | null,"next_run_at"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "bucket_lifecycle_states_bucket_id_fkey"
+      columns: ["bucket_id"]
+isOneToOne: true
+      referencedRelation: "buckets"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"buckets": {
+                  Row: {
+                    "allowed_mime_types": (string)[] | null,"avif_autodetection": boolean | null,"created_at": string | null,"file_size_limit": number | null,"id": string,"lifecycle_configuration": Json | null,"lifecycle_configuration_generation": string | null,"name": string,"owner": string | null,"owner_id": string | null,"public": boolean | null,"type": Database["storage"]['Enums']["buckettype"],"updated_at": string | null,"versioning_status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "allowed_mime_types"?: (string)[] | null,"avif_autodetection"?: boolean | null,"created_at"?: string | null,"file_size_limit"?: number | null,"id": string,"lifecycle_configuration"?: Json | null,"lifecycle_configuration_generation"?: string | null,"name": string,"owner"?: string | null,"owner_id"?: string | null,"public"?: boolean | null,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string | null,"versioning_status"?: string
+                  }
+                  Update: {
+                    "allowed_mime_types"?: (string)[] | null,"avif_autodetection"?: boolean | null,"created_at"?: string | null,"file_size_limit"?: number | null,"id"?: string,"lifecycle_configuration"?: Json | null,"lifecycle_configuration_generation"?: string | null,"name"?: string,"owner"?: string | null,"owner_id"?: string | null,"public"?: boolean | null,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string | null,"versioning_status"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"buckets_analytics": {
+                  Row: {
+                    "created_at": string,"deleted_at": string | null,"format": string,"id": string,"name": string,"type": Database["storage"]['Enums']["buckettype"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"deleted_at"?: string | null,"format"?: string,"id"?: string,"name": string,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"deleted_at"?: string | null,"format"?: string,"id"?: string,"name"?: string,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"buckets_vectors": {
+                  Row: {
+                    "created_at": string,"id": string,"type": Database["storage"]['Enums']["buckettype"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id": string,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"type"?: Database["storage"]['Enums']["buckettype"],"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"lifecycle_abandoned_artifacts": {
+                  Row: {
+                    "attempted_at": string,"bucket_id": string,"key": string,"name": string,"version": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempted_at"?: string,"bucket_id": string,"key": string,"name": string,"version"?: string | null
+                  }
+                  Update: {
+                    "attempted_at"?: string,"bucket_id"?: string,"key"?: string,"name"?: string,"version"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"migrations": {
+                  Row: {
+                    "executed_at": string | null,"hash": string,"id": number,"name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "executed_at"?: string | null,"hash": string,"id": number,"name": string
+                  }
+                  Update: {
+                    "executed_at"?: string | null,"hash"?: string,"id"?: number,"name"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"objects": {
+                  Row: {
+                    "archived_at": string | null,"bucket_id": string | null,"created_at": string | null,"id": string,"is_delete_marker": boolean,"is_versioned": boolean,"last_accessed_at": string | null,"metadata": Json | null,"name": string | null,"owner": string | null,"owner_id": string | null,"path_tokens": (string)[] | null,"updated_at": string | null,"user_metadata": Json | null,"version": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"bucket_id"?: string | null,"created_at"?: string | null,"id"?: string,"is_delete_marker"?: boolean,"is_versioned"?: boolean,"last_accessed_at"?: string | null,"metadata"?: Json | null,"name"?: string | null,"owner"?: string | null,"owner_id"?: string | null,"path_tokens"?: never,"updated_at"?: string | null,"user_metadata"?: Json | null,"version"?: string | null
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"bucket_id"?: string | null,"created_at"?: string | null,"id"?: string,"is_delete_marker"?: boolean,"is_versioned"?: boolean,"last_accessed_at"?: string | null,"metadata"?: Json | null,"name"?: string | null,"owner"?: string | null,"owner_id"?: string | null,"path_tokens"?: never,"updated_at"?: string | null,"user_metadata"?: Json | null,"version"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "objects_bucketId_fkey"
+      columns: ["bucket_id"]
+isOneToOne: false
+      referencedRelation: "buckets"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"s3_multipart_uploads": {
+                  Row: {
+                    "bucket_id": string,"created_at": string,"id": string,"in_progress_size": number,"key": string,"metadata": Json | null,"owner_id": string | null,"upload_signature": string,"user_metadata": Json | null,"version": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket_id": string,"created_at"?: string,"id": string,"in_progress_size"?: number,"key": string,"metadata"?: Json | null,"owner_id"?: string | null,"upload_signature": string,"user_metadata"?: Json | null,"version": string
+                  }
+                  Update: {
+                    "bucket_id"?: string,"created_at"?: string,"id"?: string,"in_progress_size"?: number,"key"?: string,"metadata"?: Json | null,"owner_id"?: string | null,"upload_signature"?: string,"user_metadata"?: Json | null,"version"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
+      columns: ["bucket_id"]
+isOneToOne: false
+      referencedRelation: "buckets"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"s3_multipart_uploads_parts": {
+                  Row: {
+                    "bucket_id": string,"created_at": string,"etag": string,"id": string,"key": string,"owner_id": string | null,"part_number": number,"size": number,"upload_id": string,"version": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket_id": string,"created_at"?: string,"etag": string,"id"?: string,"key": string,"owner_id"?: string | null,"part_number": number,"size"?: number,"upload_id": string,"version": string
+                  }
+                  Update: {
+                    "bucket_id"?: string,"created_at"?: string,"etag"?: string,"id"?: string,"key"?: string,"owner_id"?: string | null,"part_number"?: number,"size"?: number,"upload_id"?: string,"version"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
+      columns: ["bucket_id"]
+isOneToOne: false
+      referencedRelation: "buckets"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
+      columns: ["upload_id"]
+isOneToOne: false
+      referencedRelation: "s3_multipart_uploads"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"vector_indexes": {
+                  Row: {
+                    "bucket_id": string,"created_at": string,"data_type": string,"dimension": number,"distance_metric": string,"id": string,"metadata_configuration": Json | null,"name": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket_id": string,"created_at"?: string,"data_type": string,"dimension": number,"distance_metric": string,"id"?: string,"metadata_configuration"?: Json | null,"name": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "bucket_id"?: string,"created_at"?: string,"data_type"?: string,"dimension"?: number,"distance_metric"?: string,"id"?: string,"metadata_configuration"?: Json | null,"name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "vector_indexes_bucket_id_fkey"
+      columns: ["bucket_id"]
+isOneToOne: false
+      referencedRelation: "buckets_vectors"
+      referencedColumns: ["id"]
+    }
+                  ]
+                }
           }
           Views: {
             [_ in never]: never
           }
           Functions: {
-            [_ in never]: never
+            "allow_any_operation":
+{ Args: { "expected_operations": (string)[] }; Returns: boolean
+                           },
+"allow_only_operation":
+{ Args: { "expected_operation": string }; Returns: boolean
+                           },
+"can_insert_object":
+{ Args: { "bucketid": string,"metadata": Json,"name": string,"owner": string }; Returns: undefined
+                           },
+"delete_lifecycle_objects":
+{ Args: { "object_ids": (string)[] }; Returns: {
+              "id": string,"is_delete_marker": boolean,"metadata": Json
+            }[]
+                           },
+"extension":
+{ Args: { "name": string }; Returns: string
+                           },
+"filename":
+{ Args: { "name": string }; Returns: string
+                           },
+"foldername":
+{ Args: { "name": string }; Returns: (string)[]
+                           },
+"get_common_prefix":
+{ Args: { "p_delimiter": string,"p_key": string,"p_prefix": string }; Returns: string
+                           },
+"get_size_by_bucket":
+{ Args: { "delete_markers"?: string,"noncurrent_versions"?: string }; Returns: {
+              "bucket_id": string,"size": number
+            }[]
+                           },
+"list_multipart_uploads_with_delimiter":
+{ Args: { "bucket_id": string,"delimiter_param": string,"max_keys"?: number,"next_key_token"?: string,"next_upload_token"?: string,"prefix_param": string,"raw_prefix_param"?: string }; Returns: {
+              "created_at": string,"id": string,"key": string
+            }[]
+                           },
+"list_objects_with_delimiter":
+{ Args: { "_bucket_id": string,"delete_markers"?: string,"delimiter_param": string,"max_keys"?: number,"next_token"?: string,"next_token_archived_at"?: string,"next_token_version"?: string,"noncurrent_versions"?: string,"prefix_param": string,"sort_order"?: string,"start_after"?: string }; Returns: {
+              "archived_at": string,"created_at": string,"id": string,"is_delete_marker": boolean,"is_versioned": boolean,"last_accessed_at": string,"metadata": Json,"name": string,"updated_at": string,"version": string
+            }[]
+                           },
+"operation":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"reconcile_lifecycle_state":
+{ Args: { "policy_changed": boolean,"target_bucket_id": string }; Returns: undefined
+                           },
+"search":
+{ Args: { "bucketname": string,"delete_markers"?: string,"levels"?: number,"limits"?: number,"noncurrent_versions"?: string,"offsets"?: number,"prefix": string,"search"?: string,"sortcolumn"?: string,"sortorder"?: string }; Returns: {
+              "archived_at": string,"created_at": string,"id": string,"is_delete_marker": boolean,"is_versioned": boolean,"last_accessed_at": string,"metadata": Json,"name": string,"updated_at": string,"version": string
+            }[]
+                           },
+"search_by_timestamp":
+{ Args: { "delete_markers"?: string,"noncurrent_versions"?: string,"p_bucket_id": string,"p_level": number,"p_limit": number,"p_prefix": string,"p_sort_column": string,"p_sort_column_after": string,"p_sort_order": string,"p_start_after": string,"p_start_after_version"?: string }; Returns: {
+              "archived_at": string,"created_at": string,"id": string,"is_delete_marker": boolean,"is_versioned": boolean,"key": string,"last_accessed_at": string,"metadata": Json,"name": string,"updated_at": string,"version": string
+            }[]
+                           },
+"search_v2":
+{ Args: { "bucket_name": string,"delete_markers"?: string,"levels"?: number,"limits"?: number,"noncurrent_versions"?: string,"prefix": string,"sort_column"?: string,"sort_column_after"?: string,"sort_order"?: string,"start_after"?: string,"start_after_archived_at"?: string,"start_after_is_continuation"?: boolean,"start_after_version"?: string }; Returns: {
+              "archived_at": string,"created_at": string,"id": string,"is_delete_marker": boolean,"is_versioned": boolean,"key": string,"last_accessed_at": string,"metadata": Json,"name": string,"updated_at": string,"version": string
+            }[]
+                           }
           }
           Enums: {
-            [_ in never]: never
+            "buckettype": "STANDARD"|"ANALYTICS"|"VECTOR"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1223,11 +1545,11 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"payment_method": ["cash", "bank_transfer", "pos", "cheque", "mobile_money", "other"],"payment_status": ["recorded", "confirmed", "reversed"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"receipt_status": ["issued", "void", "reversed"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
+            "app_role": ["owner", "admin", "property_manager", "letting_agent", "caretaker", "maintenance_coordinator", "accountant", "screening_reviewer", "landlord", "tenant"],"assignment_scope": ["organisation", "branch", "property", "landlord"],"billing_period": ["monthly", "annual"],"charge_frequency": ["one_off", "monthly", "quarterly", "half_yearly", "annual"],"charge_kind": ["rent", "service_charge", "utility", "agreed_fee"],"charge_status": ["open", "cancelled"],"commission_basis": ["on_receipt", "on_invoice"],"commission_type": ["percentage", "fixed"],"contact_channel": ["phone", "sms", "whatsapp", "email"],"deduction_category": ["commission", "maintenance", "service_charge", "utilities", "statutory_fee", "agency_expense", "other"],"deposit_custodian": ["agency", "landlord"],"deposit_status": ["expected", "held", "partially_refunded", "refunded", "forfeited", "transferred"],"handover_kind": ["move_in", "move_out"],"import_kind": ["properties_units", "landlords", "tenants_leases", "opening_balances"],"import_row_status": ["pending", "valid", "invalid", "applied"],"import_status": ["draft", "validated", "applied", "rolled_back", "failed"],"lease_party_role": ["tenant", "co_tenant", "guarantor"],"lease_status": ["draft", "active", "expired", "terminated", "renewed"],"ledger_entry_kind": ["rent_collected", "commission", "remittance", "adjustment", "opening_balance"],"ledger_funds_class": ["client_funds", "agency_income"],"membership_status": ["invited", "active", "suspended"],"organisation_type": ["agency", "individual_landlord"],"payment_method": ["cash", "bank_transfer", "pos", "cheque", "mobile_money", "other"],"payment_status": ["recorded", "confirmed", "reversed"],"plan_tier": ["free", "landlord", "agent", "growth", "enterprise"],"property_type": ["residential", "commercial", "mixed_use", "estate", "land"],"receipt_status": ["issued", "void", "reversed"],"remittance_schedule": ["on_receipt", "weekly", "fortnightly", "monthly", "quarterly", "annually"],"rent_frequency": ["annual", "half_yearly", "quarterly", "monthly", "irregular"],"subscription_status": ["trialing", "active", "past_due", "grace", "suspended", "cancelled"],"tenant_contact_kind": ["next_of_kin", "employer", "business", "emergency", "referee"],"tenant_kind": ["individual", "organisation"],"unit_status": ["vacant", "occupied", "reserved", "under_maintenance", "inactive"],"unit_type": ["flat", "self_contained", "room", "duplex", "bungalow", "shop", "office", "warehouse", "other"],"usage_reading_status": ["provisional", "final"]
           }
         },"storage": {
           Enums: {
-            
+            "buckettype": ["STANDARD", "ANALYTICS", "VECTOR"]
           }
         }
 } as const

@@ -60,6 +60,7 @@ export const PERMISSIONS = [
   'payment.reverse',
   'payment.allocation.override',
   'ledger.read',
+  'ledger.write',
   'statement.read',
   'statement.issue',
 
@@ -122,6 +123,7 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'payment.reverse',
     'payment.allocation.override',
     'ledger.read',
+    'ledger.write',
     'statement.read',
     'statement.issue',
     'org.audit.read',

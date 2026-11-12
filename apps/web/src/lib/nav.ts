@@ -41,20 +41,8 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/rent', label: 'Rent and arrears', permission: 'payment.read', group: 'money' },
   { href: '/rent/receipts', label: 'Receipts', permission: 'payment.read', group: 'money' },
   { href: '/rent/cash-up', label: 'Daily cash-up', permission: 'payment.read', group: 'money' },
-  {
-    href: '/ledger',
-    label: 'Landlord ledger',
-    permission: 'ledger.read',
-    group: 'money',
-    status: 'planned',
-  },
-  {
-    href: '/reports',
-    label: 'Reports',
-    permission: 'statement.read',
-    group: 'money',
-    status: 'planned',
-  },
+  { href: '/ledger', label: 'Landlord ledger', permission: 'ledger.read', group: 'money' },
+  { href: '/reports', label: 'Reports', permission: 'statement.read', group: 'money' },
 
   {
     href: '/maintenance',
