@@ -92,6 +92,59 @@ const STATEMENT_STATUS_TONES: Record<string, BadgeTone> = {
 export const statementStatusTone = (status: string): BadgeTone =>
   STATEMENT_STATUS_TONES[status] ?? 'neutral';
 
+/** Maintenance status (MAINT-3). Awaiting approval is a warning, not a failure. */
+const MAINTENANCE_STATUS_TONES: Record<string, BadgeTone> = {
+  submitted: 'info',
+  acknowledged: 'info',
+  assigned: 'info',
+  in_progress: 'warning',
+  on_hold: 'warning',
+  awaiting_approval: 'warning',
+  completed: 'success',
+  rejected: 'danger',
+  closed: 'neutral',
+};
+
+export const maintenanceStatusTone = (status: string): BadgeTone =>
+  MAINTENANCE_STATUS_TONES[status] ?? 'neutral';
+
+const MAINTENANCE_URGENCY_TONES: Record<string, BadgeTone> = {
+  low: 'neutral',
+  normal: 'info',
+  high: 'warning',
+  emergency: 'danger',
+};
+
+export const maintenanceUrgencyTone = (urgency: string): BadgeTone =>
+  MAINTENANCE_URGENCY_TONES[urgency] ?? 'neutral';
+
+const MAINTENANCE_PRIORITY_TONES: Record<string, BadgeTone> = {
+  low: 'neutral',
+  normal: 'info',
+  high: 'warning',
+  urgent: 'danger',
+};
+
+export const maintenancePriorityTone = (priority: string): BadgeTone =>
+  MAINTENANCE_PRIORITY_TONES[priority] ?? 'neutral';
+
+const MAINTENANCE_APPROVAL_TONES: Record<string, BadgeTone> = {
+  pending: 'warning',
+  approved: 'success',
+  rejected: 'danger',
+};
+
+export const maintenanceApprovalTone = (status: string): BadgeTone =>
+  MAINTENANCE_APPROVAL_TONES[status] ?? 'neutral';
+
+const VENDOR_STATUS_TONES: Record<string, BadgeTone> = {
+  active: 'success',
+  inactive: 'neutral',
+};
+
+export const vendorStatusTone = (status: string): BadgeTone =>
+  VENDOR_STATUS_TONES[status] ?? 'neutral';
+
 /** Human label for a status key. */
 export const statusLabel = (status: string): string =>
   status.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());

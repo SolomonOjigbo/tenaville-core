@@ -12,17 +12,19 @@ describe('homeForRole', () => {
 });
 
 describe('portal navigation', () => {
-  it('offers a landlord only their portfolio and statements', () => {
+  it('offers a landlord their portfolio, statements and repairs', () => {
     expect(landlordNav.flatMap((group) => group.items.map((item) => item.href))).toEqual([
       '/portfolio',
       '/portfolio/statements',
+      '/portfolio/maintenance',
     ]);
   });
 
-  it('offers a tenant their tenancy and payments', () => {
+  it('offers a tenant their tenancy, payments and maintenance', () => {
     expect(tenantNav.flatMap((group) => group.items.map((item) => item.href))).toEqual([
       '/tenancy',
       '/tenancy/payments',
+      '/tenancy/maintenance',
     ]);
   });
 });

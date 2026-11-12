@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDate, monthBounds } from '../lib/format';
+import { formatDate, formatDateTime, monthBounds } from '../lib/format';
 
 describe('formatDate', () => {
   it('turns a contractual date into a readable one', () => {
@@ -19,6 +19,16 @@ describe('formatDate', () => {
   it('returns a malformed value unchanged instead of inventing a date', () => {
     expect(formatDate('not-a-date')).toBe('not-a-date');
     expect(formatDate('')).toBe('');
+  });
+});
+
+describe('formatDateTime', () => {
+  it('formats a timeline timestamp in UTC', () => {
+    expect(formatDateTime('2026-11-10T14:05:00.000Z')).toBe('10 Nov 2026, 14:05');
+  });
+
+  it('returns a malformed timestamp unchanged', () => {
+    expect(formatDateTime('not-a-timestamp')).toBe('not-a-timestamp');
   });
 });
 

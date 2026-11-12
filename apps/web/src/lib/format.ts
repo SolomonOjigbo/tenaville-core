@@ -35,6 +35,16 @@ const DISPLAY_DATE = new Intl.DateTimeFormat('en-NG', {
   timeZone: 'UTC',
 });
 
+const DISPLAY_DATE_TIME = new Intl.DateTimeFormat('en-NG', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: 'UTC',
+});
+
 /**
  * A contractual date for display: `2026-11-01` becomes `1 Nov 2026`.
  *
@@ -47,6 +57,12 @@ const DISPLAY_DATE = new Intl.DateTimeFormat('en-NG', {
 export const formatDate = (isoDate: string): string => {
   const parsed = Date.parse(`${isoDate}T00:00:00Z`);
   return Number.isNaN(parsed) ? isoDate : DISPLAY_DATE.format(parsed);
+};
+
+/** A timestamp for a timeline: display in UTC, matching the date helper. */
+export const formatDateTime = (isoTimestamp: string): string => {
+  const parsed = Date.parse(isoTimestamp);
+  return Number.isNaN(parsed) ? isoTimestamp : DISPLAY_DATE_TIME.format(parsed);
 };
 
 /** The first and last day of the month containing a date, as `YYYY-MM-DD`. */

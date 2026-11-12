@@ -85,7 +85,7 @@ export const currentViewer = async (): Promise<Viewer | null> => {
   const organisation = organisations[0];
   if (organisation === undefined) return null;
 
-  const access = await resolveAccess(supabase, organisation.id);
+  const access = await resolveAccess(supabase, organisation.id, userId);
   if (access === null) return null;
 
   return {

@@ -41,14 +41,21 @@ describe('navigation', () => {
     expect(nav).toContain('/reports');
   });
 
-  it('hides the ledger from a caretaker', () => {
+  it('gives a caretaker maintenance without the money screens', () => {
     // A caretaker logs repairs. A Ledger link they cannot open is worse than no
     // link: it implies access that the policy will then refuse.
     const nav = hrefs('caretaker');
-    expect(nav).toEqual(['/dashboard', '/properties']);
+    expect(nav).toEqual(['/dashboard', '/properties', '/maintenance']);
     expect(nav).not.toContain('/ledger');
     expect(nav).not.toContain('/rent');
     expect(nav).not.toContain('/settings');
+  });
+
+  it('shows maintenance to the roles that coordinate it, and not to finance', () => {
+    for (const role of ['owner', 'admin', 'property_manager', 'maintenance_coordinator'] as const) {
+      expect(hrefs(role), role).toContain('/maintenance');
+    }
+    expect(hrefs('accountant')).not.toContain('/maintenance');
   });
 
   it('never shows a screen that has not been built', () => {
@@ -126,8 +133,8 @@ describe('navigation', () => {
 
   it('drops empty groups rather than rendering a bare heading', () => {
     const groups = groupedNavigationFor('caretaker', allOff);
-    // Maintenance is planned, so the operations group has nothing live in it.
-    expect(groups.map((g) => g.group)).toEqual(['portfolio']);
+    // Maintenance is live, so the caretaker has portfolio and operations.
+    expect(groups.map((g) => g.group)).toEqual(['portfolio', 'operations']);
     expect(groups.every((g) => g.items.length > 0)).toBe(true);
   });
 

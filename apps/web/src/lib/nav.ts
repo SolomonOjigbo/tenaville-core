@@ -49,7 +49,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
     label: 'Maintenance',
     permission: 'maintenance.read',
     group: 'operations',
-    status: 'planned',
   },
   { href: '/crm', label: 'Leads', permission: 'lease.read', flag: 'crm', group: 'operations' },
   {
