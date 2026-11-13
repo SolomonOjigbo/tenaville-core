@@ -1,7 +1,7 @@
 # Tenaville — Product-to-Market Launch Readiness
 
 **Review date:** 12 November 2026
-**Revision reviewed:** `269e5ef` plus P0 hardening working tree
+**Revision reviewed:** `1620281` (P0 hardening)
 **Review basis:** code, migrations, tests, CI, documentation and live QA checks against the hosted Supabase project. The P0 hardening migration was applied to production on 12 November 2026. No external penetration test, load test, accessibility audit or pilot has been run.
 
 ## Verdict
