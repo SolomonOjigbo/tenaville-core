@@ -103,7 +103,7 @@ select is(
 
 select lives_ok(
   format(
-    $$select public.assign_maintenance_request(%L, %L, %L, %L, 'high', date '2026-11-15', 'Please attend Thursday')$$,
+    $$select public.assign_maintenance_request(%L, %L, %L, %L, 'high', current_date + 2, 'Please attend Thursday')$$,
     :'staff_request'::uuid, :'coordinator'::uuid, :'coordinator'::uuid, :'vendor'::uuid
   ),
   'MAINT-4: a coordinator can assign staff, a vendor, priority and due date'
@@ -273,7 +273,7 @@ select tests.authenticate(:'coordinator'::uuid, 'maint-coordinator@yabalets.ng')
 
 select public.assign_maintenance_request(
   :'tenant_request'::uuid, :'coordinator'::uuid, :'coordinator'::uuid,
-  :'vendor'::uuid, 'urgent', date '2026-11-12', 'Emergency visit'
+  :'vendor'::uuid, 'urgent', current_date + 2, 'Emergency visit'
 );
 
 select public.transition_maintenance_request(

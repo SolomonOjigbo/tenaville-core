@@ -102,6 +102,226 @@ export type Database = {
           },
         ];
       };
+      billing_invoice_counters: {
+        Row: {
+          invoice_year: number;
+          last_number: number;
+          organisation_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          invoice_year: number;
+          last_number?: number;
+          organisation_id: string;
+        };
+        Update: {
+          invoice_year?: number;
+          last_number?: number;
+          organisation_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'billing_invoice_counters_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      billing_invoice_lines: {
+        Row: {
+          amount_kobo: number;
+          created_at: string;
+          description: string;
+          id: string;
+          invoice_id: string;
+          kind: Database['public']['Enums']['billing_invoice_line_kind'];
+          organisation_id: string;
+          quantity: number;
+          unit_amount_kobo: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_kobo: number;
+          created_at?: string;
+          description: string;
+          id?: string;
+          invoice_id: string;
+          kind: Database['public']['Enums']['billing_invoice_line_kind'];
+          organisation_id: string;
+          quantity?: number;
+          unit_amount_kobo: number;
+        };
+        Update: {
+          amount_kobo?: number;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          invoice_id?: string;
+          kind?: Database['public']['Enums']['billing_invoice_line_kind'];
+          organisation_id?: string;
+          quantity?: number;
+          unit_amount_kobo?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'billing_invoice_lines_invoice_id_fkey';
+            columns: ['invoice_id'];
+            isOneToOne: false;
+            referencedRelation: 'billing_invoices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'billing_invoice_lines_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      billing_invoice_payments: {
+        Row: {
+          amount_kobo: number;
+          created_at: string;
+          id: string;
+          invoice_id: string;
+          method: string;
+          organisation_id: string;
+          paid_on: string;
+          recorded_by: string | null;
+          reference: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_kobo: number;
+          created_at?: string;
+          id?: string;
+          invoice_id: string;
+          method: string;
+          organisation_id: string;
+          paid_on?: string;
+          recorded_by?: string | null;
+          reference?: string | null;
+        };
+        Update: {
+          amount_kobo?: number;
+          created_at?: string;
+          id?: string;
+          invoice_id?: string;
+          method?: string;
+          organisation_id?: string;
+          paid_on?: string;
+          recorded_by?: string | null;
+          reference?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'billing_invoice_payments_invoice_id_fkey';
+            columns: ['invoice_id'];
+            isOneToOne: false;
+            referencedRelation: 'billing_invoices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'billing_invoice_payments_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      billing_invoices: {
+        Row: {
+          amount_paid_kobo: number;
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          due_on: string | null;
+          id: string;
+          invoice_number: string;
+          issued_on: string;
+          notes: string | null;
+          organisation_id: string;
+          paid_at: string | null;
+          period_end: string;
+          period_start: string;
+          plan_id: string;
+          status: Database['public']['Enums']['billing_invoice_status'];
+          subscription_id: string | null;
+          subtotal_kobo: number;
+          total_kobo: number;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_paid_kobo?: number;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          due_on?: string | null;
+          id?: string;
+          invoice_number: string;
+          issued_on?: string;
+          notes?: string | null;
+          organisation_id: string;
+          paid_at?: string | null;
+          period_end: string;
+          period_start: string;
+          plan_id: string;
+          status?: Database['public']['Enums']['billing_invoice_status'];
+          subscription_id?: string | null;
+          subtotal_kobo?: number;
+          total_kobo?: number;
+          updated_at?: string | null;
+        };
+        Update: {
+          amount_paid_kobo?: number;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          due_on?: string | null;
+          id?: string;
+          invoice_number?: string;
+          issued_on?: string;
+          notes?: string | null;
+          organisation_id?: string;
+          paid_at?: string | null;
+          period_end?: string;
+          period_start?: string;
+          plan_id?: string;
+          status?: Database['public']['Enums']['billing_invoice_status'];
+          subscription_id?: string | null;
+          subtotal_kobo?: number;
+          total_kobo?: number;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'billing_invoices_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'billing_invoices_plan_id_fkey';
+            columns: ['plan_id'];
+            isOneToOne: false;
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'billing_invoices_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       branches: {
         Row: {
           created_at: string;
@@ -347,6 +567,78 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: 'device_sessions_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      documents: {
+        Row: {
+          bucket: string;
+          created_at: string;
+          document_type: Database['public']['Enums']['document_type'];
+          entity_id: string;
+          entity_type: string;
+          expiry_date: string | null;
+          file_name: string;
+          id: string;
+          issue_date: string | null;
+          mime_type: string | null;
+          notes: string | null;
+          organisation_id: string;
+          sensitive: boolean;
+          size_bytes: number;
+          storage_path: string;
+          title: string | null;
+          updated_at: string | null;
+          uploaded_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          bucket?: string;
+          created_at?: string;
+          document_type?: Database['public']['Enums']['document_type'];
+          entity_id: string;
+          entity_type: string;
+          expiry_date?: string | null;
+          file_name: string;
+          id?: string;
+          issue_date?: string | null;
+          mime_type?: string | null;
+          notes?: string | null;
+          organisation_id: string;
+          sensitive?: boolean;
+          size_bytes?: number;
+          storage_path: string;
+          title?: string | null;
+          updated_at?: string | null;
+          uploaded_by?: string | null;
+        };
+        Update: {
+          bucket?: string;
+          created_at?: string;
+          document_type?: Database['public']['Enums']['document_type'];
+          entity_id?: string;
+          entity_type?: string;
+          expiry_date?: string | null;
+          file_name?: string;
+          id?: string;
+          issue_date?: string | null;
+          mime_type?: string | null;
+          notes?: string | null;
+          organisation_id?: string;
+          sensitive?: boolean;
+          size_bytes?: number;
+          storage_path?: string;
+          title?: string | null;
+          updated_at?: string | null;
+          uploaded_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'documents_organisation_id_fkey';
             columns: ['organisation_id'];
             isOneToOne: false;
             referencedRelation: 'organisations';
@@ -2685,6 +2977,85 @@ export type Database = {
           },
         ];
       };
+      subscription_changes: {
+        Row: {
+          changed_by: string | null;
+          created_at: string;
+          effective_on: string;
+          from_plan_id: string;
+          id: string;
+          invoice_id: string | null;
+          kind: Database['public']['Enums']['subscription_change_kind'];
+          organisation_id: string;
+          reason: string;
+          subscription_id: string;
+          to_plan_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          changed_by?: string | null;
+          created_at?: string;
+          effective_on?: string;
+          from_plan_id: string;
+          id?: string;
+          invoice_id?: string | null;
+          kind: Database['public']['Enums']['subscription_change_kind'];
+          organisation_id: string;
+          reason: string;
+          subscription_id: string;
+          to_plan_id: string;
+        };
+        Update: {
+          changed_by?: string | null;
+          created_at?: string;
+          effective_on?: string;
+          from_plan_id?: string;
+          id?: string;
+          invoice_id?: string | null;
+          kind?: Database['public']['Enums']['subscription_change_kind'];
+          organisation_id?: string;
+          reason?: string;
+          subscription_id?: string;
+          to_plan_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscription_changes_from_plan_id_fkey';
+            columns: ['from_plan_id'];
+            isOneToOne: false;
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_changes_invoice_id_fkey';
+            columns: ['invoice_id'];
+            isOneToOne: false;
+            referencedRelation: 'billing_invoices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_changes_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_changes_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_changes_to_plan_id_fkey';
+            columns: ['to_plan_id'];
+            isOneToOne: false;
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       subscriptions: {
         Row: {
           cancelled_at: string | null;
@@ -3278,6 +3649,10 @@ export type Database = {
         };
         Returns: undefined;
       };
+      change_subscription_plan: {
+        Args: { p_organisation_id: string; p_plan_id: string; p_reason: string };
+        Returns: string;
+      };
       confirm_maintenance_resolution: { Args: { p_request_id: string }; Returns: undefined };
       create_lease_with_tenant: {
         Args: {
@@ -3362,6 +3737,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      generate_document_expiry_tasks: {
+        Args: { p_days_ahead?: number; p_organisation_id: string };
+        Returns: number;
+      };
       generate_reminder_tasks: {
         Args: {
           p_lease_days_ahead?: number;
@@ -3369,6 +3748,10 @@ export type Database = {
           p_rent_days_ahead?: number;
         };
         Returns: number;
+      };
+      generate_subscription_invoice: {
+        Args: { p_organisation_id: string; p_period_end: string; p_period_start: string };
+        Returns: string;
       };
       issue_statement: { Args: { target_statement_id: string }; Returns: undefined };
       plan_entitlements: {
@@ -3410,6 +3793,16 @@ export type Database = {
           finalised: number;
           taken: number;
         }[];
+      };
+      record_invoice_payment: {
+        Args: {
+          p_amount_kobo: number;
+          p_invoice_id: string;
+          p_method: string;
+          p_paid_on: string;
+          p_reference: string;
+        };
+        Returns: undefined;
       };
       record_maintenance_cost: {
         Args: {
@@ -3518,6 +3911,8 @@ export type Database = {
         | 'landlord'
         | 'tenant';
       assignment_scope: 'organisation' | 'branch' | 'property' | 'landlord';
+      billing_invoice_line_kind: 'subscription' | 'unit_overage' | 'adjustment';
+      billing_invoice_status: 'draft' | 'open' | 'paid' | 'void';
       billing_period: 'monthly' | 'annual';
       charge_frequency: 'one_off' | 'monthly' | 'quarterly' | 'half_yearly' | 'annual';
       charge_kind: 'rent' | 'service_charge' | 'utility' | 'agreed_fee' | 'repair';
@@ -3536,6 +3931,18 @@ export type Database = {
       deposit_custodian: 'agency' | 'landlord';
       deposit_status:
         'expected' | 'held' | 'partially_refunded' | 'refunded' | 'forfeited' | 'transferred';
+      document_type:
+        | 'lease_agreement'
+        | 'tenancy_agreement'
+        | 'identification'
+        | 'proof_of_ownership'
+        | 'inspection_report'
+        | 'insurance'
+        | 'receipt'
+        | 'statement'
+        | 'notice'
+        | 'photo'
+        | 'other';
       handover_kind: 'move_in' | 'move_out';
       import_kind: 'properties_units' | 'landlords' | 'tenants_leases' | 'opening_balances';
       import_row_status: 'pending' | 'valid' | 'invalid' | 'applied';
@@ -3590,6 +3997,7 @@ export type Database = {
         'on_receipt' | 'weekly' | 'fortnightly' | 'monthly' | 'quarterly' | 'annually';
       rent_frequency: 'annual' | 'half_yearly' | 'quarterly' | 'monthly' | 'irregular';
       statement_status: 'draft' | 'reviewed' | 'issued';
+      subscription_change_kind: 'upgrade' | 'downgrade';
       subscription_status: 'trialing' | 'active' | 'past_due' | 'grace' | 'suspended' | 'cancelled';
       task_priority: 'low' | 'normal' | 'high' | 'urgent';
       task_status: 'open' | 'done' | 'cancelled';
@@ -3749,6 +4157,8 @@ export const Constants = {
         'tenant',
       ],
       assignment_scope: ['organisation', 'branch', 'property', 'landlord'],
+      billing_invoice_line_kind: ['subscription', 'unit_overage', 'adjustment'],
+      billing_invoice_status: ['draft', 'open', 'paid', 'void'],
       billing_period: ['monthly', 'annual'],
       charge_frequency: ['one_off', 'monthly', 'quarterly', 'half_yearly', 'annual'],
       charge_kind: ['rent', 'service_charge', 'utility', 'agreed_fee', 'repair'],
@@ -3773,6 +4183,19 @@ export const Constants = {
         'refunded',
         'forfeited',
         'transferred',
+      ],
+      document_type: [
+        'lease_agreement',
+        'tenancy_agreement',
+        'identification',
+        'proof_of_ownership',
+        'inspection_report',
+        'insurance',
+        'receipt',
+        'statement',
+        'notice',
+        'photo',
+        'other',
       ],
       handover_kind: ['move_in', 'move_out'],
       import_kind: ['properties_units', 'landlords', 'tenants_leases', 'opening_balances'],
@@ -3837,6 +4260,7 @@ export const Constants = {
       ],
       rent_frequency: ['annual', 'half_yearly', 'quarterly', 'monthly', 'irregular'],
       statement_status: ['draft', 'reviewed', 'issued'],
+      subscription_change_kind: ['upgrade', 'downgrade'],
       subscription_status: ['trialing', 'active', 'past_due', 'grace', 'suspended', 'cancelled'],
       task_priority: ['low', 'normal', 'high', 'urgent'],
       task_status: ['open', 'done', 'cancelled'],
