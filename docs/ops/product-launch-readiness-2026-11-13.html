@@ -1,0 +1,1291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tenaville — Product-to-Market Launch Readiness</title>
+    <style>
+      :root {
+        --ink: #18221d;
+        --muted: #5c6b62;
+        --paper: #f6f4ed;
+        --card: #fffdf7;
+        --line: #ddd8cb;
+        --green: #174a38;
+        --green-soft: #dfece4;
+        --amber: #a96b16;
+        --amber-soft: #f6ead5;
+        --red: #a23b2c;
+        --red-soft: #f6e1dd;
+        --blue: #2d5b78;
+        --blue-soft: #e1edf3;
+        --shadow: 0 16px 50px rgba(24, 34, 29, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 0%, rgba(23, 74, 56, 0.09), transparent 30rem),
+          radial-gradient(circle at 90% 8%, rgba(169, 107, 22, 0.08), transparent 26rem),
+          var(--paper);
+        color: var(--ink);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        line-height: 1.55;
+      }
+      a {
+        color: var(--green);
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 28px;
+      }
+      header.hero {
+        padding: 54px 0 34px;
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .eyebrow::before {
+        content: '';
+        width: 22px;
+        height: 2px;
+        background: var(--amber);
+      }
+      h1 {
+        margin: 14px 0 12px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-weight: 500;
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+        max-width: 900px;
+      }
+      .sub {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 1.06rem;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 22px;
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .meta strong {
+        color: var(--ink);
+        font-weight: 650;
+      }
+
+      .verdict {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 32px;
+        align-items: center;
+        margin: 34px 0 0;
+        padding: 30px;
+        background: var(--green);
+        color: #f7f4ea;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+      }
+      .gauge {
+        width: 174px;
+        height: 174px;
+        border-radius: 50%;
+        background: conic-gradient(#e5b25d 0 53%, rgba(255, 255, 255, 0.13) 53% 100%);
+        display: grid;
+        place-items: center;
+        position: relative;
+      }
+      .gauge::before {
+        content: '';
+        position: absolute;
+        inset: 14px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .gauge .num {
+        position: relative;
+        text-align: center;
+        line-height: 1;
+      }
+      .gauge .num strong {
+        display: block;
+        font-family: Georgia, serif;
+        font-size: 3.25rem;
+        font-weight: 500;
+      }
+      .gauge .num span {
+        display: block;
+        margin-top: 5px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #d8e7de;
+      }
+      .verdict h2 {
+        font-family: Georgia, serif;
+        font-weight: 500;
+        font-size: 1.75rem;
+        margin: 0 0 8px;
+        letter-spacing: -0.015em;
+      }
+      .verdict p {
+        margin: 0;
+        color: #dbe7df;
+        max-width: 720px;
+      }
+      .verdict .tag {
+        display: inline-block;
+        margin-bottom: 12px;
+        padding: 4px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 999px;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #f2cf8c;
+      }
+
+      nav.toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+      }
+      nav.toc a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+      nav.toc a:hover {
+        color: var(--green);
+      }
+
+      section {
+        padding: 40px 0 8px;
+      }
+      h3.section-title {
+        margin: 0 0 8px;
+        font-family: Georgia, serif;
+        font-weight: 500;
+        font-size: 1.75rem;
+        letter-spacing: -0.02em;
+      }
+      .section-lead {
+        margin: 0 0 22px;
+        color: var(--muted);
+        max-width: 780px;
+      }
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 7px 24px rgba(24, 34, 29, 0.035);
+      }
+      .card h4 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+      .card p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .card .big {
+        display: block;
+        margin: 2px 0 4px;
+        font-family: Georgia, serif;
+        font-size: 2rem;
+        color: var(--ink);
+      }
+
+      .score-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+      }
+      .score-table th,
+      .score-table td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        vertical-align: top;
+      }
+      .score-table th {
+        background: #efece2;
+        font-size: 11px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .score-table tr:last-child td {
+        border-bottom: 0;
+      }
+      .score-table td.num,
+      .score-table th.num {
+        text-align: right;
+        white-space: nowrap;
+      }
+      .score-table tfoot td {
+        background: #f1eee5;
+        font-weight: 700;
+      }
+      .scorebar {
+        height: 6px;
+        background: #e9e5d9;
+        border-radius: 99px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .scorebar i {
+        display: block;
+        height: 100%;
+        border-radius: 99px;
+        background: var(--green);
+      }
+      .why {
+        color: var(--muted);
+        max-width: 500px;
+      }
+      .total-score {
+        font-family: Georgia, serif;
+        font-size: 1.55rem;
+        font-weight: 500;
+      }
+
+      .blocker {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 14px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .blocker:last-child {
+        border-bottom: 0;
+      }
+      .blocker .n {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--red-soft);
+        color: var(--red);
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .blocker h4 {
+        margin: 0 0 3px;
+        font-size: 15px;
+      }
+      .blocker p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 14px 0 18px;
+      }
+      .filter {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--card);
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+      .filter.active {
+        background: var(--green);
+        color: white;
+        border-color: var(--green);
+      }
+
+      .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .check {
+        display: grid;
+        grid-template-columns: 22px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: start;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 13px;
+      }
+      .check .box {
+        width: 17px;
+        height: 17px;
+        border-radius: 4px;
+        border: 1.5px solid #b9b3a4;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 900;
+        margin-top: 1px;
+      }
+      .check[data-status='done'] .box {
+        background: var(--green-soft);
+        border-color: #9cbea9;
+        color: var(--green);
+      }
+      .check[data-status='partial'] .box {
+        background: var(--amber-soft);
+        border-color: #dec08c;
+        color: var(--amber);
+      }
+      .check[data-status='todo'] .box {
+        background: var(--red-soft);
+        border-color: #dcaea5;
+        color: var(--red);
+      }
+      .check[data-status='done'] .box::after {
+        content: '✓';
+      }
+      .check[data-status='partial'] .box::after {
+        content: '~';
+      }
+      .check[data-status='todo'] .box::after {
+        content: '!';
+      }
+      .check .id {
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .badge {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .badge.done {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .badge.partial {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .badge.todo {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+
+      .callout {
+        background: var(--amber-soft);
+        border: 1px solid #e4c99d;
+        border-radius: 14px;
+        padding: 18px 20px;
+        color: #5f4317;
+        font-size: 14px;
+      }
+      .callout strong {
+        color: #4a330f;
+      }
+
+      table.criteria {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      table.criteria th,
+      table.criteria td {
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        vertical-align: top;
+      }
+      table.criteria th {
+        background: #efece2;
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      table.criteria tr:last-child td {
+        border-bottom: 0;
+      }
+
+      ol.path {
+        margin: 0;
+        padding-left: 22px;
+        display: grid;
+        gap: 10px;
+        font-size: 14px;
+      }
+      ol.path li::marker {
+        color: var(--amber);
+        font-weight: 800;
+      }
+
+      footer {
+        margin-top: 44px;
+        border-top: 1px solid var(--line);
+        padding: 28px 0 50px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      footer .decision {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      @media (max-width: 850px) {
+        .verdict {
+          grid-template-columns: 1fr;
+          text-align: left;
+        }
+        .gauge {
+          width: 140px;
+          height: 140px;
+        }
+        .gauge .num strong {
+          font-size: 2.6rem;
+        }
+        .grid.two,
+        .grid.three {
+          grid-template-columns: 1fr;
+        }
+        .score-table {
+          display: block;
+          overflow-x: auto;
+        }
+        .wrap {
+          padding: 0 18px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        nav.toc,
+        .filters {
+          display: none;
+        }
+        .verdict {
+          box-shadow: none;
+          print-color-adjust: exact;
+        }
+        .card,
+        .score-table,
+        table.criteria,
+        .check {
+          break-inside: avoid;
+          box-shadow: none;
+        }
+        section {
+          padding-top: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Product-to-market assessment</div>
+        <h1>Tenaville launch readiness</h1>
+        <p class="sub">
+          A weighted review of the web product, data layer, mobile app, communications, billing,
+          migration, operations and compliance — with the tasks that are done, partial and still
+          open.
+        </p>
+        <div class="meta">
+          <span><strong>Review date</strong> 13 November 2026</span>
+          <span><strong>Revision</strong> <code>3e15e42</code></span>
+          <span><strong>Basis</strong> Code, tests, CI, docs and hosted QA checks</span>
+        </div>
+
+        <div class="verdict">
+          <div class="gauge" aria-label="53 out of 100">
+            <div class="num"><strong>53</strong><span>out of 100</span></div>
+          </div>
+          <div>
+            <span class="tag">Not launch-ready</span>
+            <h2>Strong web core. Incomplete launch programme.</h2>
+            <p>
+              The web R1 workflows and database integrity are well developed. Mobile is absent,
+              outbound messaging is simulated, subscription billing has no gateway, migration/export
+              is incomplete, and production operations, security assurance and legal gates are open.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc">
+      <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0">
+        <a href="#score">Score sheet</a>
+        <a href="#blockers">Launch blockers</a>
+        <a href="#checklist">Checklist</a>
+        <a href="#exit">Exit criteria</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#path">Path to launch</a>
+      </div>
+    </nav>
+
+    <main class="wrap">
+      <section id="score">
+        <h3 class="section-title">Score sheet</h3>
+        <p class="section-lead">
+          Scores are 0–10 against a public-launch standard, then weighted. This is a product and
+          engineering judgement, not an audit certification.
+        </p>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th class="num">Weight</th>
+              <th class="num">Score</th>
+              <th class="num">Weighted</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Web product coverage</strong>
+                <div class="scorebar"><i style="width: 80%"></i></div>
+              </td>
+              <td class="num">20</td>
+              <td class="num">8</td>
+              <td class="num">160</td>
+              <td class="why">
+                58 page files cover portfolio, tenancy, money, ledger, statements, reports,
+                maintenance, portals, comms, documents and billing. Remaining P0 gaps are real but
+                bounded.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Data, security and financial integrity</strong>
+                <div class="scorebar"><i style="width: 90%"></i></div>
+              </td>
+              <td class="num">15</td>
+              <td class="num">9</td>
+              <td class="num">135</td>
+              <td class="why">
+                RLS on every table, 24 pgTAP files and 458 assertions, append-only financial
+                records, gapless receipts, audited approvals and private storage. Independent
+                security testing is missing.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Web UX, accessibility and responsiveness</strong>
+                <div class="scorebar"><i style="width: 70%"></i></div>
+              </td>
+              <td class="num">10</td>
+              <td class="num">7</td>
+              <td class="num">70</td>
+              <td class="why">
+                Responsive shell, 44px controls, print views, error/loading/not-found boundaries and
+                empty states. No automated accessibility audit or browser E2E suite.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Mobile app</strong>
+                <div class="scorebar"><i style="width: 10%"></i></div>
+              </td>
+              <td class="num">15</td>
+              <td class="num">1</td>
+              <td class="num">15</td>
+              <td class="why">
+                Only a theme file and empty feature/offline folders. No screens, auth, offline
+                queue, provisional receipts, device lock or push. Typecheck passes because there is
+                nothing to check.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Communications, reminders and tasks</strong>
+                <div class="scorebar"><i style="width: 40%"></i></div>
+              </td>
+              <td class="num">10</td>
+              <td class="num">4</td>
+              <td class="num">40</td>
+              <td class="why">
+                Templates, message log, delivery attempts, fallback order, task queue, preferences
+                and reminder generation exist. The only provider is a logging stub; reminders are
+                manual; no inbound queue or rate limits.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Billing and monetisation</strong>
+                <div class="scorebar"><i style="width: 60%"></i></div>
+              </td>
+              <td class="num">10</td>
+              <td class="num">6</td>
+              <td class="num">60</td>
+              <td class="why">
+                Plans, entitlements, plan changes, downgrade guards, invoices, overage lines and
+                manual payments work. No Nigerian gateway/checkout, subscription receipts, dunning
+                or export preservation.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Migration and onboarding</strong>
+                <div class="scorebar"><i style="width: 30%"></i></div>
+              </td>
+              <td class="num">5</td>
+              <td class="num">3</td>
+              <td class="num">15</td>
+              <td class="why">
+                Property/unit import framework exists in the backend. No import UI, tenant/lease
+                import, opening balances, dry-run/rollback UI or organisation export.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Reliability, operations and security assurance</strong>
+                <div class="scorebar"><i style="width: 30%"></i></div>
+              </td>
+              <td class="num">8</td>
+              <td class="num">3</td>
+              <td class="num">24</td>
+              <td class="why">
+                CI covers format, lint, typecheck, tests, RLS and traceability structure. No staging
+                deploy, build/deploy job, observability, error tracking, backups drill, incident
+                process or pen test.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Legal and compliance</strong>
+                <div class="scorebar"><i style="width: 10%"></i></div>
+              </td>
+              <td class="num">5</td>
+              <td class="num">1</td>
+              <td class="num">5</td>
+              <td class="why">
+                All 12 compliance-register items are open: name, NDPA privacy, client-money
+                treatment, WhatsApp policy, payment licensing and more.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Release evidence, GTM and support</strong>
+                <div class="scorebar"><i style="width: 20%"></i></div>
+              </td>
+              <td class="num">2</td>
+              <td class="num">2</td>
+              <td class="num">4</td>
+              <td class="why">
+                README, traceability and backlog status are stale and still describe a
+                pre-implementation repository. No public pricing/terms page, support channels or
+                status page.
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Weighted total</td>
+              <td class="num"><span class="total-score">53</span></td>
+              <td class="why">528 / 1000. Not launch-ready.</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="blockers">
+        <h3 class="section-title">Launch blockers</h3>
+        <p class="section-lead">
+          These are the reasons a public launch should not be scheduled. Several also block a
+          credible R1 pilot.
+        </p>
+        <div class="card">
+          <div class="blocker">
+            <div class="n">1</div>
+            <div>
+              <h4>No staff mobile app</h4>
+              <p>
+                R1 requires native iOS/Android with offline capture, provisional receipts, sync
+                state, device protection, low-data uploads and push. None exists. R1 exit criteria
+                cannot be met.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">2</div>
+            <div>
+              <h4>Outbound messaging is not real</h4>
+              <p>
+                The logging provider reports success without contacting WhatsApp, SMS or email. The
+                log can say “sent” when nobody was messaged. No scheduler runs rent, lease or
+                maintenance reminders.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">3</div>
+            <div>
+              <h4>Subscription billing has no gateway</h4>
+              <p>
+                Invoices and manual payment recording exist. BILL-2's gateway, checkout and
+                subscription receipts do not. A new customer cannot pay Tenaville from the product.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">4</div>
+            <div>
+              <h4>Migration, opening balances and export are missing</h4>
+              <p>
+                No tenant/lease import, cutover balances, dry-run/rollback or organisation-wide
+                export. Pilot exit criteria require reconciliation and export.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">5</div>
+            <div>
+              <h4>Production operations are absent</h4>
+              <p>
+                No staging/deployment configuration, error tracking, uptime or job monitoring,
+                backup/restore drill, incident process, support channels or security testing.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">6</div>
+            <div>
+              <h4>Legal and compliance gates are open</h4>
+              <p>
+                Name/trademark, NDPA privacy, client-money treatment, WhatsApp policy, payment
+                licensing and consumer transparency all remain unresolved.
+              </p>
+            </div>
+          </div>
+          <div class="blocker">
+            <div class="n">7</div>
+            <div>
+              <h4>P0 scope gaps remain</h4>
+              <p>
+                Session/device management, property photos, lease handover/termination, full deposit
+                lifecycle, ledger evidence, maintenance media/notifications and the full operational
+                report set are partial or absent.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="checklist">
+        <h3 class="section-title">Done / partial / undone</h3>
+        <p class="section-lead">
+          Filter the checklist. “Done” means implemented and covered by tests or live verification;
+          “partial” means a material obligation remains.
+        </p>
+        <div class="filters" role="group" aria-label="Filter checklist">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="done">Done</button>
+          <button class="filter" data-filter="partial">Partial</button>
+          <button class="filter" data-filter="todo">Not done</button>
+        </div>
+
+        <h4 style="margin: 26px 0 10px">Done and verified</h4>
+        <ul class="checklist">
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">ORG</span> Organisation creation, owner membership, email
+              verification, password reset and staff invitations</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">ORG</span> Roles, permissions, property/portfolio scoping, RLS on
+              every table and CI isolation tests</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">ORG</span> Audit trail with before/after, reasons, document access
+              and approval events</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">OWN / PROP</span> Landlords, mandates, properties, units, statuses
+              and no public marketplace exposure</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE</span> Tenants, direct lease creation, activation, renewal and
+              historical preservation</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">RENT</span> Rent schedules, payments, allocations, part-payment
+              credit rows, gapless receipts and reversals</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">RENT / AN</span> Daily cash-up, arrears ageing, rent roll and
+              collections CSV exports</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEDGER</span> Client funds versus agency income, commission posting,
+              remittances and statements through draft/reviewed/issued</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">MAINT</span> Requests, assignment, vendors, timeline, costs,
+              approvals, completion and tenant confirm/reopen</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">PORTAL</span> Landlord portfolio/statements/repairs/documents and
+              tenant tenancy/receipts/maintenance/messages/documents</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">COMMS</span> Templates, message log, delivery attempts, fallback
+              order, task queue, preferences and manual reminder generation</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">DOC</span> Document registry, private upload, short-lived download,
+              access audit and expiry task generation</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">BILL</span> Plans, entitlements, plan changes, downgrade guards,
+              invoices, overage lines and manual payments</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">QA</span> 24 database test files / 458 assertions, 153 core tests,
+              98 web tests and a passing production build</span
+            ><span class="badge done">Done</span>
+          </li>
+        </ul>
+
+        <h4 style="margin: 26px 0 10px">Partial</h4>
+        <ul class="checklist">
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">ORG-2 / ORG-9</span> Phone verification, device list, remote
+              sign-out, session timeout and recovery runbooks</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">PROP-1 / PROP-2</span> Property photos, facilities editing,
+              property/unit edit and archive</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">PROP-4 / MIG</span> Import screen, tenant/lease import, opening
+              balances and dry-run/rollback</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-5 / LEASE-13</span> Move-in/move-out, handover, meter readings
+              and the full deposit lifecycle UI</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-6 / RENT-6</span> Configurable 90/60/30-day alerts and
+              scheduled reminder dispatch</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span><span class="id">RENT-14</span> Applying tenant credit to a future charge</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEDGER-3</span> Attaching receipts and invoices to ledger
+              entries</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">MAINT-2 / 10 / 12</span> Contextual maintenance media and outbound
+              tenant notifications</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">AN-1</span> Occupancy, lease-expiry and maintenance-queue report
+              views</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">COMMS-2 / 6 / 8</span> Real providers, rate limits, scheduled sends,
+              template approval sync and inbound inbox</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">DOC-1 / 3 / 6</span> Screening-application attachment, generated
+              PDFs and malware scanning</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">BILL-2 / 4</span> Gateway checkout, subscription receipts, dunning
+              and export preservation</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span><span class="id">MOB</span> Mobile workspace scaffold only</span
+            ><span class="badge partial">Partial</span>
+          </li>
+        </ul>
+
+        <h4 style="margin: 26px 0 10px">Not done</h4>
+        <ul class="checklist">
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">MOB-1 / 3–8</span> Native iOS/Android app, offline queue,
+              provisional receipts, sync/retry, device lock, low-data uploads and push</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">COMMS</span> Real WhatsApp Business, SMS and email providers with
+              webhooks, rate limits and cost reporting</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">JOBS</span> Scheduled background jobs for rent, lease, maintenance
+              and document reminders</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">BILL-2</span> Subscription payment gateway/checkout, gateway
+              receipts and dunning</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">MIG / BILL-4</span> Tenant/lease import, opening balances, import
+              dry-run/rollback and full organisation export</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">OPS</span> Production/staging deployment, observability, backups
+              restoration, incident response and support/status channels</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">SEC / QA</span> Penetration test, dependency cadence, load test,
+              browser E2E and accessibility audit</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEGAL</span> Privacy notices, NDPA/processor agreements,
+              data-subject process, name/trademark/domain clearance, client-money and
+              messaging-policy review</span
+            ><span class="badge todo">Not done</span>
+          </li>
+          <li class="check" data-status="todo">
+            <span class="box"></span
+            ><span
+              ><span class="id">GTM</span> Public pricing/terms pages, onboarding runbook, support
+              SLAs and launch communications</span
+            ><span class="badge todo">Not done</span>
+          </li>
+        </ul>
+      </section>
+
+      <section id="exit">
+        <h3 class="section-title">R1 exit criteria</h3>
+        <p class="section-lead">
+          From PRD §16.2. A public launch cannot be called R1-complete while these are unmet.
+        </p>
+        <table class="criteria">
+          <thead>
+            <tr>
+              <th>Criterion</th>
+              <th>Status</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>At least 3 pilot agencies through a month-end cycle</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>No pilot run</td>
+            </tr>
+            <tr>
+              <td>Core records maintained without spreadsheets</td>
+              <td><span class="badge partial">Partial</span></td>
+              <td>Web flows exist; import/opening balances absent</td>
+            </tr>
+            <tr>
+              <td>Statements accepted without material correction</td>
+              <td><span class="badge todo">Not demonstrated</span></td>
+              <td>Built and live-checked; no pilot acceptance</td>
+            </tr>
+            <tr>
+              <td>Maintenance requests assigned, updated and closed with audit</td>
+              <td><span class="badge done">Met</span></td>
+              <td>Implemented and live-checked</td>
+            </tr>
+            <tr>
+              <td>Tenant portal limited to correct tenant/lease</td>
+              <td><span class="badge done">Met</span></td>
+              <td>RLS and pgTAP isolation tests</td>
+            </tr>
+            <tr>
+              <td>Offline actions sync without duplicates</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>No mobile app</td>
+            </tr>
+            <tr>
+              <td>No critical security or isolation defects</td>
+              <td><span class="badge partial">Partial</span></td>
+              <td>Strong RLS/audit; no pen test</td>
+            </tr>
+            <tr>
+              <td>Backup restoration tested</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>No backup/restore drill</td>
+            </tr>
+            <tr>
+              <td>Staff can export organisation data</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>Report CSVs only</td>
+            </tr>
+            <tr>
+              <td>Opening balances reconcile at cutover</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>No opening-balance import</td>
+            </tr>
+            <tr>
+              <td>Receipt numbering has no gaps, duplicates or reuse</td>
+              <td><span class="badge done">Met</span></td>
+              <td>Gapless counter and database tests</td>
+            </tr>
+            <tr>
+              <td>Automated isolation tests pass in CI every release</td>
+              <td><span class="badge done">Met</span></td>
+              <td>Required CI job</td>
+            </tr>
+            <tr>
+              <td>Offline payment sync tested with interrupted/repeated sync</td>
+              <td><span class="badge todo">Not met</span></td>
+              <td>No mobile app</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="evidence">
+        <h3 class="section-title">Evidence and documentation drift</h3>
+        <div class="grid two">
+          <div class="card">
+            <h4>Reviewed</h4>
+            <p>
+              23 SQL migrations · 24 pgTAP files / 458 assertions · 58 web pages · two API route
+              handlers · 153 core tests · 98 web tests · CI quality and isolation gates · compliance
+              register · operations README · PRD and R1 exit criteria · live hosted checks across
+              rent, statements, maintenance, comms, documents and billing.
+            </p>
+          </div>
+          <div class="card" style="background: var(--amber-soft); border-color: #e4c99d">
+            <h4>Release records are stale</h4>
+            <p>
+              README still says “pre-implementation … no feature code yet”; backlog mapping says 8
+              done / 120 todo and “no user interface exists”; traceability says 0 of 194
+              requirements done. An external reviewer, pilot agency or investor cannot rely on the
+              repository's own status. Refreshing it is part of launch readiness.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="path">
+        <h3 class="section-title">Recommended path</h3>
+        <div class="card">
+          <ol class="path">
+            <li>
+              <strong>Decide launch scope.</strong> Build mobile R1, or re-baseline to a web-only
+              pilot with contractual scope removal. Do not claim R1 complete while mobile is absent.
+            </li>
+            <li>
+              <strong>Make messaging real.</strong> Wire production providers, add scheduled
+              reminder jobs, label logging honestly until then, and enforce consent/rate limits.
+            </li>
+            <li>
+              <strong>Close billing.</strong> Add a licensed Nigerian subscription payment path and
+              gateway receipts, or launch invoice-only by explicit commercial decision.
+            </li>
+            <li>
+              <strong>Close migration and export.</strong> Tenant/lease import, opening balances,
+              dry-run/rollback and organisation export are pilot exit criteria.
+            </li>
+            <li>
+              <strong>Make production operable.</strong> Staging, deploy pipeline, error/uptime/job
+              monitoring, backup restore drill, incident response, support and status page.
+            </li>
+            <li>
+              <strong>Clear the legal register.</strong> Name, privacy/NDPA, client money, messaging
+              policy, payment licensing and consumer copy.
+            </li>
+            <li>
+              <strong>Test adversarially.</strong> Pen test, dependency cadence, load test, browser
+              E2E and accessibility audit.
+            </li>
+            <li>
+              <strong>Run a controlled pilot.</strong> Three agencies, a full month-end,
+              offline/payment/receipt/statement acceptance and documented exceptions before a public
+              decision.
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p class="decision">
+          Decision: no public launch. Conditional web-only pilot only after the operational,
+          messaging, billing, migration, security and legal gates above are closed or formally
+          accepted as pilot exceptions.
+        </p>
+        <p>
+          Review at <code>3e15e42</code> · 13 November 2026 · Scores are a launch-readiness
+          judgement, not a security certification or legal opinion.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const buttons = document.querySelectorAll('.filter');
+      const checks = document.querySelectorAll('.check');
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          button.classList.add('active');
+          const filter = button.dataset.filter;
+          checks.forEach((check) => {
+            check.style.display =
+              filter === 'all' || check.dataset.status === filter ? 'grid' : 'none';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
