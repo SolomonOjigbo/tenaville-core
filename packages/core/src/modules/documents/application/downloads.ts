@@ -50,6 +50,8 @@ const ENTITY_TABLES = {
   lease: 'leases',
   deposit_deduction: 'deposit_deductions',
   handover: 'lease_handovers',
+  maintenance_request: 'maintenance_requests',
+  payment: 'payments',
 } as const satisfies Record<DocumentEntity, string>;
 
 export class DocumentAccessError extends Error {

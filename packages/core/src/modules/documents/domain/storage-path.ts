@@ -20,7 +20,15 @@ export type Bucket = 'documents' | 'maintenance';
  * cannot look up.
  */
 export type DocumentEntity =
-  'property' | 'unit' | 'landlord' | 'tenant' | 'lease' | 'deposit_deduction' | 'handover';
+  | 'property'
+  | 'unit'
+  | 'landlord'
+  | 'tenant'
+  | 'lease'
+  | 'deposit_deduction'
+  | 'handover'
+  | 'maintenance_request'
+  | 'payment';
 
 export class StoragePathError extends Error {
   constructor(message: string) {

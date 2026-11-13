@@ -1,5 +1,12 @@
-/** The documents module's public surface (DOC-7, TV-014). */
+/** The documents module's public surface (DOC-2, DOC-5, DOC-7). */
 export { issueDownloadUrl, uploadDocument, type DownloadRequest } from './downloads';
+
+export {
+  daysUntilExpiry,
+  documentExpiryLabel,
+  documentExpiryStatus,
+  type DocumentExpiryStatus,
+} from '../domain/expiry';
 
 export {
   buildObjectPath,

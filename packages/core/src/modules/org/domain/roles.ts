@@ -42,6 +42,9 @@ export const PERMISSIONS = [
   'org.audit.read',
   'org.billing.read',
   'org.billing.manage',
+  // Recording a payment against an invoice is finance work, not plan
+  // administration. An accountant may do it without being able to switch plans.
+  'org.billing.payment.record',
 
   // Portfolio (R1 step 2)
   'property.read',
@@ -72,6 +75,10 @@ export const PERMISSIONS = [
   // Communications and tasks (R1 step 10). Every staff role needs the queue and
   // the message log; a caretaker fixes what a message reports.
   'comms.read',
+
+  // Documents (R1 step 11)
+  'document.read',
+  'document.write',
 
   // Own records only — what a tenant or landlord may reach about themselves.
   'self.tenancy.read',
@@ -104,11 +111,27 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'maintenance.read',
     'maintenance.write',
     'comms.read',
+    'document.read',
+    'document.write',
   ],
 
-  letting_agent: ['property.read', 'lease.read', 'maintenance.read', 'comms.read'],
+  letting_agent: [
+    'property.read',
+    'lease.read',
+    'maintenance.read',
+    'comms.read',
+    'document.read',
+    'document.write',
+  ],
 
-  caretaker: ['property.read', 'maintenance.read', 'maintenance.write', 'comms.read'],
+  caretaker: [
+    'property.read',
+    'maintenance.read',
+    'maintenance.write',
+    'comms.read',
+    'document.read',
+    'document.write',
+  ],
 
   maintenance_coordinator: [
     'property.read',
@@ -116,6 +139,8 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'maintenance.write',
     'maintenance.approve',
     'comms.read',
+    'document.read',
+    'document.write',
   ],
 
   // An accountant reads the money and may reverse a payment, but does not
@@ -134,10 +159,13 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     'statement.issue',
     'org.audit.read',
     'org.billing.read',
+    'org.billing.payment.record',
     'comms.read',
+    'document.read',
+    'document.write',
   ],
 
-  screening_reviewer: ['property.read', 'lease.read'],
+  screening_reviewer: ['property.read', 'lease.read', 'document.read'],
 
   // A landlord sees their own portfolio and approves repairs above a threshold
   // (OWN-4, MAINT-8). They are not staff.
