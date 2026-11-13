@@ -16,6 +16,22 @@ export default function SignUpPage() {
 
         <SignUpForm />
 
+        <p className="text-xs leading-5 text-subtle">
+          By creating an account you acknowledge our{' '}
+          <Link href="/legal/privacy" className="text-info-text underline">
+            Privacy Notice
+          </Link>{' '}
+          and{' '}
+          <Link href="/legal/terms" className="text-info-text underline">
+            Terms of Service
+          </Link>
+          . Agency accounts also operate under our{' '}
+          <Link href="/legal/data-processing-agreement" className="text-info-text underline">
+            Data Processing Agreement
+          </Link>
+          .
+        </p>
+
         <p className="text-sm text-muted">
           Already have an account?{' '}
           <Link href="/sign-in" className="text-primary underline">

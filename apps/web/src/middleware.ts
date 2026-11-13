@@ -25,6 +25,7 @@ const PUBLIC_PREFIXES = [
   '/reset-password',
   '/verify-email',
   '/accept-invitation',
+  '/legal',
   '/auth/',
   '/design',
 ];

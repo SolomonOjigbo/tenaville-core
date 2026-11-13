@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react';
 
+import { LegalFooter } from '../../components/legal/legal-footer';
+
 /**
  * The unauthenticated shell: one centred card, nothing else.
  *
  * No navigation, because there is nowhere to go yet, and no product chrome to
- * imply otherwise.
+ * imply otherwise. Legal links are included because they must be reachable
+ * before an account is created.
  */
 export default function AuthLayout({ children }: { readonly children: ReactNode }) {
   return (
@@ -15,6 +18,7 @@ export default function AuthLayout({ children }: { readonly children: ReactNode 
           <p className="mt-1 text-sm text-muted">Property management for Nigerian agencies</p>
         </div>
         {children}
+        <LegalFooter />
       </div>
     </main>
   );
