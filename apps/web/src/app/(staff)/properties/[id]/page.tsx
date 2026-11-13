@@ -1,4 +1,7 @@
+import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
+
+import { createAdminClient } from '@tenaville/db';
 
 import {
   Badge,
@@ -16,6 +19,7 @@ import {
   statusLabel,
   unitStatusTone,
 } from '../../../../components/ui';
+import { PropertyPhotoForm } from '../../../../components/forms/property-photo-form';
 import { UnitForm } from '../../../../components/forms/unit-form';
 import { formatDate } from '../../../../lib/format';
 import { currentViewer, supabaseForRequest } from '../../../../server/session';
@@ -44,19 +48,40 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   }
 
   const supabase = await supabaseForRequest();
-  const { data: property, error } = await supabase
-    .from('properties')
-    .select(
-      'id, name, reference, property_type, address_line, lga, state_code, notes, created_at, landlords(display_name, phone, email), units(id, label, unit_type, status, asking_rent_kobo)',
-    )
-    .eq('id', id)
-    .order('label', { referencedTable: 'units' })
-    .maybeSingle();
+  const [{ data: property, error }, { data: photoRows }] = await Promise.all([
+    supabase
+      .from('properties')
+      .select(
+        'id, name, reference, property_type, address_line, lga, state_code, notes, created_at, landlords(display_name, phone, email), units(id, label, unit_type, status, asking_rent_kobo)',
+      )
+      .eq('id', id)
+      .order('label', { referencedTable: 'units' })
+      .maybeSingle(),
+    supabase
+      .from('property_photos')
+      .select('id, storage_path, caption, created_at')
+      .eq('property_id', id)
+      .order('sort_order')
+      .order('created_at'),
+  ]);
 
   if (error !== null || property === null) notFound();
 
   const units = property.units;
   const landlord = property.landlords;
+  const uploadedPhotos = photoRows ?? [];
+  const admin = uploadedPhotos.length === 0 ? null : createAdminClient('sign property photos');
+  const photos =
+    admin === null
+      ? []
+      : await Promise.all(
+          uploadedPhotos.map(async (photo) => {
+            const { data: signed } = await admin.storage
+              .from('documents')
+              .createSignedUrl(photo.storage_path, 60 * 60);
+            return { ...photo, url: signed?.signedUrl ?? null };
+          }),
+        );
 
   return (
     <>
@@ -72,6 +97,50 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
+          <Card>
+            <CardHeader
+              title="Photos"
+              description="Private to this organisation. Images are served through short-lived links."
+            />
+            <CardBody className="space-y-4">
+              {photos.length === 0 ? (
+                <p className="text-sm text-muted">No photos yet.</p>
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {photos.map((photo) => (
+                    <figure
+                      key={photo.id}
+                      className="overflow-hidden rounded-md border border-border"
+                    >
+                      {photo.url === null ? (
+                        <div className="flex h-40 items-center justify-center bg-surface2 text-xs text-subtle">
+                          Image unavailable
+                        </div>
+                      ) : (
+                        <Image
+                          src={photo.url}
+                          alt={photo.caption ?? 'Property photo'}
+                          width={640}
+                          height={420}
+                          unoptimized
+                          className="h-40 w-full object-cover"
+                        />
+                      )}
+                      {photo.caption !== null && (
+                        <figcaption className="px-3 py-2 text-xs text-muted">
+                          {photo.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ))}
+                </div>
+              )}
+              {(viewer.access.can('property.write') || viewer.access.can('maintenance.write')) && (
+                <PropertyPhotoForm propertyId={property.id} />
+              )}
+            </CardBody>
+          </Card>
+
           <Card>
             <CardHeader
               title="Units"

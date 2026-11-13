@@ -5,7 +5,9 @@ import { formatNaira, kobo } from '@tenaville/money';
 import { AssignmentForm } from '../../../../components/forms/assignment-form';
 import { CommentForm } from '../../../../components/forms/comment-form';
 import { CostForm } from '../../../../components/forms/cost-form';
+import { DocumentUploadForm } from '../../../../components/forms/document-upload-form';
 import { StatusForm } from '../../../../components/forms/status-form';
+import { DocumentsTable } from '../../../../components/documents/documents-table';
 import { ApprovalForm } from '../../../../components/forms/approval-form';
 import { MaintenanceTimeline } from '../../../../components/maintenance/maintenance-timeline';
 import {
@@ -48,7 +50,10 @@ export default async function MaintenanceDetailPage({
   if (!viewer.access.can('maintenance.read')) {
     return (
       <Card>
-        <EmptyState title="You cannot see this repair" description="This is a maintenance permission." />
+        <EmptyState
+          title="You cannot see this repair"
+          description="This is a maintenance permission."
+        />
       </Card>
     );
   }
@@ -74,6 +79,7 @@ export default async function MaintenanceDetailPage({
     { data: memberships },
     { data: vendors },
     { data: organisation },
+    { data: media },
   ] = await Promise.all([
     supabase
       .from('maintenance_events')
@@ -82,7 +88,9 @@ export default async function MaintenanceDetailPage({
       .order('created_at'),
     supabase
       .from('maintenance_costs')
-      .select('id, description, amount_kobo, payer, reason, invoice_path, requires_approval, created_at')
+      .select(
+        'id, description, amount_kobo, payer, reason, invoice_path, requires_approval, created_at',
+      )
       .eq('request_id', id)
       .order('created_at'),
     supabase
@@ -105,12 +113,25 @@ export default async function MaintenanceDetailPage({
       .select('maintenance_approval_threshold_kobo')
       .eq('id', viewer.organisationId)
       .maybeSingle(),
+    supabase
+      .from('documents')
+      .select(
+        'id, entity_type, entity_id, bucket, storage_path, title, file_name, document_type, mime_type, size_bytes, created_at, expiry_date, sensitive',
+      )
+      .eq('entity_type', 'maintenance_request')
+      .eq('entity_id', id)
+      .order('created_at'),
   ]);
 
   const memberRows = (memberships ?? []).filter((member) =>
-    ['owner', 'admin', 'property_manager', 'letting_agent', 'caretaker', 'maintenance_coordinator'].includes(
-      member.role,
-    ),
+    [
+      'owner',
+      'admin',
+      'property_manager',
+      'letting_agent',
+      'caretaker',
+      'maintenance_coordinator',
+    ].includes(member.role),
   );
   const profiles =
     memberRows.length === 0
@@ -136,9 +157,7 @@ export default async function MaintenanceDetailPage({
     .map((vendor) => ({ id: vendor.id, label: vendor.name }));
 
   const assignee =
-    request.assignee_user_id === null
-      ? null
-      : (profileById.get(request.assignee_user_id) ?? null);
+    request.assignee_user_id === null ? null : (profileById.get(request.assignee_user_id) ?? null);
   const coordinator =
     request.coordinator_user_id === null
       ? null
@@ -187,7 +206,11 @@ export default async function MaintenanceDetailPage({
       )}
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Recorded cost" value={<Money kobo={totalCost.toString()} />} hint="All cost lines" />
+        <Stat
+          label="Recorded cost"
+          value={<Money kobo={totalCost.toString()} />}
+          hint="All cost lines"
+        />
         <Stat
           label="Approval threshold"
           value={<Money kobo={String(threshold)} />}
@@ -217,7 +240,11 @@ export default async function MaintenanceDetailPage({
                   <dd className="text-text">
                     {request.property?.name ?? 'Property'}
                     <span className="block text-xs text-muted">
-                      {[request.property?.address_line, request.property?.lga, request.property?.state_code]
+                      {[
+                        request.property?.address_line,
+                        request.property?.lga,
+                        request.property?.state_code,
+                      ]
                         .filter((part) => part !== null && part !== undefined && part !== '')
                         .join(', ')}
                     </span>
@@ -243,7 +270,9 @@ export default async function MaintenanceDetailPage({
                   <dd className="text-text">
                     {assignee?.full_name ?? assignee?.email ?? 'Unassigned'}
                     {request.vendors?.name !== undefined && (
-                      <span className="block text-xs text-muted">Vendor: {request.vendors.name}</span>
+                      <span className="block text-xs text-muted">
+                        Vendor: {request.vendors.name}
+                      </span>
                     )}
                     {coordinator !== null && (
                       <span className="block text-xs text-muted">
@@ -320,22 +349,50 @@ export default async function MaintenanceDetailPage({
 
               {canWrite && !terminal && (
                 <div className="border-t border-border pt-4">
-                  <CostForm
-                    requestId={request.id}
-                    thresholdLabel={formatNaira(kobo(threshold))}
-                  />
+                  <CostForm requestId={request.id} thresholdLabel={formatNaira(kobo(threshold))} />
                 </div>
               )}
             </CardBody>
           </Card>
 
           <Card>
-            <CardHeader title="Timeline" description="Every status, assignment, cost and comment." />
+            <CardHeader
+              title="Timeline"
+              description="Every status, assignment, cost and comment."
+            />
             <CardBody className="space-y-6">
               <MaintenanceTimeline events={events ?? []} />
               <div className="border-t border-border pt-4">
                 <CommentForm requestId={request.id} isStaff={viewer.access.isStaff} />
               </div>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardHeader
+              title="Photos and documents"
+              description="Tenant photos, quotations and invoices attached to this repair."
+            />
+            <CardBody className="space-y-4">
+              <DocumentsTable documents={media ?? []} />
+              {viewer.access.can('document.write') && (
+                <div className="border-t border-border pt-4">
+                  <DocumentUploadForm
+                    groups={[
+                      {
+                        type: 'maintenance_request',
+                        label: 'This repair',
+                        items: [
+                          {
+                            id: request.id,
+                            label: `${maintenanceCategoryLabel(request.category)} · reported ${formatDate(request.reported_on)}`,
+                          },
+                        ],
+                      },
+                    ]}
+                  />
+                </div>
+              )}
             </CardBody>
           </Card>
         </div>
@@ -373,7 +430,6 @@ export default async function MaintenanceDetailPage({
           <Card>
             <CardHeader title="Contacts" />
             <CardBody className="space-y-2 text-sm">
-
               <p className="text-text">
                 Tenant
                 <span className="block text-xs text-muted">

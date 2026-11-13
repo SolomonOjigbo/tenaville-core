@@ -2,6 +2,13 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { safeRedirect } from './lib/auth';
+import {
+  DEVICE_COOKIE,
+  DEVICE_COOKIE_MAX_AGE,
+  SESSION_IDLE_DAYS,
+  deviceLabel,
+  isDeviceKey,
+} from './lib/device';
 
 /**
  * Refreshes the Supabase session on every request and guards the private
@@ -78,6 +85,63 @@ export const middleware = async (request: NextRequest) => {
     home.pathname = '/dashboard';
     home.search = '';
     return NextResponse.redirect(home);
+  }
+
+  if (user !== null) {
+    const existingKey = request.cookies.get(DEVICE_COOKIE)?.value;
+    const deviceKey = isDeviceKey(existingKey) ? existingKey : crypto.randomUUID();
+
+    const { data: session, error: sessionError } = await supabase
+      .from('device_sessions')
+      .select('revoked_at, last_seen_at')
+      .eq('user_id', user.id)
+      .eq('device_key', deviceKey)
+      .maybeSingle();
+
+    const idleCutoff = Date.now() - SESSION_IDLE_DAYS * 24 * 60 * 60 * 1000;
+    const revoked =
+      sessionError === null &&
+      session !== null &&
+      (session.revoked_at !== null || Date.parse(String(session.last_seen_at)) < idleCutoff);
+
+    if (revoked) {
+      await supabase.auth.signOut();
+      const signIn = request.nextUrl.clone();
+      signIn.pathname = '/sign-in';
+      signIn.search = 'error=session-revoked';
+      const redirect = NextResponse.redirect(signIn);
+      for (const cookie of request.cookies.getAll()) {
+        if (cookie.name.startsWith('sb-')) {
+          redirect.cookies.set(cookie.name, '', { path: '/', maxAge: 0 });
+        }
+      }
+      redirect.cookies.set(DEVICE_COOKIE, '', { path: '/', maxAge: 0 });
+      return redirect;
+    }
+
+    // A failure to record the device must not lock a person out of the product;
+    // revocation is enforced when the row is readable.
+    if (sessionError === null) {
+      await supabase.from('device_sessions').upsert(
+        {
+          user_id: user.id,
+          device_key: deviceKey,
+          device_label: deviceLabel(request.headers.get('user-agent')),
+          user_agent: request.headers.get('user-agent')?.slice(0, 500) ?? null,
+          platform: 'web',
+          last_seen_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,device_key' },
+      );
+    }
+
+    response.cookies.set(DEVICE_COOKIE, deviceKey, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: DEVICE_COOKIE_MAX_AGE,
+    });
   }
 
   return response;

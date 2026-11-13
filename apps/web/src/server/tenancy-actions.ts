@@ -5,11 +5,17 @@ import { redirect } from 'next/navigation';
 
 import {
   addDays,
+  approveDeduction,
   createLease,
   createTenant,
   formatDate,
   parseDate,
+  proposeDeduction,
+  recordDepositReceipt,
+  recordHandover,
   renewLease,
+  settleDeposit,
+  terminateLease,
 } from '@tenaville/core/leases';
 import { activateLease } from '@tenaville/core/rent';
 import { MoneyParseError, parseNaira, toTransport } from '@tenaville/money';
@@ -255,4 +261,212 @@ export const renewLeaseAction = async (
   revalidatePath(`/leases/${leaseId}`);
   revalidatePath('/rent');
   redirect(`/leases/${renewalLeaseId}${activationFailed ? '?warning=activation' : ''}`);
+};
+
+const financeAccess = (viewer: NonNullable<Awaited<ReturnType<typeof currentViewer>>>): boolean =>
+  viewer.access.can('lease.write') || viewer.access.can('payment.record');
+
+const refreshTenancy = (leaseId: string): void => {
+  revalidatePath(`/leases/${leaseId}`);
+  revalidatePath(`/leases/${leaseId}/deposit`);
+  revalidatePath(`/leases/${leaseId}/handovers`);
+  revalidatePath('/leases');
+};
+
+export const recordDepositReceiptAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!financeAccess(viewer)) return { error: 'Your role cannot record deposits.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  const depositedOn = field(form, 'receivedOn').trim();
+  try {
+    await recordDepositReceipt(await supabaseForRequest(), {
+      depositId: field(form, 'depositId').trim(),
+      receivedOn: depositedOn,
+    });
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not record the deposit') };
+  }
+
+  refreshTenancy(leaseId);
+  revalidatePath('/tenancy');
+  return { message: 'Deposit recorded as held.' };
+};
+
+export const proposeDepositDeductionAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!financeAccess(viewer)) return { error: 'Your role cannot propose deductions.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  let amountKobo: string;
+  try {
+    amountKobo = toKoboTransport(field(form, 'amount'));
+  } catch (error) {
+    return { fieldErrors: { amount: rentFieldError(error).rent ?? 'Enter a valid amount' } };
+  }
+
+  try {
+    await proposeDeduction(await supabaseForRequest(), {
+      organisationId: viewer.organisationId,
+      depositId: field(form, 'depositId').trim(),
+      amountKobo,
+      reason: field(form, 'reason'),
+      evidencePaths: [],
+    });
+  } catch (error) {
+    const fieldErrors = fieldErrorsFrom(error);
+    if (fieldErrors !== null) return { fieldErrors };
+    return { error: errorMessage(error, 'Could not propose the deduction') };
+  }
+
+  refreshTenancy(leaseId);
+  return { message: 'Deduction proposed. It needs approval before it counts.' };
+};
+
+export const approveDepositDeductionAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!financeAccess(viewer)) return { error: 'Your role cannot approve deductions.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  try {
+    await approveDeduction(
+      await supabaseForRequest(),
+      field(form, 'deductionId').trim(),
+      viewer.userId,
+    );
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not approve the deduction') };
+  }
+
+  refreshTenancy(leaseId);
+  return { message: 'Deduction approved.' };
+};
+
+export const settleDepositAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!financeAccess(viewer)) return { error: 'Your role cannot settle deposits.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  const outcome = field(form, 'outcome');
+  if (outcome !== 'refund' && outcome !== 'forfeit' && outcome !== 'transfer') {
+    return { fieldErrors: { outcome: 'Choose what happens to the deposit' } };
+  }
+
+  try {
+    await settleDeposit(await supabaseForRequest(), {
+      depositId: field(form, 'depositId').trim(),
+      outcome,
+      settledOn: field(form, 'settledOn').trim(),
+      ...(optionalField(form, 'transferredToLeaseId') === undefined
+        ? {}
+        : { transferredToLeaseId: optionalField(form, 'transferredToLeaseId') }),
+      ...(optionalField(form, 'notes') === undefined
+        ? {}
+        : { notes: optionalField(form, 'notes') }),
+    });
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not settle the deposit') };
+  }
+
+  refreshTenancy(leaseId);
+  revalidatePath('/tenancy');
+  return { message: 'Deposit settled.' };
+};
+
+export const recordHandoverAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('lease.write')) return { error: 'Your role cannot record handovers.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  const kind = field(form, 'kind') === 'move_out' ? 'move_out' : 'move_in';
+  const balanceText = field(form, 'outstandingBalance').trim();
+
+  let outstandingBalanceKobo: string | undefined;
+  if (balanceText !== '') {
+    try {
+      outstandingBalanceKobo = toKoboTransport(balanceText);
+    } catch (error) {
+      return {
+        fieldErrors: {
+          outstandingBalance: rentFieldError(error).rent ?? 'Enter a valid amount',
+        },
+      };
+    }
+  }
+
+  const meterReadings: Record<string, string> = {};
+  for (const meter of ['electricity', 'water', 'gas'] as const) {
+    const value = field(form, meter).trim();
+    if (value !== '') meterReadings[meter] = value;
+  }
+
+  try {
+    await recordHandover(await supabaseForRequest(), {
+      organisationId: viewer.organisationId,
+      leaseId,
+      kind,
+      happenedOn: field(form, 'happenedOn').trim(),
+      meterReadings,
+      evidencePaths: [],
+      keysReturned: checked(form, 'keysReturned'),
+      ...(optionalField(form, 'notes') === undefined
+        ? {}
+        : { notes: optionalField(form, 'notes') }),
+      ...(outstandingBalanceKobo === undefined ? {} : { outstandingBalanceKobo }),
+    });
+  } catch (error) {
+    const fieldErrors = fieldErrorsFrom(error);
+    if (fieldErrors !== null) return { fieldErrors };
+    return { error: errorMessage(error, 'Could not record the handover') };
+  }
+
+  refreshTenancy(leaseId);
+  return {
+    message: kind === 'move_in' ? 'Move-in handover recorded.' : 'Move-out handover recorded.',
+  };
+};
+
+export const terminateLeaseAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('lease.write')) return { error: 'Your role cannot terminate leases.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  try {
+    await terminateLease(await supabaseForRequest(), {
+      leaseId,
+      terminatedOn: field(form, 'terminatedOn').trim(),
+      reason: field(form, 'reason'),
+    });
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not terminate the lease') };
+  }
+
+  refreshTenancy(leaseId);
+  revalidatePath('/tenancy');
+  revalidatePath('/units');
+  return { message: 'Lease terminated.' };
 };

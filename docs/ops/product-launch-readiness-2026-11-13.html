@@ -114,7 +114,7 @@
         width: 174px;
         height: 174px;
         border-radius: 50%;
-        background: conic-gradient(#e5b25d 0 53%, rgba(255, 255, 255, 0.13) 53% 100%);
+        background: conic-gradient(#e5b25d 0 57%, rgba(255, 255, 255, 0.13) 57% 100%);
         display: grid;
         place-items: center;
         position: relative;
@@ -552,22 +552,23 @@
           open.
         </p>
         <div class="meta">
-          <span><strong>Review date</strong> 13 November 2026</span>
-          <span><strong>Revision</strong> <code>3e15e42</code></span>
+          <span><strong>Review date</strong> 12 November 2026</span>
+          <span><strong>Revision</strong> <code>269e5ef</code> + P0 hardening</span>
           <span><strong>Basis</strong> Code, tests, CI, docs and hosted QA checks</span>
         </div>
 
         <div class="verdict">
-          <div class="gauge" aria-label="53 out of 100">
-            <div class="num"><strong>53</strong><span>out of 100</span></div>
+          <div class="gauge" aria-label="57 out of 100">
+            <div class="num"><strong>57</strong><span>out of 100</span></div>
           </div>
           <div>
             <span class="tag">Not launch-ready</span>
             <h2>Strong web core. Incomplete launch programme.</h2>
             <p>
-              The web R1 workflows and database integrity are well developed. Mobile is absent,
-              outbound messaging is simulated, subscription billing has no gateway, migration/export
-              is incomplete, and production operations, security assurance and legal gates are open.
+              The six remaining P0 web gaps are closed and the data layer remains strong. Mobile is
+              absent, outbound messaging is simulated, subscription billing has no gateway,
+              migration/export is incomplete, and production operations, security assurance and
+              legal gates remain open.
             </p>
           </div>
         </div>
@@ -606,15 +607,15 @@
             <tr>
               <td>
                 <strong>Web product coverage</strong>
-                <div class="scorebar"><i style="width: 80%"></i></div>
+                <div class="scorebar"><i style="width: 90%"></i></div>
               </td>
               <td class="num">20</td>
-              <td class="num">8</td>
-              <td class="num">160</td>
+              <td class="num">9</td>
+              <td class="num">180</td>
               <td class="why">
-                58 page files cover portfolio, tenancy, money, ledger, statements, reports,
-                maintenance, portals, comms, documents and billing. Remaining P0 gaps are real but
-                bounded.
+                70 page files cover portfolio, tenancy, money, ledger, statements, reports,
+                maintenance, portals, comms, documents, devices and billing. The six P0 web gaps are
+                implemented; the operational report set remains incomplete.
               </td>
             </tr>
             <tr>
@@ -626,22 +627,23 @@
               <td class="num">9</td>
               <td class="num">135</td>
               <td class="why">
-                RLS on every table, 24 pgTAP files and 458 assertions, append-only financial
-                records, gapless receipts, audited approvals and private storage. Independent
-                security testing is missing.
+                RLS on every table, 24 pgTAP files and 474 assertions, append-only financial
+                records, gapless receipts, audited approvals, evidence links and private storage.
+                Independent security testing is missing.
               </td>
             </tr>
             <tr>
               <td>
                 <strong>Web UX, accessibility and responsiveness</strong>
-                <div class="scorebar"><i style="width: 70%"></i></div>
+                <div class="scorebar"><i style="width: 80%"></i></div>
               </td>
               <td class="num">10</td>
-              <td class="num">7</td>
-              <td class="num">70</td>
+              <td class="num">8</td>
+              <td class="num">80</td>
               <td class="why">
-                Responsive shell, 44px controls, print views, error/loading/not-found boundaries and
-                empty states. No automated accessibility audit or browser E2E suite.
+                Responsive shell, 44px controls, print views, contextual deposit/handover/media
+                actions, error/loading/not-found boundaries and empty states. No automated
+                accessibility audit or browser E2E suite.
               </td>
             </tr>
             <tr>
@@ -667,9 +669,9 @@
               <td class="num">4</td>
               <td class="num">40</td>
               <td class="why">
-                Templates, message log, delivery attempts, fallback order, task queue, preferences
-                and reminder generation exist. The only provider is a logging stub; reminders are
-                manual; no inbound queue or rate limits.
+                Templates, message log, delivery attempts, fallback order, task queue, preferences,
+                reminder generation and in-app tenant notices exist. The only outbound provider is a
+                logging stub; reminders are manual; no inbound queue or rate limits.
               </td>
             </tr>
             <tr>
@@ -716,36 +718,37 @@
             <tr>
               <td>
                 <strong>Legal and compliance</strong>
-                <div class="scorebar"><i style="width: 10%"></i></div>
+                <div class="scorebar"><i style="width: 30%"></i></div>
               </td>
               <td class="num">5</td>
-              <td class="num">1</td>
-              <td class="num">5</td>
+              <td class="num">3</td>
+              <td class="num">15</td>
               <td class="why">
-                All 12 compliance-register items are open: name, NDPA privacy, client-money
-                treatment, WhatsApp policy, payment licensing and more.
+                Draft privacy, terms, processor, data-request, messaging, client-money and
+                name/trademark pages exist. Counsel review, name/trademark/domain clearance and
+                regulatory sign-off remain open.
               </td>
             </tr>
             <tr>
               <td>
                 <strong>Release evidence, GTM and support</strong>
-                <div class="scorebar"><i style="width: 20%"></i></div>
+                <div class="scorebar"><i style="width: 30%"></i></div>
               </td>
               <td class="num">2</td>
-              <td class="num">2</td>
-              <td class="num">4</td>
+              <td class="num">3</td>
+              <td class="num">6</td>
               <td class="why">
-                README, traceability and backlog status are stale and still describe a
-                pre-implementation repository. No public pricing/terms page, support channels or
-                status page.
+                This report is refreshed and public legal pages exist. README, traceability and
+                backlog status remain stale; no public pricing, support channels, SLAs or status
+                page.
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="3">Weighted total</td>
-              <td class="num"><span class="total-score">53</span></td>
-              <td class="why">528 / 1000. Not launch-ready.</td>
+              <td class="num"><span class="total-score">57</span></td>
+              <td class="why">570 / 1000. Not launch-ready.</td>
             </tr>
           </tfoot>
         </table>
@@ -815,19 +818,9 @@
             <div>
               <h4>Legal and compliance gates are open</h4>
               <p>
-                Name/trademark, NDPA privacy, client-money treatment, WhatsApp policy, payment
-                licensing and consumer transparency all remain unresolved.
-              </p>
-            </div>
-          </div>
-          <div class="blocker">
-            <div class="n">7</div>
-            <div>
-              <h4>P0 scope gaps remain</h4>
-              <p>
-                Session/device management, property photos, lease handover/termination, full deposit
-                lifecycle, ledger evidence, maintenance media/notifications and the full operational
-                report set are partial or absent.
+                Draft policy pages are published, but counsel review, product name/trademark/domain
+                clearance, client-money treatment, WhatsApp business policy, payment licensing and
+                consumer transparency remain unresolved.
               </p>
             </div>
           </div>
@@ -943,8 +936,50 @@
           <li class="check" data-status="done">
             <span class="box"></span
             ><span
-              ><span class="id">QA</span> 24 database test files / 458 assertions, 153 core tests,
-              98 web tests and a passing production build</span
+              ><span class="id">ORG-9</span> Device/session register, remote sign-out, sign-out
+              everywhere and 30-day idle expiry</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">PROP</span> Property photo upload, private gallery and short-lived
+              signed URLs</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-5</span> Move-in/move-out handovers with condition notes,
+              meter readings, balances and key status</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-3 / LEASE-5</span> Lease termination with date, reason, unit
+              release and tenant notice</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-13</span> Full deposit lifecycle UI: receipt, deductions,
+              approval, refund/forfeit/transfer settlement</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEDGER / MAINT</span> Ledger evidence attachments and maintenance
+              photo/media with in-app tenant notices</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">QA</span> 24 database test files / 474 assertions, 153 core tests,
+              103 web tests and a passing production build</span
             ><span class="badge done">Done</span>
           </li>
         </ul>
@@ -954,15 +989,15 @@
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">ORG-2 / ORG-9</span> Phone verification, device list, remote
-              sign-out, session timeout and recovery runbooks</span
+              ><span class="id">ORG-2 / ORG-9</span> Phone verification and account-recovery
+              runbooks</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">PROP-1 / PROP-2</span> Property photos, facilities editing,
-              property/unit edit and archive</span
+              ><span class="id">PROP-1 / PROP-2</span> Facilities editing, property/unit edit and
+              archive</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -970,13 +1005,6 @@
             ><span
               ><span class="id">PROP-4 / MIG</span> Import screen, tenant/lease import, opening
               balances and dry-run/rollback</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">LEASE-5 / LEASE-13</span> Move-in/move-out, handover, meter readings
-              and the full deposit lifecycle UI</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -994,15 +1022,8 @@
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">LEDGER-3</span> Attaching receipts and invoices to ledger
-              entries</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">MAINT-2 / 10 / 12</span> Contextual maintenance media and outbound
-              tenant notifications</span
+              ><span class="id">MAINT-2 / 10 / 12</span> Contextual maintenance media exists and
+              in-app tenant notices are sent; outbound provider delivery is still simulated</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -1031,6 +1052,14 @@
             ><span
               ><span class="id">BILL-2 / 4</span> Gateway checkout, subscription receipts, dunning
               and export preservation</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEGAL</span> Draft privacy, terms, processor, data-request,
+              messaging, client-money and name/trademark pages exist; counsel review and formal
+              clearance remain</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -1094,16 +1123,15 @@
           <li class="check" data-status="todo">
             <span class="box"></span
             ><span
-              ><span class="id">LEGAL</span> Privacy notices, NDPA/processor agreements,
-              data-subject process, name/trademark/domain clearance, client-money and
-              messaging-policy review</span
+              ><span class="id">LEGAL</span> Counsel sign-off for privacy, processor, client-money
+              and messaging policies; product name/trademark/domain clearance</span
             ><span class="badge todo">Not done</span>
           </li>
           <li class="check" data-status="todo">
             <span class="box"></span
             ><span
-              ><span class="id">GTM</span> Public pricing/terms pages, onboarding runbook, support
-              SLAs and launch communications</span
+              ><span class="id">GTM</span> Public pricing, onboarding runbook, support SLAs and
+              launch communications</span
             ><span class="badge todo">Not done</span>
           </li>
         </ul>
@@ -1198,10 +1226,13 @@
           <div class="card">
             <h4>Reviewed</h4>
             <p>
-              23 SQL migrations · 24 pgTAP files / 458 assertions · 58 web pages · two API route
-              handlers · 153 core tests · 98 web tests · CI quality and isolation gates · compliance
-              register · operations README · PRD and R1 exit criteria · live hosted checks across
-              rent, statements, maintenance, comms, documents and billing.
+              24 SQL migrations · 24 pgTAP files / 474 assertions · 70 web pages · two API route
+              handlers · 153 core tests · 103 web tests · CI quality and isolation gates ·
+              compliance register · operations README · PRD and R1 exit criteria · live hosted
+              checks across rent, statements, maintenance, comms, documents, billing and P0
+              hardening. Production migration ledger includes
+              <code>20261104100000_p0_hardening</code>; notifications, both lifecycle RPCs and the
+              device-session columns were verified in production.
             </p>
           </div>
           <div class="card" style="background: var(--amber-soft); border-color: #e4c99d">

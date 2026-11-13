@@ -125,6 +125,12 @@ export default async function LeasePage({
             <LinkButton href="/leases" variant="secondary">
               Back to leases
             </LinkButton>
+            <LinkButton href={`/leases/${lease.id}/deposit`} variant="secondary">
+              Deposit
+            </LinkButton>
+            <LinkButton href={`/leases/${lease.id}/handovers`} variant="secondary">
+              Handovers
+            </LinkButton>
             {viewer.access.can('payment.record') && (
               <LinkButton href="/rent/payments/new">Record a payment</LinkButton>
             )}

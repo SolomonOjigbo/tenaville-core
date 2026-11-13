@@ -52,6 +52,7 @@ describe('navigation', () => {
       '/messages',
       '/tasks',
       '/documents',
+      '/settings/sessions',
     ]);
     expect(nav).not.toContain('/ledger');
     expect(nav).not.toContain('/rent');
@@ -155,8 +156,8 @@ describe('navigation', () => {
 
   it('drops empty groups rather than rendering a bare heading', () => {
     const groups = groupedNavigationFor('caretaker', allOff);
-    // Maintenance is live, so the caretaker has portfolio and operations.
-    expect(groups.map((g) => g.group)).toEqual(['portfolio', 'operations']);
+    // Maintenance is live, and every staff member can manage their own devices.
+    expect(groups.map((g) => g.group)).toEqual(['portfolio', 'operations', 'admin']);
     expect(groups.every((g) => g.items.length > 0)).toBe(true);
   });
 

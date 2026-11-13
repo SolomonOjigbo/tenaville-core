@@ -28,7 +28,8 @@ export type DocumentEntity =
   | 'deposit_deduction'
   | 'handover'
   | 'maintenance_request'
-  | 'payment';
+  | 'payment'
+  | 'ledger_entry';
 
 export class StoragePathError extends Error {
   constructor(message: string) {

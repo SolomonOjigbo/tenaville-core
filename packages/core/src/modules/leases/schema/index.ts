@@ -112,3 +112,21 @@ export const recordHandoverSchema = z.object({
 });
 
 export type RecordHandoverInput = z.infer<typeof recordHandoverSchema>;
+
+export const settleDepositSchema = z.object({
+  depositId: z.string().uuid(),
+  outcome: z.enum(['refund', 'forfeit', 'transfer']),
+  settledOn: z.string().date(),
+  transferredToLeaseId: z.string().uuid().optional(),
+  notes: z.string().trim().max(2000).optional(),
+});
+
+export type SettleDepositInput = z.infer<typeof settleDepositSchema>;
+
+export const terminateLeaseSchema = z.object({
+  leaseId: z.string().uuid(),
+  terminatedOn: z.string().date(),
+  reason: z.string().trim().min(3, 'Give a reason for termination').max(1000),
+});
+
+export type TerminateLeaseInput = z.infer<typeof terminateLeaseSchema>;

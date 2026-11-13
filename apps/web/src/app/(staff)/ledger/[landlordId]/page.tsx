@@ -19,7 +19,9 @@ import {
   Th,
   statusLabel,
 } from '../../../../components/ui';
+import { DocumentUploadForm } from '../../../../components/forms/document-upload-form';
 import { RemittanceForm } from '../../../../components/forms/remittance-form';
+import { DocumentsTable } from '../../../../components/documents/documents-table';
 import { LandlordStatements } from '../../../../components/statements/landlord-statements';
 import { formatDate } from '../../../../lib/format';
 import { paymentMethodLabel, sumKobo, todayIso } from '../../../../lib/payments';
@@ -90,6 +92,19 @@ export default async function LandlordLedgerPage({
   ]);
 
   if (error !== null || landlord === null) notFound();
+
+  const entryIds = (entries ?? []).map((entry) => entry.id);
+  const { data: evidence } =
+    entryIds.length === 0
+      ? { data: [] as const }
+      : await supabase
+          .from('documents')
+          .select(
+            'id, entity_type, entity_id, bucket, storage_path, title, file_name, document_type, mime_type, size_bytes, created_at, expiry_date, sensitive',
+          )
+          .eq('entity_type', 'ledger_entry')
+          .in('entity_id', entryIds)
+          .order('created_at', { ascending: false });
 
   const balance = balanceFromEntries(balanceRows ?? []);
   const commissionEntries = (entries ?? []).filter((entry) => entry.entry_kind === 'commission');
@@ -178,6 +193,33 @@ export default async function LandlordLedgerPage({
               )}
             </tbody>
           </Table>
+        </CardBody>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader
+          title="Ledger evidence"
+          description="Receipts, statements and supporting documents attached to an entry."
+          action={<Badge tone="neutral">{evidence?.length ?? 0}</Badge>}
+        />
+        <CardBody className="space-y-4">
+          <DocumentsTable documents={evidence ?? []} />
+          {viewer.access.can('document.write') && (
+            <div className="border-t border-border pt-4">
+              <DocumentUploadForm
+                groups={[
+                  {
+                    type: 'ledger_entry',
+                    label: 'Ledger entry',
+                    items: (entries ?? []).map((entry) => ({
+                      id: entry.id,
+                      label: `${formatDate(entry.occurred_on)} · ${entry.description}`,
+                    })),
+                  },
+                ]}
+              />
+            </div>
+          )}
         </CardBody>
       </Card>
 

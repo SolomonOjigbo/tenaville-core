@@ -44,6 +44,9 @@ export default async function DocumentsPage() {
     { data: tenants },
     { data: leases },
     { data: maintenance },
+    { data: deductions },
+    { data: handovers },
+    { data: ledgerEntries },
   ] = await Promise.all([
     supabase
       .from('documents')
@@ -63,6 +66,21 @@ export default async function DocumentsPage() {
       .from('maintenance_requests')
       .select('id, category, property:properties(name), units(label)')
       .order('created_at', { ascending: false }),
+    supabase
+      .from('deposit_deductions')
+      .select(
+        'id, reason, amount_kobo, lease:lease_deposits!deposit_deductions_deposit_id_fkey(lease:leases!lease_deposits_lease_id_fkey(reference))',
+      )
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('lease_handovers')
+      .select('id, kind, happened_on, lease:leases(reference)')
+      .order('happened_on', { ascending: false }),
+    supabase
+      .from('landlord_ledger_entries')
+      .select('id, entry_kind, occurred_on, description, landlord:landlords(display_name)')
+      .order('occurred_on', { ascending: false })
+      .limit(100),
   ]);
 
   const groups: DocumentEntityGroup[] = [
@@ -103,6 +121,30 @@ export default async function DocumentsPage() {
       items: (maintenance ?? []).map((row) => ({
         id: row.id,
         label: `${row.category.replace(/_/g, ' ')} · ${row.property?.name ?? 'Property'} · ${row.units?.label ?? 'Whole property'}`,
+      })),
+    },
+    {
+      type: 'deposit_deduction',
+      label: 'Deposit deduction',
+      items: (deductions ?? []).map((row) => ({
+        id: row.id,
+        label: `${row.lease?.lease?.reference ?? 'Lease'} · ${row.reason}`,
+      })),
+    },
+    {
+      type: 'handover',
+      label: 'Handover',
+      items: (handovers ?? []).map((row) => ({
+        id: row.id,
+        label: `${row.lease?.reference ?? 'Lease'} · ${row.kind.replace(/_/g, ' ')} · ${row.happened_on}`,
+      })),
+    },
+    {
+      type: 'ledger_entry',
+      label: 'Ledger entry',
+      items: (ledgerEntries ?? []).map((row) => ({
+        id: row.id,
+        label: `${row.landlord?.display_name ?? 'Landlord'} · ${row.occurred_on} · ${row.description}`,
       })),
     },
   ].filter((group) => group.items.length > 0);

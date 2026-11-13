@@ -29,6 +29,7 @@ const ENTITY_TABLES = {
   handover: 'lease_handovers',
   maintenance_request: 'maintenance_requests',
   payment: 'payments',
+  ledger_entry: 'landlord_ledger_entries',
 } as const satisfies Record<DocumentEntity, string>;
 
 const MAX_BYTES = 25 * 1024 * 1024;
@@ -39,6 +40,9 @@ const refreshDocuments = (): void => {
   revalidatePath('/documents');
   revalidatePath('/tenancy/documents');
   revalidatePath('/portfolio/documents');
+  revalidatePath('/maintenance', 'layout');
+  revalidatePath('/tenancy/maintenance', 'layout');
+  revalidatePath('/ledger', 'layout');
 };
 
 export const uploadDocumentAction = async (
@@ -47,12 +51,15 @@ export const uploadDocumentAction = async (
 ): Promise<ActionResult> => {
   const viewer = await currentViewer();
   if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
-  if (!viewer.access.can('document.write')) {
-    return { error: 'Your role cannot upload documents.' };
-  }
 
   const entityType = field(form, 'entityType') as DocumentEntity;
   const entityId = field(form, 'entityId').trim();
+
+  const tenantRepairMedia =
+    entityType === 'maintenance_request' && viewer.access.can('self.maintenance.request');
+  if (!viewer.access.can('document.write') && !tenantRepairMedia) {
+    return { error: 'Your role cannot upload documents.' };
+  }
   const file = form.get('file');
 
   if (!(entityType in ENTITY_TABLES)) return { error: 'Choose what the file belongs to.' };

@@ -530,6 +530,7 @@ export type Database = {
         Row: {
           app_version: string | null;
           created_at: string;
+          device_key: string | null;
           device_label: string | null;
           id: string;
           last_seen_at: string;
@@ -537,12 +538,14 @@ export type Database = {
           platform: string;
           revoked_at: string | null;
           revoked_by: string | null;
+          user_agent: string | null;
           user_id: string;
         };
         ComputedFields: never;
         Insert: {
           app_version?: string | null;
           created_at?: string;
+          device_key?: string | null;
           device_label?: string | null;
           id?: string;
           last_seen_at?: string;
@@ -550,11 +553,13 @@ export type Database = {
           platform: string;
           revoked_at?: string | null;
           revoked_by?: string | null;
+          user_agent?: string | null;
           user_id: string;
         };
         Update: {
           app_version?: string | null;
           created_at?: string;
+          device_key?: string | null;
           device_label?: string | null;
           id?: string;
           last_seen_at?: string;
@@ -562,6 +567,7 @@ export type Database = {
           platform?: string;
           revoked_at?: string | null;
           revoked_by?: string | null;
+          user_agent?: string | null;
           user_id?: string;
         };
         Relationships: [
@@ -1108,11 +1114,13 @@ export type Database = {
           amount_kobo: number;
           created_at: string;
           custodian: Database['public']['Enums']['deposit_custodian'];
+          forfeited_amount_kobo: number;
           id: string;
           lease_id: string;
           notes: string | null;
           organisation_id: string;
           received_on: string | null;
+          refunded_amount_kobo: number;
           settled_on: string | null;
           status: Database['public']['Enums']['deposit_status'];
           transferred_to_lease_id: string | null;
@@ -1123,11 +1131,13 @@ export type Database = {
           amount_kobo: number;
           created_at?: string;
           custodian?: Database['public']['Enums']['deposit_custodian'];
+          forfeited_amount_kobo?: number;
           id?: string;
           lease_id: string;
           notes?: string | null;
           organisation_id: string;
           received_on?: string | null;
+          refunded_amount_kobo?: number;
           settled_on?: string | null;
           status?: Database['public']['Enums']['deposit_status'];
           transferred_to_lease_id?: string | null;
@@ -1137,11 +1147,13 @@ export type Database = {
           amount_kobo?: number;
           created_at?: string;
           custodian?: Database['public']['Enums']['deposit_custodian'];
+          forfeited_amount_kobo?: number;
           id?: string;
           lease_id?: string;
           notes?: string | null;
           organisation_id?: string;
           received_on?: string | null;
+          refunded_amount_kobo?: number;
           settled_on?: string | null;
           status?: Database['public']['Enums']['deposit_status'];
           transferred_to_lease_id?: string | null;
@@ -2173,6 +2185,54 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: 'notification_preferences_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      notifications: {
+        Row: {
+          body: string;
+          created_at: string;
+          id: string;
+          kind: string;
+          organisation_id: string;
+          read_at: string | null;
+          related_id: string | null;
+          related_type: string | null;
+          title: string;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          body: string;
+          created_at?: string;
+          id?: string;
+          kind: string;
+          organisation_id: string;
+          read_at?: string | null;
+          related_id?: string | null;
+          related_type?: string | null;
+          title: string;
+          user_id: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          organisation_id?: string;
+          read_at?: string | null;
+          related_id?: string | null;
+          related_type?: string | null;
+          title?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'notifications_organisation_id_fkey';
             columns: ['organisation_id'];
             isOneToOne: false;
             referencedRelation: 'organisations';
@@ -3873,9 +3933,23 @@ export type Database = {
       };
       reverse_payment: { Args: { reason: string; target_payment_id: string }; Returns: string };
       review_statement: { Args: { target_statement_id: string }; Returns: undefined };
+      settle_deposit: {
+        Args: {
+          p_deposit_id: string;
+          p_notes?: string;
+          p_outcome: string;
+          p_settled_on: string;
+          p_transferred_to_lease_id?: string;
+        };
+        Returns: undefined;
+      };
       take_usage_reading: {
         Args: { period_end: string; period_start: string; target_organisation_id: string };
         Returns: string;
+      };
+      terminate_lease: {
+        Args: { p_lease_id: string; p_reason: string; p_terminated_on: string };
+        Returns: undefined;
       };
       transition_maintenance_request: {
         Args: {

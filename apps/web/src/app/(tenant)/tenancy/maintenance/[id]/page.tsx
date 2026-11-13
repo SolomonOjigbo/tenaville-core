@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 
 import { CommentForm } from '../../../../../components/forms/comment-form';
+import { DocumentUploadForm } from '../../../../../components/forms/document-upload-form';
 import { TenantResponseForm } from '../../../../../components/forms/tenant-response-form';
+import { DocumentsTable } from '../../../../../components/documents/documents-table';
 import { MaintenanceTimeline } from '../../../../../components/maintenance/maintenance-timeline';
 import {
   Badge,
@@ -55,11 +57,21 @@ export default async function TenantMaintenanceDetailPage({
 
   if (error !== null || request === null) notFound();
 
-  const { data: events } = await supabase
-    .from('maintenance_events')
-    .select('id, kind, actor_label, body, visible_to_tenant, created_at')
-    .eq('request_id', id)
-    .order('created_at');
+  const [{ data: events }, { data: media }] = await Promise.all([
+    supabase
+      .from('maintenance_events')
+      .select('id, kind, actor_label, body, visible_to_tenant, created_at')
+      .eq('request_id', id)
+      .order('created_at'),
+    supabase
+      .from('documents')
+      .select(
+        'id, entity_type, entity_id, bucket, storage_path, title, file_name, document_type, mime_type, size_bytes, created_at, expiry_date, sensitive',
+      )
+      .eq('entity_type', 'maintenance_request')
+      .eq('entity_id', id)
+      .order('created_at'),
+  ]);
 
   return (
     <>
@@ -93,7 +105,9 @@ export default async function TenantMaintenanceDetailPage({
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-subtle">Target date</dt>
                   <dd className="text-text">
-                    {request.due_on === null ? 'The agency has not set one yet' : formatDate(request.due_on)}
+                    {request.due_on === null
+                      ? 'The agency has not set one yet'
+                      : formatDate(request.due_on)}
                   </dd>
                 </div>
                 <div>
@@ -126,11 +140,40 @@ export default async function TenantMaintenanceDetailPage({
               </div>
             </CardBody>
           </Card>
+
+          <Card>
+            <CardHeader
+              title="Photos and documents"
+              description="Attach a picture of the problem or a document the agency asked for."
+            />
+            <CardBody className="space-y-4">
+              <DocumentsTable documents={media ?? []} />
+              <div className="border-t border-border pt-4">
+                <DocumentUploadForm
+                  groups={[
+                    {
+                      type: 'maintenance_request',
+                      label: 'This repair',
+                      items: [
+                        {
+                          id: request.id,
+                          label: `Repair reported ${formatDate(request.reported_on)}`,
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              </div>
+            </CardBody>
+          </Card>
         </div>
 
         <div className="space-y-6">
           <Card>
-            <CardHeader title="Is it fixed?" description="Confirm the repair or tell the agency what is still wrong." />
+            <CardHeader
+              title="Is it fixed?"
+              description="Confirm the repair or tell the agency what is still wrong."
+            />
             <CardBody>
               <TenantResponseForm
                 requestId={request.id}

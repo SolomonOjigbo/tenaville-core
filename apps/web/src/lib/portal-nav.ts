@@ -75,6 +75,12 @@ export const tenantNav: readonly NavGroup[] = [
         group: 'portfolio',
       },
       {
+        href: '/tenancy/notifications',
+        label: 'Notifications',
+        permission: 'self.tenancy.read',
+        group: 'portfolio',
+      },
+      {
         href: '/tenancy/documents',
         label: 'Documents',
         permission: 'self.tenancy.read',

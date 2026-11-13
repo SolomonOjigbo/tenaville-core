@@ -6,7 +6,7 @@
 
 begin;
 
-select plan(26);
+select plan(29);
 
 select tests.as_owner();
 
@@ -277,6 +277,40 @@ select ok(
 select ok(
   exists (select 1 from public.audit_events where entity_type = 'remittance'),
   'ORG-5: remittances are audited'
+);
+
+-- ---------------------------------------------------------------------------
+-- Ledger evidence
+-- ---------------------------------------------------------------------------
+select tests.authenticate(:'owner'::uuid, 'ledger-owner@yabalets.ng');
+select id as rent_entry from public.landlord_ledger_entries
+where entry_kind = 'rent_collected'
+limit 1 \gset
+
+select lives_ok(
+  format($$insert into public.documents
+            (organisation_id, entity_type, entity_id, bucket, storage_path,
+             file_name, mime_type, size_bytes, document_type, title, uploaded_by)
+           values (%L, 'ledger_entry', %L, 'documents',
+                   'ledger/' || %L || '/receipt.pdf', 'receipt.pdf',
+                   'application/pdf', 5000, 'receipt', 'Bank receipt', %L)$$,
+         :'org'::uuid, :'rent_entry'::uuid, :'rent_entry'::uuid, :'owner'::uuid),
+  'a ledger entry can carry supporting evidence'
+);
+
+select is(
+  (select count(*)::int from public.documents
+   where entity_type = 'ledger_entry' and entity_id = :'rent_entry'::uuid),
+  1,
+  'the evidence is visible to staff who can see the ledger entry'
+);
+
+select tests.authenticate(:'outsider'::uuid, 'ledger-outsider@other.ng');
+
+select is(
+  (select count(*)::int from public.documents where entity_type = 'ledger_entry'),
+  0,
+  'LEDGER-5: ledger evidence is invisible outside the organisation'
 );
 
 select * from finish();

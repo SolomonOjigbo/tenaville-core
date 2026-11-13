@@ -7,6 +7,7 @@ import { safeRedirect } from '../../../lib/auth';
 const LINK_MESSAGES: Record<string, string> = {
   'link-expired': 'That link has expired or was already used. Request a new one below.',
   'link-invalid': 'That link was not valid. Request a new one below.',
+  'session-revoked': 'This device was signed out. Sign in again to continue.',
 };
 
 export default async function SignInPage({

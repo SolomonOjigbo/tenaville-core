@@ -3,8 +3,10 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { uploadDocument } from '@tenaville/core/documents';
 import { createLandlord } from '@tenaville/core/landlords';
 import { createProperty, createUnit } from '@tenaville/core/properties';
+import { createAdminClient } from '@tenaville/db';
 import { MoneyParseError, parseNaira, toTransport } from '@tenaville/money';
 
 import { errorMessage, fieldErrorsFrom } from '../lib/form-errors';
@@ -182,4 +184,70 @@ export const createUnitAction = async (
   revalidatePath(`/properties/${propertyId}`);
   revalidatePath('/properties');
   return { message: 'Unit added.' };
+};
+
+const PHOTO_TYPES = /^image\/(jpeg|png|webp|heic|heif)$/;
+
+export const uploadPropertyPhotoAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('property.write') && !viewer.access.can('maintenance.write')) {
+    return { error: 'Your role cannot add property photos.' };
+  }
+
+  const propertyId = field(form, 'propertyId').trim();
+  const file = form.get('file');
+  if (!(file instanceof File) || file.size === 0) {
+    return { fieldErrors: { file: 'Choose a photo to upload' } };
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    return { fieldErrors: { file: 'Photos must be 10 MB or smaller' } };
+  }
+  if (file.type !== '' && !PHOTO_TYPES.test(file.type)) {
+    return { fieldErrors: { file: 'Use a JPEG, PNG, WebP or HEIC photo' } };
+  }
+
+  const supabase = await supabaseForRequest();
+  const { data: property } = await supabase
+    .from('properties')
+    .select('id')
+    .eq('id', propertyId)
+    .maybeSingle();
+  if (property === null) return { error: 'That property could not be found.' };
+
+  let path: string;
+  try {
+    const uploaded = await uploadDocument(supabase, {
+      bucket: 'documents',
+      organisationId: viewer.organisationId,
+      entityType: 'property',
+      entityId: propertyId,
+      filename: file.name,
+      body: await file.arrayBuffer(),
+      contentType: file.type || 'application/octet-stream',
+    });
+    path = uploaded.path;
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not store the photo') };
+  }
+
+  const { error } = await supabase.from('property_photos').insert({
+    organisation_id: viewer.organisationId,
+    property_id: propertyId,
+    storage_path: path,
+    caption: optionalField(form, 'caption') ?? null,
+    uploaded_by: viewer.userId,
+  });
+
+  if (error !== null) {
+    const admin = createAdminClient('remove a property photo whose row was refused');
+    await admin.storage.from('documents').remove([path]);
+    return { error: errorMessage(error, 'Could not save the photo') };
+  }
+
+  revalidatePath(`/properties/${propertyId}`);
+  return { message: 'Photo added.' };
 };

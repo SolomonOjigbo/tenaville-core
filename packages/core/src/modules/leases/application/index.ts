@@ -4,6 +4,7 @@ export { createLease } from './create-lease';
 export { renewLease } from './renew-lease';
 export { recordDepositReceipt, proposeDeduction, approveDeduction } from './deposits';
 export { recordHandover } from './record-handover';
+export { settleDeposit, terminateLease } from './lifecycle';
 
 export {
   generateRentPeriods,
@@ -28,6 +29,8 @@ export {
   recordDepositReceiptSchema,
   proposeDeductionSchema,
   recordHandoverSchema,
+  settleDepositSchema,
+  terminateLeaseSchema,
   rentFrequencySchema,
   periodicRentFrequencySchema,
   leaseStatusSchema,
@@ -38,4 +41,6 @@ export {
   type RecordDepositReceiptInput,
   type ProposeDeductionInput,
   type RecordHandoverInput,
+  type SettleDepositInput,
+  type TerminateLeaseInput,
 } from '../schema/index';

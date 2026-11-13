@@ -5,7 +5,7 @@
 -- — which is the dispute this exists to prevent.
 
 begin;
-select plan(14);
+select plan(27);
 
 select tests.as_owner();
 
@@ -183,6 +183,132 @@ select is(
   (select count(*)::int from public.deposit_deductions),
   3,
   'LEASE-13: the tenant can see every deduction and reversal against their deposit'
+);
+
+-- --- settlement ------------------------------------------------------------
+-- The original 5,000,000 deduction was reversed; the 15,000,000 service
+-- charge remains approved. The refund is therefore 5,000,000, not 5,000,000
+-- plus the reversed claim.
+select tests.authenticate(:'aj_acct'::uuid, 'accounts@ajah.ng');
+
+select lives_ok(
+  format($$select public.settle_deposit(%L, 'refund', current_date, null, 'Move-out settled')$$,
+         :'deposit'::uuid),
+  'LEASE-13: a held deposit can be settled'
+);
+
+select is(
+  (select status::text from public.lease_deposits where id = :'deposit'::uuid),
+  'partially_refunded',
+  'LEASE-13: approved deductions make the outcome partially refunded'
+);
+
+select is(
+  (select refunded_amount_kobo from public.lease_deposits where id = :'deposit'::uuid),
+  5000000::bigint,
+  'LEASE-13: the refund excludes reversed deductions'
+);
+
+select tests.authenticate(:'aj_tenant'::uuid, 'tenant@ajah.ng');
+
+select is(
+  (select count(*)::int from public.notifications
+   where user_id = :'aj_tenant'::uuid and kind = 'deposit'),
+  1,
+  'LEASE-13: settlement notifies the tenant'
+);
+
+select tests.authenticate(:'aj_acct'::uuid, 'accounts@ajah.ng');
+
+select throws_ok(
+  format($$select public.settle_deposit(%L, 'refund', current_date, null, null)$$,
+         :'deposit'::uuid),
+  '23514',
+  null,
+  'LEASE-13: a settled deposit cannot be settled twice'
+);
+
+-- --- termination -----------------------------------------------------------
+select tests.authenticate(:'aj_owner'::uuid, 'owner@ajah.ng');
+
+select lives_ok(
+  format($$select public.terminate_lease(%L, current_date, 'Tenant ended the tenancy')$$,
+         :'lease'::uuid),
+  'LEASE-5: an active tenancy can be terminated with a reason'
+);
+
+select is(
+  (select terminated_on from public.leases where id = :'lease'::uuid),
+  current_date,
+  'LEASE-5: termination records the date on the lease'
+);
+
+select is(
+  (select termination_reason from public.leases where id = :'lease'::uuid),
+  'Tenant ended the tenancy',
+  'LEASE-5: termination records why it ended'
+);
+
+select tests.authenticate(:'aj_tenant'::uuid, 'tenant@ajah.ng');
+
+select is(
+  (select count(*)::int from public.notifications
+   where user_id = :'aj_tenant'::uuid and kind = 'tenancy'),
+  1,
+  'LEASE-5: termination notifies the tenant'
+);
+
+-- --- maintenance notices (MAINT-12) ----------------------------------------
+-- Fixture creation bypasses the staff property-assignment policy; the subject
+-- under test is the notification trigger, not who may file a repair.
+select tests.as_owner();
+
+insert into public.maintenance_requests
+  (organisation_id, property_id, unit_id, lease_id, tenant_id,
+   submitted_by, reported_on, category, description)
+values
+  (:'aj_org'::uuid, :'property'::uuid, :'unit'::uuid, :'lease'::uuid,
+   :'tenant'::uuid, 'staff', current_date, 'plumbing', 'Kitchen tap is leaking')
+returning id as request \gset
+
+select tests.authenticate(:'aj_tenant'::uuid, 'tenant@ajah.ng');
+
+select is(
+  (select count(*)::int from public.notifications
+   where user_id = :'aj_tenant'::uuid and kind = 'maintenance'),
+  1,
+  'MAINT-12: a tenant is notified when a repair is received'
+);
+
+select tests.as_owner();
+
+update public.maintenance_requests set status = 'acknowledged' where id = :'request'::uuid;
+
+select tests.authenticate(:'aj_tenant'::uuid, 'tenant@ajah.ng');
+
+select is(
+  (select count(*)::int from public.notifications
+   where user_id = :'aj_tenant'::uuid and kind = 'maintenance'),
+  2,
+  'MAINT-12: a status change notifies the tenant'
+);
+
+select lives_ok(
+  format($$insert into public.documents
+            (organisation_id, entity_type, entity_id, bucket, storage_path,
+             file_name, mime_type, size_bytes, document_type, title, uploaded_by)
+           values (%L, 'maintenance_request', %L, 'documents',
+                   'ajah/maintenance/' || %L || '/tap.jpg', 'tap.jpg',
+                   'image/jpeg', 1200, 'photo', 'Leaking tap', %L)$$,
+         :'aj_org'::uuid, :'request'::uuid, :'request'::uuid, :'aj_tenant'::uuid),
+  'MAINT-12: a tenant can attach a photo to their own repair'
+);
+
+select is(
+  (select count(*)::int from public.documents
+   where entity_type = 'maintenance_request' and entity_id = :'request'::uuid),
+  1,
+  'MAINT-12: the tenant photo is visible on their repair'
 );
 
 select * from finish();
