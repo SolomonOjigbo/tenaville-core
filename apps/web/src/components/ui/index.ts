@@ -8,6 +8,7 @@ export {
 export { Card, CardBody, CardHeader } from './card';
 export {
   Badge,
+  invoiceStatusTone,
   leaseStatusTone,
   maintenanceApprovalTone,
   maintenancePriorityTone,

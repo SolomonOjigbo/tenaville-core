@@ -45,7 +45,14 @@ describe('navigation', () => {
     // A caretaker logs repairs. A Ledger link they cannot open is worse than no
     // link: it implies access that the policy will then refuse.
     const nav = hrefs('caretaker');
-    expect(nav).toEqual(['/dashboard', '/properties', '/maintenance', '/messages', '/tasks']);
+    expect(nav).toEqual([
+      '/dashboard',
+      '/properties',
+      '/maintenance',
+      '/messages',
+      '/tasks',
+      '/documents',
+    ]);
     expect(nav).not.toContain('/ledger');
     expect(nav).not.toContain('/rent');
     expect(nav).not.toContain('/settings');

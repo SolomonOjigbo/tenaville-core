@@ -176,6 +176,16 @@ const TASK_PRIORITY_TONES: Record<string, BadgeTone> = {
 export const taskPriorityTone = (priority: string): BadgeTone =>
   TASK_PRIORITY_TONES[priority] ?? 'neutral';
 
+const INVOICE_STATUS_TONES: Record<string, BadgeTone> = {
+  draft: 'neutral',
+  open: 'warning',
+  paid: 'success',
+  void: 'neutral',
+};
+
+export const invoiceStatusTone = (status: string): BadgeTone =>
+  INVOICE_STATUS_TONES[status] ?? 'neutral';
+
 /** Human label for a status key. */
 export const statusLabel = (status: string): string =>
   status.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());

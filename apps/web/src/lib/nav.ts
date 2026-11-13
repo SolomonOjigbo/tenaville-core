@@ -52,6 +52,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   { href: '/messages', label: 'Messages', permission: 'comms.read', group: 'operations' },
   { href: '/tasks', label: 'Tasks', permission: 'comms.read', group: 'operations' },
+  { href: '/documents', label: 'Documents', permission: 'document.read', group: 'operations' },
   { href: '/crm', label: 'Leads', permission: 'lease.read', flag: 'crm', group: 'operations' },
   {
     href: '/screening',
@@ -66,6 +67,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
   {
     href: '/settings/plan',
     label: 'Plan and limits',
+    permission: 'org.billing.read',
+    group: 'admin',
+  },
+  {
+    href: '/settings/invoices',
+    label: 'Invoices',
     permission: 'org.billing.read',
     group: 'admin',
   },

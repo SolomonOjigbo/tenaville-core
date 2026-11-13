@@ -1,27 +1,39 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import {
+  billingInvoiceStatusLabel,
   describeAllowance,
   fetchEntitlements,
   fetchUsageWarnings,
+  invoiceBalanceKobo,
+  isInvoiceOverdue,
   percentageUsed,
   type Allowance,
 } from '@tenaville/core/billing';
+import { formatNaira, kobo } from '@tenaville/money';
 
 import { UsageBar } from '../../../../components/billing/usage-bar';
 import { UsageNotice } from '../../../../components/billing/usage-notice';
+import { GenerateInvoiceForm } from '../../../../components/forms/generate-invoice-form';
+import { PlanChangeForm } from '../../../../components/forms/plan-change-form';
 import {
   Badge,
   Card,
   CardBody,
   CardHeader,
   EmptyState,
+  LinkButton,
   Money,
   PageHeader,
   Table,
+  TableEmpty,
   Td,
   Th,
+  invoiceStatusTone,
 } from '../../../../components/ui';
+import { formatDate, monthBounds } from '../../../../lib/format';
+import { todayIso } from '../../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../../server/session';
 
 /**
@@ -56,10 +68,33 @@ export default async function PlanPage() {
   }
 
   const supabase = await supabaseForRequest();
-  const [entitlements, warnings] = await Promise.all([
-    fetchEntitlements(supabase, viewer.organisationId),
-    fetchUsageWarnings(supabase, viewer.organisationId),
-  ]);
+  const [entitlements, warnings, { data: subscription }, { data: plans }, { data: invoices }] =
+    await Promise.all([
+      fetchEntitlements(supabase, viewer.organisationId),
+      fetchUsageWarnings(supabase, viewer.organisationId),
+      supabase
+        .from('subscriptions')
+        .select(
+          'plan_id, status, trial_ends_on, current_period_start, current_period_end, units_included',
+        )
+        .eq('organisation_id', viewer.organisationId)
+        .maybeSingle(),
+      supabase
+        .from('plans')
+        .select(
+          'id, name, price_kobo, billing_period, unit_limit, property_limit, user_limit, sort_order',
+        )
+        .eq('is_public', true)
+        .order('sort_order'),
+      supabase
+        .from('billing_invoices')
+        .select(
+          'id, invoice_number, period_start, period_end, status, total_kobo, amount_paid_kobo, due_on, issued_on',
+        )
+        .eq('organisation_id', viewer.organisationId)
+        .order('issued_on', { ascending: false })
+        .limit(20),
+    ]);
 
   if (entitlements === null) {
     return (
@@ -94,6 +129,17 @@ export default async function PlanPage() {
       note: 'Staff seats, including unaccepted invitations. Tenant and landlord portal access is not a seat.',
     },
   ];
+
+  const planRows = plans ?? [];
+  const invoiceRows = invoices ?? [];
+  const canManage = viewer.access.can('org.billing.manage');
+  const month = monthBounds(todayIso());
+  const planChoices = planRows.map((plan) => ({
+    id: plan.id,
+    name: plan.name,
+    priceLabel: plan.price_kobo === 0 ? 'Free' : formatNaira(kobo(plan.price_kobo)),
+    allowanceLabel: `${plan.unit_limit === null ? 'Unlimited' : plan.unit_limit} units`,
+  }));
 
   return (
     <>
@@ -172,6 +218,116 @@ export default async function PlanPage() {
               </tr>
             </tbody>
           </Table>
+        </CardBody>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader
+          title="Subscription"
+          description="The plan in force, the trial if any, and the current billing period."
+        />
+        <CardBody className="space-y-6">
+          <dl className="grid gap-4 text-sm sm:grid-cols-3">
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-subtle">Plan</dt>
+              <dd className="mt-0.5 text-text">{entitlements.planName}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-subtle">Status</dt>
+              <dd className="mt-0.5 text-text">{subscription?.status ?? 'No subscription'}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-subtle">Trial ends</dt>
+              <dd className="mt-0.5 text-text">
+                {subscription?.trial_ends_on === null || subscription?.trial_ends_on === undefined
+                  ? '—'
+                  : formatDate(subscription.trial_ends_on)}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="border-t border-border pt-4">
+            <PlanChangeForm
+              plans={planChoices}
+              currentPlanId={subscription?.plan_id ?? entitlements.planId}
+              canManage={canManage}
+            />
+          </div>
+        </CardBody>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader
+          title="Invoices"
+          description="Issued in naira. An invoice freezes the plan price for its period."
+          action={
+            <LinkButton href="/settings/invoices" variant="secondary">
+              All invoices
+            </LinkButton>
+          }
+        />
+        <CardBody className="space-y-6">
+          <Table caption="Recent invoices">
+            <thead>
+              <tr>
+                <Th>Invoice</Th>
+                <Th>Period</Th>
+                <Th numeric>Total</Th>
+                <Th>Status</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoiceRows.length === 0 ? (
+                <TableEmpty colSpan={4} message="No invoices yet." />
+              ) : (
+                invoiceRows.slice(0, 5).map((invoice) => {
+                  const balance = invoiceBalanceKobo(invoice.total_kobo, invoice.amount_paid_kobo);
+                  return (
+                    <tr key={invoice.id}>
+                      <Td>
+                        <Link
+                          href={`/settings/invoices/${invoice.id}`}
+                          className="text-info-text underline-offset-2 hover:underline"
+                        >
+                          {invoice.invoice_number}
+                        </Link>
+                        <span className="block text-xs text-subtle">
+                          Issued {formatDate(invoice.issued_on)}
+                        </span>
+                      </Td>
+                      <Td>
+                        {formatDate(invoice.period_start)} – {formatDate(invoice.period_end)}
+                      </Td>
+                      <Td numeric>
+                        <Money kobo={String(invoice.total_kobo)} />
+                        {balance > 0n && (
+                          <span className="block text-xs text-muted">
+                            {formatNaira(kobo(balance))} outstanding
+                          </span>
+                        )}
+                      </Td>
+                      <Td>
+                        <Badge tone={invoiceStatusTone(invoice.status)}>
+                          {billingInvoiceStatusLabel(invoice.status)}
+                        </Badge>
+                        {isInvoiceOverdue(invoice.status, invoice.due_on, todayIso()) && (
+                          <span className="mt-1 block text-xs text-danger-text">Overdue</span>
+                        )}
+                      </Td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </Table>
+
+          <div className="border-t border-border pt-4">
+            <GenerateInvoiceForm
+              defaultStart={month.start}
+              defaultEnd={month.end}
+              canManage={canManage}
+            />
+          </div>
         </CardBody>
       </Card>
 

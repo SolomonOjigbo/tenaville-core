@@ -35,6 +35,12 @@ export const landlordNav: readonly NavGroup[] = [
         permission: 'maintenance.read',
         group: 'portfolio',
       },
+      {
+        href: '/portfolio/documents',
+        label: 'Documents',
+        permission: 'self.portfolio.read',
+        group: 'portfolio',
+      },
     ],
   },
 ];
@@ -65,6 +71,12 @@ export const tenantNav: readonly NavGroup[] = [
       {
         href: '/tenancy/messages',
         label: 'Messages',
+        permission: 'self.tenancy.read',
+        group: 'portfolio',
+      },
+      {
+        href: '/tenancy/documents',
+        label: 'Documents',
         permission: 'self.tenancy.read',
         group: 'portfolio',
       },
