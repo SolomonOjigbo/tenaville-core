@@ -1,7 +1,7 @@
 # Tenaville — Product-to-Market Launch Readiness
 
 **Review date:** 14 November 2026
-**Revision reviewed:** `38221f4` plus remaining P0 completion working tree
+**Revision reviewed:** `2d57d8c`
 **Review basis:** code, migrations, tests, CI, documentation and live QA checks against the hosted Supabase project. Migrations through `20261115100000` were applied to production, and the daily reminder cron job is active. No external penetration test, load test, accessibility audit or pilot has been run.
 
 ## Verdict
