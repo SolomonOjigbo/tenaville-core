@@ -26,6 +26,52 @@ const field = (form: FormData, name: string): string => {
 const isIsoDate = (value: string): boolean =>
   /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
 
+export const applyTenantCreditAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('payment.record')) {
+    return { error: 'Your role cannot apply tenant credit.' };
+  }
+
+  const creditId = field(form, 'creditId').trim();
+  const chargeId = field(form, 'chargeId').trim();
+  const amountText = field(form, 'amount').trim();
+  if (creditId === '' || chargeId === '') {
+    return { fieldErrors: { creditId: 'Choose the credit and the charge' } };
+  }
+
+  let amountKobo: number;
+  try {
+    amountKobo = toSafeNumber(parseNaira(amountText));
+  } catch (error) {
+    return {
+      fieldErrors: {
+        amount:
+          error instanceof MoneyParseError
+            ? 'Enter a naira amount, for example 50,000.00'
+            : 'That amount is too large to apply',
+      },
+    };
+  }
+  if (amountKobo <= 0) return { fieldErrors: { amount: 'Enter a positive amount' } };
+
+  const supabase = await supabaseForRequest();
+  const { error } = await supabase.rpc('apply_tenant_credit', {
+    p_credit_allocation_id: creditId,
+    p_charge_id: chargeId,
+    p_amount_kobo: amountKobo,
+  });
+
+  if (error !== null) return { error: `Could not apply the credit: ${error.message}` };
+
+  revalidatePath('/rent');
+  revalidatePath('/rent/credit');
+  return { message: 'Credit applied to the charge.' };
+};
+
 export const recordPaymentAction = async (
   _previous: ActionResult,
   form: FormData,

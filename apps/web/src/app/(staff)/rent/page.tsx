@@ -160,6 +160,9 @@ export default async function RentPage({
             <LinkButton href="/rent/cash-up" variant="secondary">
               Daily cash-up
             </LinkButton>
+            <LinkButton href="/rent/credit" variant="secondary">
+              Tenant credit
+            </LinkButton>
             <LinkButton href="/rent/receipts" variant="secondary">
               All receipts
             </LinkButton>

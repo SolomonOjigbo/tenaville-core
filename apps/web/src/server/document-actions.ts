@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { scanDocument } from '@tenaville/adapters/malware';
 import { uploadDocument, type DocumentEntity } from '@tenaville/core/documents';
 import { createAdminClient } from '@tenaville/db';
 
@@ -30,6 +31,7 @@ const ENTITY_TABLES = {
   maintenance_request: 'maintenance_requests',
   payment: 'payments',
   ledger_entry: 'landlord_ledger_entries',
+  screening_application: 'screening_applications',
 } as const satisfies Record<DocumentEntity, string>;
 
 const MAX_BYTES = 25 * 1024 * 1024;
@@ -83,6 +85,24 @@ export const uploadDocumentAction = async (
     return { error: 'That record could not be found, or is not yours to attach a document to.' };
   }
 
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const scan = await scanDocument({
+    filename: file.name,
+    mimeType: file.type || 'application/octet-stream',
+    bytes,
+  });
+
+  if (scan.status === 'infected' || scan.status === 'error') {
+    return {
+      fieldErrors: {
+        file:
+          scan.status === 'infected'
+            ? `The file was rejected by malware scanning: ${scan.detail}`
+            : `The file could not be scanned safely: ${scan.detail}`,
+      },
+    };
+  }
+
   let path: string;
   try {
     const uploaded = await uploadDocument(supabase, {
@@ -91,7 +111,7 @@ export const uploadDocumentAction = async (
       entityType,
       entityId,
       filename: file.name,
-      body: await file.arrayBuffer(),
+      body: bytes.buffer,
       contentType: file.type || 'application/octet-stream',
     });
     path = uploaded.path;
@@ -125,6 +145,10 @@ export const uploadDocumentAction = async (
     expiry_date: optionalField(form, 'expiryDate') ?? null,
     notes: optionalField(form, 'notes') ?? null,
     sensitive: checked(form, 'sensitive'),
+    scan_status: scan.status,
+    scan_engine: scan.engine,
+    scan_detail: scan.detail,
+    scanned_at: scan.status === 'unscanned' ? null : new Date().toISOString(),
     uploaded_by: viewer.userId,
   });
 

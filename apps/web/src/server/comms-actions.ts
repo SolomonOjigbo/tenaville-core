@@ -235,8 +235,9 @@ export const generateRemindersAction = async (): Promise<ActionResult> => {
   if (!viewer.access.isStaff) return { error: 'Only staff can generate reminders.' };
 
   const supabase = await supabaseForRequest();
-  const { data, error } = await supabase.rpc('generate_reminder_tasks', {
+  const { data, error } = await supabase.rpc('run_reminder_dispatch', {
     p_organisation_id: viewer.organisationId,
+    p_source: 'manual',
   });
 
   if (error !== null) return { error: errorMessage(error, 'Could not generate reminders') };
@@ -244,8 +245,53 @@ export const generateRemindersAction = async (): Promise<ActionResult> => {
   refreshComms();
   const created = typeof data === 'number' ? data : 0;
   return {
-    message: created === 0 ? 'No new reminders were needed.' : `${created} reminder tasks created.`,
+    message:
+      created === 0
+        ? 'No new reminders were needed.'
+        : `${created} reminder tasks created. Tenant messages were queued where an address exists.`,
   };
+};
+
+export const saveReminderSettingsAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('org.update')) {
+    return { error: 'Only an owner or administrator can change reminder settings.' };
+  }
+
+  const leaseDays = field(form, 'leaseAlertDays')
+    .split(',')
+    .map((value) => Number.parseInt(value.trim(), 10))
+    .filter((value) => Number.isInteger(value))
+    .filter((value, index, values) => values.indexOf(value) === index)
+    .sort((a, b) => b - a);
+  const rentDays = Number.parseInt(field(form, 'rentReminderDays').trim(), 10);
+
+  if (
+    leaseDays.length === 0 ||
+    leaseDays.length > 8 ||
+    leaseDays.some((days) => days < 1 || days > 365)
+  ) {
+    return { fieldErrors: { leaseAlertDays: 'Use 1–8 whole day counts between 1 and 365.' } };
+  }
+  if (!Number.isInteger(rentDays) || rentDays < 0 || rentDays > 365) {
+    return { fieldErrors: { rentReminderDays: 'Use a whole number between 0 and 365.' } };
+  }
+
+  const supabase = await supabaseForRequest();
+  const { error } = await supabase
+    .from('organisations')
+    .update({ lease_alert_days: leaseDays, rent_reminder_days: rentDays })
+    .eq('id', viewer.organisationId);
+
+  if (error !== null) return { error: errorMessage(error, 'Could not save reminder settings') };
+
+  revalidatePath('/settings/reminders');
+  revalidatePath('/tasks');
+  return { message: 'Reminder settings saved.' };
 };
 
 export const saveTemplateAction = async (

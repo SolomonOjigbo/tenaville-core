@@ -106,6 +106,9 @@ export default async function StatementPage({ params }: { params: Promise<{ id: 
             <LinkButton href={`/ledger/${statement.landlord_id}`} variant="secondary">
               Back to ledger
             </LinkButton>
+            <LinkButton href={`/api/v1/statements/${statement.id}/pdf`} variant="secondary">
+              Download PDF
+            </LinkButton>
             <PrintButton />
           </div>
         }

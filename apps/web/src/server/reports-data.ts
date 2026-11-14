@@ -23,3 +23,24 @@ export const fetchArrears = (supabase: ReportClient) =>
 
 export const fetchCollections = (supabase: ReportClient, since: string) =>
   supabase.from('payments').select('amount_kobo, paid_on').gte('paid_on', since);
+
+export const fetchOccupancy = (supabase: ReportClient) =>
+  supabase
+    .from('report_occupancy')
+    .select('property_id, property, unit_id, unit, status, lease_id, ends_on')
+    .order('property')
+    .order('unit');
+
+export const fetchLeaseExpiry = (supabase: ReportClient) =>
+  supabase
+    .from('report_lease_expiry')
+    .select('lease_id, reference, ends_on, days_to_expiry, rent_kobo, unit, property, tenant')
+    .order('ends_on');
+
+export const fetchMaintenanceQueue = (supabase: ReportClient) =>
+  supabase
+    .from('report_maintenance_queue')
+    .select(
+      'request_id, status, priority, urgency, category, reported_on, due_on, property, unit, days_overdue',
+    )
+    .order('due_on', { ascending: true, nullsFirst: false });

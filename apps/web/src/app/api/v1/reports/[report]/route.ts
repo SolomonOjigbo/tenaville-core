@@ -4,14 +4,27 @@ import {
   arrearsCsv,
   buildArrears,
   buildCollections,
+  buildLeaseExpiry,
+  buildMaintenanceQueue,
+  buildOccupancy,
   buildRentRoll,
   collectionsCsv,
+  leaseExpiryCsv,
+  maintenanceQueueCsv,
   monthsBack,
+  occupancyCsv,
   rentRollCsv,
 } from '../../../../../lib/reports';
 import { todayIso } from '../../../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../../../server/session';
-import { fetchArrears, fetchCollections, fetchRentRoll } from '../../../../../server/reports-data';
+import {
+  fetchArrears,
+  fetchCollections,
+  fetchLeaseExpiry,
+  fetchMaintenanceQueue,
+  fetchOccupancy,
+  fetchRentRoll,
+} from '../../../../../server/reports-data';
 
 /**
  * CSV exports for the reports screen.
@@ -56,6 +69,24 @@ export async function GET(_request: Request, { params }: { params: Promise<{ rep
       const { data } = await fetchCollections(supabase, monthsBack(today, 6));
       csv = collectionsCsv(buildCollections(data ?? []));
       filename = `collections-${today}.csv`;
+      break;
+    }
+    case 'occupancy': {
+      const { data } = await fetchOccupancy(supabase);
+      csv = occupancyCsv(buildOccupancy(data ?? []));
+      filename = `occupancy-${today}.csv`;
+      break;
+    }
+    case 'lease-expiry': {
+      const { data } = await fetchLeaseExpiry(supabase);
+      csv = leaseExpiryCsv(buildLeaseExpiry(data ?? []));
+      filename = `lease-expiry-${today}.csv`;
+      break;
+    }
+    case 'maintenance-queue': {
+      const { data } = await fetchMaintenanceQueue(supabase);
+      csv = maintenanceQueueCsv(buildMaintenanceQueue(data ?? []));
+      filename = `maintenance-queue-${today}.csv`;
       break;
     }
     default:

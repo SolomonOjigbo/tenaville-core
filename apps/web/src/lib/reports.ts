@@ -193,6 +193,163 @@ export const buildCollections = (rows: readonly CollectionSource[]): MonthSummar
   return [...byMonth.values()].sort((a, b) => b.month.localeCompare(a.month));
 };
 
+export interface OccupancySource {
+  readonly property_id: string;
+  readonly property: string;
+  readonly unit_id: string;
+  readonly unit: string;
+  readonly status: string;
+  readonly lease_id: string | null;
+  readonly ends_on: string | null;
+}
+
+export interface OccupancyRow {
+  readonly propertyId: string;
+  readonly property: string;
+  readonly total: number;
+  readonly occupied: number;
+  readonly vacant: number;
+  readonly reserved: number;
+  readonly underMaintenance: number;
+  readonly inactive: number;
+  readonly occupancyRate: number;
+}
+
+export const buildOccupancy = (rows: readonly OccupancySource[]): OccupancyRow[] => {
+  const byProperty = new Map<string, OccupancyRow>();
+
+  for (const row of rows) {
+    const current = byProperty.get(row.property_id) ?? {
+      propertyId: row.property_id,
+      property: row.property,
+      total: 0,
+      occupied: 0,
+      vacant: 0,
+      reserved: 0,
+      underMaintenance: 0,
+      inactive: 0,
+      occupancyRate: 0,
+    };
+
+    const occupied = row.status === 'occupied' || row.lease_id !== null;
+    byProperty.set(row.property_id, {
+      ...current,
+      total: current.total + 1,
+      occupied: current.occupied + (occupied ? 1 : 0),
+      vacant: current.vacant + (row.status === 'vacant' && !occupied ? 1 : 0),
+      reserved: current.reserved + (row.status === 'reserved' ? 1 : 0),
+      underMaintenance:
+        current.underMaintenance + (row.status === 'under_maintenance' ? 1 : 0),
+      inactive: current.inactive + (row.status === 'inactive' ? 1 : 0),
+    });
+  }
+
+  return [...byProperty.values()]
+    .map((row) => ({
+      ...row,
+      occupancyRate: row.total === 0 ? 0 : Math.round((row.occupied / row.total) * 100),
+    }))
+    .sort((a, b) => a.property.localeCompare(b.property));
+};
+
+export interface LeaseExpirySource {
+  readonly lease_id: string;
+  readonly reference: string | null;
+  readonly ends_on: string;
+  readonly days_to_expiry: number | null;
+  readonly rent_kobo: number;
+  readonly unit: string;
+  readonly property: string;
+  readonly tenant: string;
+}
+
+export interface LeaseExpiryRow {
+  readonly leaseId: string;
+  readonly reference: string;
+  readonly tenant: string;
+  readonly property: string;
+  readonly unit: string;
+  readonly endsOn: string;
+  readonly daysToExpiry: number;
+  readonly rentKobo: bigint;
+  readonly window: '0–30 days' | '31–60 days' | '61–90 days' | 'Over 90 days' | 'Expired';
+}
+
+const expiryWindow = (days: number): LeaseExpiryRow['window'] => {
+  if (days < 0) return 'Expired';
+  if (days <= 30) return '0–30 days';
+  if (days <= 60) return '31–60 days';
+  if (days <= 90) return '61–90 days';
+  return 'Over 90 days';
+};
+
+export const buildLeaseExpiry = (rows: readonly LeaseExpirySource[]): LeaseExpiryRow[] =>
+  rows
+    .map((row) => {
+      const daysToExpiry = row.days_to_expiry ?? 0;
+      return {
+        leaseId: row.lease_id,
+        reference: row.reference ?? 'No reference',
+        tenant: row.tenant,
+        property: row.property,
+        unit: row.unit,
+        endsOn: row.ends_on,
+        daysToExpiry,
+        rentKobo: BigInt(row.rent_kobo),
+        window: expiryWindow(daysToExpiry),
+      };
+    })
+    .sort((a, b) => a.daysToExpiry - b.daysToExpiry);
+
+export interface MaintenanceQueueSource {
+  readonly request_id: string;
+  readonly status: string;
+  readonly priority: string;
+  readonly urgency: string;
+  readonly category: string;
+  readonly reported_on: string;
+  readonly due_on: string | null;
+  readonly property: string;
+  readonly unit: string | null;
+  readonly days_overdue: number | null;
+}
+
+export interface MaintenanceQueueRow {
+  readonly requestId: string;
+  readonly status: string;
+  readonly priority: string;
+  readonly urgency: string;
+  readonly category: string;
+  readonly reportedOn: string;
+  readonly dueOn: string | null;
+  readonly property: string;
+  readonly unit: string;
+  readonly daysOverdue: number;
+  readonly overdue: boolean;
+}
+
+export const buildMaintenanceQueue = (
+  rows: readonly MaintenanceQueueSource[],
+): MaintenanceQueueRow[] =>
+  rows
+    .map((row) => {
+      const daysOverdue = Math.max(row.days_overdue ?? 0, 0);
+      return {
+        requestId: row.request_id,
+        status: row.status,
+        priority: row.priority,
+        urgency: row.urgency,
+        category: row.category,
+        reportedOn: row.reported_on,
+        dueOn: row.due_on,
+        property: row.property,
+        unit: row.unit ?? 'Whole property',
+        daysOverdue,
+        overdue: row.due_on !== null && daysOverdue > 0,
+      };
+    })
+    .sort((a, b) => b.daysOverdue - a.daysOverdue);
+
 /** The first day of the month `count` months before the month containing `today`. */
 export const monthsBack = (today: string, count: number): string => {
   const [yearString, monthString] = today.split('-');
@@ -265,5 +422,51 @@ export const collectionsCsv = (rows: readonly MonthSummary[]): string =>
       koboToDecimal(row.grossKobo),
       koboToDecimal(row.reversalKobo),
       koboToDecimal(row.netKobo),
+    ]),
+  );
+
+export const occupancyCsv = (rows: readonly OccupancyRow[]): string =>
+  toCsv(
+    ['Property', 'Units', 'Occupied', 'Vacant', 'Reserved', 'Under maintenance', 'Inactive', 'Occupancy %'],
+    rows.map((row) => [
+      row.property,
+      row.total,
+      row.occupied,
+      row.vacant,
+      row.reserved,
+      row.underMaintenance,
+      row.inactive,
+      row.occupancyRate,
+    ]),
+  );
+
+export const leaseExpiryCsv = (rows: readonly LeaseExpiryRow[]): string =>
+  toCsv(
+    ['Lease', 'Tenant', 'Property', 'Unit', 'Ends', 'Days to expiry', 'Window', 'Rent (NGN)'],
+    rows.map((row) => [
+      row.reference,
+      row.tenant,
+      row.property,
+      row.unit,
+      row.endsOn,
+      row.daysToExpiry,
+      row.window,
+      koboToDecimal(row.rentKobo),
+    ]),
+  );
+
+export const maintenanceQueueCsv = (rows: readonly MaintenanceQueueRow[]): string =>
+  toCsv(
+    ['Property', 'Unit', 'Category', 'Status', 'Priority', 'Urgency', 'Reported', 'Due', 'Days overdue'],
+    rows.map((row) => [
+      row.property,
+      row.unit,
+      row.category,
+      row.status,
+      row.priority,
+      row.urgency,
+      row.reportedOn,
+      row.dueOn ?? '',
+      row.daysOverdue,
     ]),
   );

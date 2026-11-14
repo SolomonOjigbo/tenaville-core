@@ -47,11 +47,12 @@ export default async function DocumentsPage() {
     { data: deductions },
     { data: handovers },
     { data: ledgerEntries },
+    { data: screeningApplications },
   ] = await Promise.all([
     supabase
       .from('documents')
       .select(
-        'id, entity_type, entity_id, bucket, storage_path, file_name, document_type, title, expiry_date, size_bytes, sensitive',
+        'id, entity_type, entity_id, bucket, storage_path, file_name, document_type, title, expiry_date, size_bytes, sensitive, scan_status',
       )
       .order('created_at', { ascending: false }),
     supabase.from('properties').select('id, name').order('name'),
@@ -80,6 +81,11 @@ export default async function DocumentsPage() {
       .from('landlord_ledger_entries')
       .select('id, entry_kind, occurred_on, description, landlord:landlords(display_name)')
       .order('occurred_on', { ascending: false })
+      .limit(100),
+    supabase
+      .from('screening_applications')
+      .select('id, applicant_name, status, created_at')
+      .order('created_at', { ascending: false })
       .limit(100),
   ]);
 
@@ -145,6 +151,14 @@ export default async function DocumentsPage() {
       items: (ledgerEntries ?? []).map((row) => ({
         id: row.id,
         label: `${row.landlord?.display_name ?? 'Landlord'} · ${row.occurred_on} · ${row.description}`,
+      })),
+    },
+    {
+      type: 'screening_application',
+      label: 'Screening application',
+      items: (screeningApplications ?? []).map((row) => ({
+        id: row.id,
+        label: `${row.applicant_name} · ${row.status.replace(/_/g, ' ')}`,
       })),
     },
   ].filter((group) => group.items.length > 0);

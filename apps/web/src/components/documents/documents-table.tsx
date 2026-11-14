@@ -17,6 +17,7 @@ export interface DocumentRow {
   readonly expiry_date: string | null;
   readonly size_bytes: number;
   readonly sensitive: boolean;
+  readonly scan_status?: string | null;
 }
 
 const EXPIRY_TONES = {
@@ -59,6 +60,12 @@ export const DocumentsTable = ({ documents }: { readonly documents: readonly Doc
                   <span className="text-text">
                     {document.title ?? document.file_name}
                     {document.sensitive && <Badge tone="warning">Sensitive</Badge>}
+                    {document.scan_status === 'unscanned' && (
+                      <Badge tone="warning">Not scanned</Badge>
+                    )}
+                    {document.scan_status === 'infected' && (
+                      <Badge tone="danger">Infected</Badge>
+                    )}
                   </span>
                   <span className="block text-xs text-subtle">
                     {document.document_type.replace(/_/g, ' ')}

@@ -114,7 +114,7 @@
         width: 174px;
         height: 174px;
         border-radius: 50%;
-        background: conic-gradient(#e5b25d 0 57%, rgba(255, 255, 255, 0.13) 57% 100%);
+        background: conic-gradient(#e5b25d 0 58%, rgba(255, 255, 255, 0.13) 58% 100%);
         display: grid;
         place-items: center;
         position: relative;
@@ -552,23 +552,27 @@
           open.
         </p>
         <div class="meta">
-          <span><strong>Review date</strong> 12 November 2026</span>
-          <span><strong>Revision</strong> <code>1620281</code> (P0 hardening)</span>
-          <span><strong>Basis</strong> Code, tests, CI, docs and hosted QA checks</span>
+          <span><strong>Review date</strong> 14 November 2026</span>
+          <span><strong>Revision</strong> <code>38221f4</code> plus completion working tree</span>
+          <span
+            ><strong>Basis</strong> Code, tests, CI, docs, hosted QA checks and active production
+            cron</span
+          >
         </div>
 
         <div class="verdict">
-          <div class="gauge" aria-label="57 out of 100">
-            <div class="num"><strong>57</strong><span>out of 100</span></div>
+          <div class="gauge" aria-label="58 out of 100">
+            <div class="num"><strong>58</strong><span>out of 100</span></div>
           </div>
           <div>
             <span class="tag">Not launch-ready</span>
             <h2>Strong web core. Incomplete launch programme.</h2>
             <p>
-              The six remaining P0 web gaps are closed and the data layer remains strong. Mobile is
-              absent, outbound messaging is simulated, subscription billing has no gateway,
-              migration/export is incomplete, and production operations, security assurance and
-              legal gates remain open.
+              Scheduled reminders queue tenant messages, credit can be applied to future charges,
+              receipts and statements generate PDFs, imports have rollback, and occupancy/expiry/
+              maintenance reports exist. Mobile is absent, outbound provider credentials are still
+              missing, subscription billing has no gateway, organisation export is missing, and
+              production operations, security assurance and legal gates remain open.
             </p>
           </div>
         </div>
@@ -613,9 +617,9 @@
               <td class="num">9</td>
               <td class="num">180</td>
               <td class="why">
-                70 page files cover portfolio, tenancy, money, ledger, statements, reports,
-                maintenance, portals, comms, documents, devices and billing. The six P0 web gaps are
-                implemented; the operational report set remains incomplete.
+                76 page files cover portfolio, tenancy, money, ledger, statements, reports,
+                maintenance, portals, comms, documents, devices, imports and billing. Operational
+                report views and the remaining P0 surfaces are implemented.
               </td>
             </tr>
             <tr>
@@ -627,9 +631,9 @@
               <td class="num">9</td>
               <td class="num">135</td>
               <td class="why">
-                RLS on every table, 24 pgTAP files and 474 assertions, append-only financial
-                records, gapless receipts, audited approvals, evidence links and private storage.
-                Independent security testing is missing.
+                RLS on every table, 26 pgTAP files and 530 assertions, append-only financial
+                records, gapless receipts, audited approvals, evidence links, credit application and
+                private storage. Independent security testing is missing.
               </td>
             </tr>
             <tr>
@@ -663,15 +667,16 @@
             <tr>
               <td>
                 <strong>Communications, reminders and tasks</strong>
-                <div class="scorebar"><i style="width: 40%"></i></div>
+                <div class="scorebar"><i style="width: 50%"></i></div>
               </td>
               <td class="num">10</td>
-              <td class="num">4</td>
-              <td class="num">40</td>
+              <td class="num">5</td>
+              <td class="num">50</td>
               <td class="why">
                 Templates, message log, delivery attempts, fallback order, task queue, preferences,
-                reminder generation and in-app tenant notices exist. The only outbound provider is a
-                logging stub; reminders are manual; no inbound queue or rate limits.
+                configurable lease/rent reminders, daily cron dispatch, queued tenant messages and
+                in-app notices exist. The outbound provider is still a logging stub; no inbound
+                queue or rate limits.
               </td>
             </tr>
             <tr>
@@ -697,8 +702,8 @@
               <td class="num">3</td>
               <td class="num">15</td>
               <td class="why">
-                Property/unit import framework exists in the backend. No import UI, tenant/lease
-                import, opening balances, dry-run/rollback UI or organisation export.
+                Import UI covers properties, tenant/leases and opening balances with dry-run and
+                rollback. Organisation-wide data export remains absent.
               </td>
             </tr>
             <tr>
@@ -747,8 +752,8 @@
           <tfoot>
             <tr>
               <td colspan="3">Weighted total</td>
-              <td class="num"><span class="total-score">57</span></td>
-              <td class="why">570 / 1000. Not launch-ready.</td>
+              <td class="num"><span class="total-score">58</span></td>
+              <td class="why">580 / 1000. Not launch-ready.</td>
             </tr>
           </tfoot>
         </table>
@@ -777,9 +782,9 @@
             <div>
               <h4>Outbound messaging is not real</h4>
               <p>
-                The logging provider reports success without contacting WhatsApp, SMS or email. The
-                log can say “sent” when nobody was messaged. No scheduler runs rent, lease or
-                maintenance reminders.
+                The logging provider reports success without contacting WhatsApp, SMS or email.
+                Reminders are scheduled and tenant messages are queued, but the queue has no real
+                provider behind it, so the log can say “sent” when nobody was messaged.
               </p>
             </div>
           </div>
@@ -796,10 +801,11 @@
           <div class="blocker">
             <div class="n">4</div>
             <div>
-              <h4>Migration, opening balances and export are missing</h4>
+              <h4>Organisation-wide export is missing</h4>
               <p>
-                No tenant/lease import, cutover balances, dry-run/rollback or organisation-wide
-                export. Pilot exit criteria require reconciliation and export.
+                Property, tenant/lease and opening-balance imports now have dry-run/rollback UI, but
+                there is no organisation data export. Pilot exit criteria require staff to export
+                organisation data.
               </p>
             </div>
           </div>
@@ -971,15 +977,55 @@
           <li class="check" data-status="done">
             <span class="box"></span
             ><span
-              ><span class="id">LEDGER / MAINT</span> Ledger evidence attachments and maintenance
-              photo/media with in-app tenant notices</span
+              ><span class="id">LEDGER / MAINT</span> Ledger evidence attachments, maintenance
+              media, in-app notices and queued outbound tenant messages</span
             ><span class="badge done">Done</span>
           </li>
           <li class="check" data-status="done">
             <span class="box"></span
             ><span
-              ><span class="id">QA</span> 24 database test files / 474 assertions, 153 core tests,
-              103 web tests and a passing production build</span
+              ><span class="id">PROP-1 / PROP-2</span> Property/unit edit, facilities and guarded
+              archive</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">PROP-4 / MIG</span> Import UI, tenant/lease import, opening
+              balances, dry-run and rollback</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">LEASE-6 / RENT-6</span> Configurable 90/60/30 alerts, rent reminders
+              and daily scheduled dispatch</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span><span class="id">RENT-14</span> Applying tenant credit to a future charge</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">AN-1</span> Occupancy, lease-expiry and maintenance-queue report
+              views with CSV exports</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">DOC-1 / DOC-3</span> Screening-application attachment and generated
+              receipt/statement PDFs</span
+            ><span class="badge done">Done</span>
+          </li>
+          <li class="check" data-status="done">
+            <span class="box"></span
+            ><span
+              ><span class="id">QA</span> 26 database test files / 530 assertions, 165 core tests,
+              108 web tests, 3 adapter tests and a passing production build</span
             ><span class="badge done">Done</span>
           </li>
         </ul>
@@ -996,55 +1042,22 @@
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">PROP-1 / PROP-2</span> Facilities editing, property/unit edit and
-              archive</span
+              ><span class="id">MAINT-2 / 10 / 12</span> Contextual media, in-app notices and queued
+              outbound messages exist; actual provider delivery is still simulated</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">PROP-4 / MIG</span> Import screen, tenant/lease import, opening
-              balances and dry-run/rollback</span
+              ><span class="id">COMMS-2 / 6 / 8</span> Real providers, rate limits, template
+              approval sync and inbound inbox</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
             <span class="box"></span
             ><span
-              ><span class="id">LEASE-6 / RENT-6</span> Configurable 90/60/30-day alerts and
-              scheduled reminder dispatch</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span><span class="id">RENT-14</span> Applying tenant credit to a future charge</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">MAINT-2 / 10 / 12</span> Contextual maintenance media exists and
-              in-app tenant notices are sent; outbound provider delivery is still simulated</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">AN-1</span> Occupancy, lease-expiry and maintenance-queue report
-              views</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">COMMS-2 / 6 / 8</span> Real providers, rate limits, scheduled sends,
-              template approval sync and inbound inbox</span
-            ><span class="badge partial">Partial</span>
-          </li>
-          <li class="check" data-status="partial">
-            <span class="box"></span
-            ><span
-              ><span class="id">DOC-1 / 3 / 6</span> Screening-application attachment, generated
-              PDFs and malware scanning</span
+              ><span class="id">DOC-6</span> Scan state and built-in EICAR/executable checks exist;
+              no external malware scanner is configured in production</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -1052,6 +1065,11 @@
             ><span
               ><span class="id">BILL-2 / 4</span> Gateway checkout, subscription receipts, dunning
               and export preservation</span
+            ><span class="badge partial">Partial</span>
+          </li>
+          <li class="check" data-status="partial">
+            <span class="box"></span
+            ><span><span class="id">MIG-5</span> Organisation-wide data export</span
             ><span class="badge partial">Partial</span>
           </li>
           <li class="check" data-status="partial">
@@ -1088,22 +1106,13 @@
           <li class="check" data-status="todo">
             <span class="box"></span
             ><span
-              ><span class="id">JOBS</span> Scheduled background jobs for rent, lease, maintenance
-              and document reminders</span
-            ><span class="badge todo">Not done</span>
-          </li>
-          <li class="check" data-status="todo">
-            <span class="box"></span
-            ><span
               ><span class="id">BILL-2</span> Subscription payment gateway/checkout, gateway
               receipts and dunning</span
             ><span class="badge todo">Not done</span>
           </li>
           <li class="check" data-status="todo">
             <span class="box"></span
-            ><span
-              ><span class="id">MIG / BILL-4</span> Tenant/lease import, opening balances, import
-              dry-run/rollback and full organisation export</span
+            ><span><span class="id">MIG-5 / BILL-4</span> Full organisation data export</span
             ><span class="badge todo">Not done</span>
           </li>
           <li class="check" data-status="todo">
@@ -1159,7 +1168,7 @@
             <tr>
               <td>Core records maintained without spreadsheets</td>
               <td><span class="badge partial">Partial</span></td>
-              <td>Web flows exist; import/opening balances absent</td>
+              <td>Web flows and imports exist; no pilot month-end</td>
             </tr>
             <tr>
               <td>Statements accepted without material correction</td>
@@ -1198,8 +1207,8 @@
             </tr>
             <tr>
               <td>Opening balances reconcile at cutover</td>
-              <td><span class="badge todo">Not met</span></td>
-              <td>No opening-balance import</td>
+              <td><span class="badge partial">Partial</span></td>
+              <td>Import implemented; not proven in a pilot</td>
             </tr>
             <tr>
               <td>Receipt numbering has no gaps, duplicates or reuse</td>
@@ -1226,13 +1235,13 @@
           <div class="card">
             <h4>Reviewed</h4>
             <p>
-              24 SQL migrations · 24 pgTAP files / 474 assertions · 70 web pages · two API route
-              handlers · 153 core tests · 103 web tests · CI quality and isolation gates ·
-              compliance register · operations README · PRD and R1 exit criteria · live hosted
-              checks across rent, statements, maintenance, comms, documents, billing and P0
-              hardening. Production migration ledger includes
-              <code>20261104100000_p0_hardening</code>; notifications, both lifecycle RPCs and the
-              device-session columns were verified in production.
+              26 SQL migrations · 26 pgTAP files / 530 assertions · 76 web pages · six API route
+              handlers · 165 core tests · 108 web tests · 3 adapter tests · CI quality and isolation
+              gates · compliance register · operations README · PRD and R1 exit criteria · live
+              hosted checks across rent, statements, maintenance, comms, documents, billing, imports
+              and P0 hardening. Production migration ledger includes
+              <code>20261115100000</code>; the reminder cron job, tenant credit, report views,
+              screening documents and scan metadata were verified in production.
             </p>
           </div>
           <div class="card" style="background: var(--amber-soft); border-color: #e4c99d">
@@ -1256,16 +1265,17 @@
               pilot with contractual scope removal. Do not claim R1 complete while mobile is absent.
             </li>
             <li>
-              <strong>Make messaging real.</strong> Wire production providers, add scheduled
-              reminder jobs, label logging honestly until then, and enforce consent/rate limits.
+              <strong>Make messaging real.</strong> Wire production providers, label queued/logging
+              delivery honestly until then, and enforce consent/rate limits. Scheduled jobs and
+              queues already exist.
             </li>
             <li>
               <strong>Close billing.</strong> Add a licensed Nigerian subscription payment path and
               gateway receipts, or launch invoice-only by explicit commercial decision.
             </li>
             <li>
-              <strong>Close migration and export.</strong> Tenant/lease import, opening balances,
-              dry-run/rollback and organisation export are pilot exit criteria.
+              <strong>Close organisation export.</strong> Imports and opening balances exist;
+              organisation-wide export remains a pilot exit criterion.
             </li>
             <li>
               <strong>Make production operable.</strong> Staging, deploy pipeline, error/uptime/job
@@ -1297,7 +1307,7 @@
           accepted as pilot exceptions.
         </p>
         <p>
-          Review at <code>3e15e42</code> · 13 November 2026 · Scores are a launch-readiness
+          Review at <code>38221f4</code> · 14 November 2026 · Scores are a launch-readiness
           judgement, not a security certification or legal opinion.
         </p>
       </div>

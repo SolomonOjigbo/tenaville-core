@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import {
+  Badge,
   Card,
   CardBody,
   CardHeader,
@@ -18,6 +19,9 @@ import {
 import {
   buildArrears,
   buildCollections,
+  buildLeaseExpiry,
+  buildMaintenanceQueue,
+  buildOccupancy,
   buildRentRoll,
   monthsBack,
   summariseArrears,
@@ -26,7 +30,14 @@ import {
 import { formatDate } from '../../../lib/format';
 import { todayIso } from '../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../server/session';
-import { fetchArrears, fetchCollections, fetchRentRoll } from '../../../server/reports-data';
+import {
+  fetchArrears,
+  fetchCollections,
+  fetchLeaseExpiry,
+  fetchMaintenanceQueue,
+  fetchOccupancy,
+  fetchRentRoll,
+} from '../../../server/reports-data';
 
 /**
  * Reports (AN-1, AN-4, RENT-5).
@@ -60,16 +71,29 @@ export default async function ReportsPage() {
   const today = todayIso();
   const since = monthsBack(today, 6);
 
-  const [rentRollData, arrearsData, collectionsData] = await Promise.all([
+  const [
+    rentRollData,
+    arrearsData,
+    collectionsData,
+    occupancyData,
+    expiryData,
+    maintenanceData,
+  ] = await Promise.all([
     fetchRentRoll(supabase),
     fetchArrears(supabase),
     fetchCollections(supabase, since),
+    fetchOccupancy(supabase),
+    fetchLeaseExpiry(supabase),
+    fetchMaintenanceQueue(supabase),
   ]);
 
   const rentRoll = buildRentRoll(rentRollData.data ?? []);
   const arrears = buildArrears(arrearsData.data ?? [], today);
   const buckets = summariseArrears(arrears);
   const collections = buildCollections(collectionsData.data ?? []);
+  const occupancy = buildOccupancy(occupancyData.data ?? []);
+  const expiring = buildLeaseExpiry(expiryData.data ?? []);
+  const maintenance = buildMaintenanceQueue(maintenanceData.data ?? []);
 
   const totalOutstanding = arrears.reduce((total, row) => total + row.outstandingKobo, 0n);
   const totalNet = collections.reduce((total, month) => total + month.netKobo, 0n);
@@ -227,6 +251,159 @@ export default async function ReportsPage() {
                     </Td>
                     <Td numeric>
                       <Money kobo={month.netKobo.toString()} />
+                    </Td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </CardBody>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader
+          title="Occupancy"
+          description="Units by property and occupancy rate. Archived units and properties are excluded."
+          action={
+            <LinkButton href="/api/v1/reports/occupancy" variant="secondary" size="sm">
+              Export CSV
+            </LinkButton>
+          }
+        />
+        <CardBody className="p-0">
+          <Table caption="Occupancy by property">
+            <thead>
+              <tr>
+                <Th>Property</Th>
+                <Th numeric>Units</Th>
+                <Th numeric>Occupied</Th>
+                <Th numeric>Vacant</Th>
+                <Th numeric>Reserved</Th>
+                <Th numeric>Under repair</Th>
+                <Th numeric>Occupancy</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {occupancy.length === 0 ? (
+                <TableEmpty colSpan={7} message="No active units." />
+              ) : (
+                occupancy.map((row) => (
+                  <tr key={row.propertyId}>
+                    <Td>{row.property}</Td>
+                    <Td numeric>{row.total}</Td>
+                    <Td numeric>{row.occupied}</Td>
+                    <Td numeric>{row.vacant}</Td>
+                    <Td numeric>{row.reserved}</Td>
+                    <Td numeric>{row.underMaintenance}</Td>
+                    <Td numeric>{row.occupancyRate}%</Td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </CardBody>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader
+          title="Lease expiry"
+          description="Active tenancies by time to expiry, soonest first."
+          action={
+            <LinkButton href="/api/v1/reports/lease-expiry" variant="secondary" size="sm">
+              Export CSV
+            </LinkButton>
+          }
+        />
+        <CardBody className="p-0">
+          <Table caption="Lease expiry">
+            <thead>
+              <tr>
+                <Th>Tenant</Th>
+                <Th>Tenancy</Th>
+                <Th>Property</Th>
+                <Th>Ends</Th>
+                <Th>Window</Th>
+                <Th numeric>Rent</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {expiring.length === 0 ? (
+                <TableEmpty colSpan={6} message="No active tenancies." />
+              ) : (
+                expiring.map((row) => (
+                  <tr key={row.leaseId}>
+                    <Td>{row.tenant}</Td>
+                    <Td>{row.reference}</Td>
+                    <Td>
+                      {row.property}
+                      <span className="block text-xs text-subtle">{row.unit}</span>
+                    </Td>
+                    <Td>
+                      {formatDate(row.endsOn)}
+                      <span className="block text-xs text-subtle">
+                        {row.daysToExpiry < 0
+                          ? `${Math.abs(row.daysToExpiry)} days ago`
+                          : `${row.daysToExpiry} days`}
+                      </span>
+                    </Td>
+                    <Td>
+                      <Badge tone={row.daysToExpiry <= 30 ? 'warning' : 'neutral'}>
+                        {row.window}
+                      </Badge>
+                    </Td>
+                    <Td numeric>
+                      <Money kobo={row.rentKobo.toString()} />
+                    </Td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </CardBody>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader
+          title="Maintenance queue"
+          description="Unclosed repairs, most overdue first."
+          action={
+            <LinkButton href="/api/v1/reports/maintenance-queue" variant="secondary" size="sm">
+              Export CSV
+            </LinkButton>
+          }
+        />
+        <CardBody className="p-0">
+          <Table caption="Maintenance queue">
+            <thead>
+              <tr>
+                <Th>Property</Th>
+                <Th>Category</Th>
+                <Th>Status</Th>
+                <Th>Priority</Th>
+                <Th>Due</Th>
+                <Th numeric>Days overdue</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {maintenance.length === 0 ? (
+                <TableEmpty colSpan={6} message="No open repairs." />
+              ) : (
+                maintenance.map((row) => (
+                  <tr key={row.requestId}>
+                    <Td>
+                      {row.property}
+                      <span className="block text-xs text-subtle">{row.unit}</span>
+                    </Td>
+                    <Td>{statusLabel(row.category)}</Td>
+                    <Td>{statusLabel(row.status)}</Td>
+                    <Td>{statusLabel(row.priority)}</Td>
+                    <Td>{row.dueOn === null ? 'Not set' : formatDate(row.dueOn)}</Td>
+                    <Td numeric>
+                      {row.overdue ? (
+                        <span className="text-danger-text">{row.daysOverdue}</span>
+                      ) : (
+                        '—'
+                      )}
                     </Td>
                   </tr>
                 ))

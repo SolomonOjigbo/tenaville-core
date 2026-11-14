@@ -5,10 +5,16 @@ import {
   bucketForDays,
   buildArrears,
   buildCollections,
+  buildLeaseExpiry,
+  buildMaintenanceQueue,
+  buildOccupancy,
   buildRentRoll,
   collectionsCsv,
+  leaseExpiryCsv,
+  maintenanceQueueCsv,
   koboToDecimal,
   monthsBack,
+  occupancyCsv,
   rentRollCsv,
   summariseArrears,
   toCsv,
@@ -149,6 +155,58 @@ describe('buildCollections', () => {
       reversalKobo: -5_000_000n,
       netKobo: 10_000_000n,
     });
+  });
+});
+
+describe('AN-1 report views', () => {
+  it('summarises occupancy by property and calculates the rate', () => {
+    const rows = buildOccupancy([
+      { property_id: 'p1', property: 'Court', unit_id: 'u1', unit: '1', status: 'occupied', lease_id: 'l1', ends_on: '2027-01-01' },
+      { property_id: 'p1', property: 'Court', unit_id: 'u2', unit: '2', status: 'vacant', lease_id: null, ends_on: null },
+      { property_id: 'p1', property: 'Court', unit_id: 'u3', unit: '3', status: 'under_maintenance', lease_id: null, ends_on: null },
+    ]);
+    expect(rows[0]).toMatchObject({
+      total: 3,
+      occupied: 1,
+      vacant: 1,
+      underMaintenance: 1,
+      occupancyRate: 33,
+    });
+  });
+
+  it('buckets lease expiry and maintenance overdue work', () => {
+    const expiry = buildLeaseExpiry([
+      { lease_id: 'l1', reference: 'L1', ends_on: '2026-12-01', days_to_expiry: 17, rent_kobo: 100, unit: '1', property: 'Court', tenant: 'T' },
+      { lease_id: 'l2', reference: 'L2', ends_on: '2027-03-01', days_to_expiry: 107, rent_kobo: 100, unit: '2', property: 'Court', tenant: 'U' },
+    ]);
+    expect(expiry.map((row) => row.window)).toEqual(['0–30 days', 'Over 90 days']);
+
+    const queue = buildMaintenanceQueue([
+      { request_id: 'm1', status: 'assigned', priority: 'high', urgency: 'normal', category: 'plumbing', reported_on: '2026-11-01', due_on: '2026-11-10', property: 'Court', unit: '1', days_overdue: 5 },
+    ]);
+    expect(queue[0]?.overdue).toBe(true);
+    expect(queue[0]?.daysOverdue).toBe(5);
+  });
+
+  it('exports the new report sheets', () => {
+    const occupancy = buildOccupancy([
+      { property_id: 'p1', property: 'Court', unit_id: 'u1', unit: '1', status: 'occupied', lease_id: 'l1', ends_on: '2027-01-01' },
+    ]);
+    expect(occupancyCsv(occupancy)).toContain('Occupancy %');
+    expect(
+      leaseExpiryCsv(
+        buildLeaseExpiry([
+          { lease_id: 'l1', reference: 'L1', ends_on: '2026-12-01', days_to_expiry: 17, rent_kobo: 100, unit: '1', property: 'Court', tenant: 'T' },
+        ]),
+      ),
+    ).toContain('Days to expiry');
+    expect(
+      maintenanceQueueCsv(
+        buildMaintenanceQueue([
+          { request_id: 'm1', status: 'assigned', priority: 'high', urgency: 'normal', category: 'plumbing', reported_on: '2026-11-01', due_on: '2026-11-10', property: 'Court', unit: null, days_overdue: 5 },
+        ]),
+      ),
+    ).toContain('Days overdue');
   });
 });
 

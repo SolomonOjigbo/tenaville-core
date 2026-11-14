@@ -29,7 +29,8 @@ export type DocumentEntity =
   | 'handover'
   | 'maintenance_request'
   | 'payment'
-  | 'ledger_entry';
+  | 'ledger_entry'
+  | 'screening_application';
 
 export class StoragePathError extends Error {
   constructor(message: string) {

@@ -35,6 +35,7 @@ insert into audit_exempt values
   ('messages',          'the communications log itself; templates and preferences are audited'),
   ('message_deliveries','append-only provider attempts belonging to the audited message log'),
   ('notifications',     'per-user delivery of an event already recorded on the audited lease or maintenance timeline'),
+  ('reminder_runs',     'operational dispatch log; the tasks and messages it creates are separately auditable'),
   ('billing_invoice_counters', 'internal invoice-number allocator; the invoice that consumes a number is audited'),
   ('receipt_counters',  'internal gapless allocator; the receipt that consumes a number is audited');
 

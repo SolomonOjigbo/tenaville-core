@@ -53,6 +53,7 @@ const ENTITY_TABLES = {
   maintenance_request: 'maintenance_requests',
   payment: 'payments',
   ledger_entry: 'landlord_ledger_entries',
+  screening_application: 'screening_applications',
 } as const satisfies Record<DocumentEntity, string>;
 
 export class DocumentAccessError extends Error {

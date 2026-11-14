@@ -110,6 +110,9 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
             <LinkButton href="/rent" variant="secondary">
               Back to rent
             </LinkButton>
+            <LinkButton href={`/api/v1/receipts/${receipt.id}/pdf`} variant="secondary">
+              Download PDF
+            </LinkButton>
             <PrintButton />
           </div>
         }
