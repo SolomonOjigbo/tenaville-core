@@ -79,6 +79,15 @@ export const renewLeaseSchema = z.object({
 
 export type RenewLeaseInput = z.infer<typeof renewLeaseSchema>;
 
+export const createDepositSchema = z.object({
+  organisationId: z.string().uuid(),
+  leaseId: z.string().uuid(),
+  amountKobo: koboString,
+  custodian: depositCustodianSchema.default('agency'),
+});
+
+export type CreateDepositInput = z.infer<typeof createDepositSchema>;
+
 export const recordDepositReceiptSchema = z.object({
   depositId: z.string().uuid(),
   receivedOn: z.string().date(),

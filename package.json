@@ -24,7 +24,8 @@
     "db:lint": "supabase db lint",
     "docs:reqs": "node tools/check-traceability.mjs && node tools/check-backlog.mjs",
     "db:verify": "bash tools/db-verify.sh",
-    "docs:backlog": "node tools/check-backlog.mjs"
+    "docs:backlog": "node tools/check-backlog.mjs",
+    "seed:demo": "pnpm --filter @tenaville/seed seed"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",

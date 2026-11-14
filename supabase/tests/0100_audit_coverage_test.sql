@@ -20,6 +20,7 @@ insert into audit_exempt values
   ('plan_roles',        'as plans: which roles a plan may assign. A *membership* role change is audited, which is the act ORG-5 names'),
   ('users',             'a person editing their own name or phone; ORG-5 does not name it'),
   ('import_rows',       'rows within a batch; the batch itself is audited'),
+  ('import_batch_entities', 'rollback index of entities within an audited import batch'),
   ('device_sessions',   'ORG-9: revocation auditing arrives with the device list API (TV-006)'),
   ('branches',          'ORG-6 is R2; audit when branch features ship'),
   ('subscriptions',     'changed only by verified billing events; auditing arrives with BILL-2'),

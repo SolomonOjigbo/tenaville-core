@@ -2,7 +2,12 @@
 export { createTenant } from './create-tenant';
 export { createLease } from './create-lease';
 export { renewLease } from './renew-lease';
-export { recordDepositReceipt, proposeDeduction, approveDeduction } from './deposits';
+export {
+  createDeposit,
+  recordDepositReceipt,
+  proposeDeduction,
+  approveDeduction,
+} from './deposits';
 export { recordHandover } from './record-handover';
 export { settleDeposit, terminateLease } from './lifecycle';
 
@@ -26,6 +31,7 @@ export {
   createTenantSchema,
   createLeaseSchema,
   renewLeaseSchema,
+  createDepositSchema,
   recordDepositReceiptSchema,
   proposeDeductionSchema,
   recordHandoverSchema,
@@ -37,6 +43,7 @@ export {
   depositCustodianSchema,
   type CreateTenantInput,
   type CreateLeaseInput,
+  type CreateDepositInput,
   type RenewLeaseInput,
   type RecordDepositReceiptInput,
   type ProposeDeductionInput,

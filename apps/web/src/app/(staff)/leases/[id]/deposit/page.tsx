@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
 import { formatNaira, fromTransport } from '@tenaville/money';
@@ -20,10 +19,13 @@ import {
 } from '../../../../../components/ui';
 import {
   ApproveDeductionForm,
+  CreateDepositForm,
   ProposeDeductionForm,
   RecordDepositReceiptForm,
   SettleDepositForm,
 } from '../../../../../components/forms/deposit-forms';
+import { DocumentUploadForm } from '../../../../../components/forms/document-upload-form';
+import { DocumentsTable } from '../../../../../components/documents/documents-table';
 import { formatDate } from '../../../../../lib/format';
 import { todayIso } from '../../../../../lib/payments';
 import { currentViewer, supabaseForRequest } from '../../../../../server/session';
@@ -94,6 +96,18 @@ export default async function LeaseDepositPage({ params }: { params: Promise<{ i
     .reduce((total, deduction) => total + BigInt(deduction.amount_kobo), 0n);
   const tenant = lease.lease_parties.find((party) => party.role === 'tenant')?.tenants ?? null;
   const canManage = viewer.access.can('lease.write') || viewer.access.can('payment.record');
+  const deductionIds = deductions.map((deduction) => deduction.id);
+  const { data: evidence } =
+    deductionIds.length === 0
+      ? { data: [] as const }
+      : await supabase
+          .from('documents')
+          .select(
+            'id, entity_type, entity_id, bucket, storage_path, title, file_name, document_type, mime_type, size_bytes, created_at, expiry_date, sensitive',
+          )
+          .eq('entity_type', 'deposit_deduction')
+          .in('entity_id', deductionIds)
+          .order('created_at', { ascending: false });
   const leaseOptions = (leasesResult.data ?? []).map((candidate) => ({
     id: candidate.id,
     label: `${candidate.reference ?? 'Lease'} · ${candidate.units?.properties?.name ?? 'Property'} · ${candidate.units?.label ?? 'Unit'}`,
@@ -113,15 +127,25 @@ export default async function LeaseDepositPage({ params }: { params: Promise<{ i
 
       {deposit === null ? (
         <Card>
-          <EmptyState
+          <CardHeader
             title="No deposit recorded"
-            description="A deposit can only be recorded with the tenancy. Recreate the lease with the deposit details if one is held."
-            action={
-              <LinkButton href={`/leases/${lease.id}`} variant="secondary">
-                Back to tenancy
-              </LinkButton>
-            }
+            description="Add the caution deposit now if one is held for this tenancy."
           />
+          <CardBody>
+            {canManage ? (
+              <CreateDepositForm leaseId={lease.id} />
+            ) : (
+              <EmptyState
+                title="No deposit recorded"
+                description="The agency has not recorded a deposit for this tenancy."
+                action={
+                  <LinkButton href={`/leases/${lease.id}`} variant="secondary">
+                    Back to tenancy
+                  </LinkButton>
+                }
+              />
+            )}
+          </CardBody>
         </Card>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -220,7 +244,8 @@ export default async function LeaseDepositPage({ params }: { params: Promise<{ i
                           {canManage && (
                             <Td>
                               {deduction.approved_at === null &&
-                              deposit.status === 'held' && deposit.settled_on === null ? (
+                              deposit.status === 'held' &&
+                              deposit.settled_on === null ? (
                                 <ApproveDeductionForm
                                   leaseId={lease.id}
                                   deductionId={deduction.id}
@@ -252,57 +277,66 @@ export default async function LeaseDepositPage({ params }: { params: Promise<{ i
               </Card>
             )}
 
-            {canManage &&
-              deposit.status === 'held' && deposit.settled_on === null && (
-                <>
-                  <Card>
-                    <CardHeader
-                      title="Propose a deduction"
-                      description="A deduction needs an approved reason before it can reduce the refund."
-                    />
-                    <CardBody>
-                      <ProposeDeductionForm leaseId={lease.id} depositId={deposit.id} />
-                    </CardBody>
-                  </Card>
-                  <Card>
-                    <CardHeader
-                      title="Settle the deposit"
-                      description={`The database computes a refund from approved deductions. Suggested refund before settlement: ${formatNaira(
-                        fromTransport(
-                          String(
-                            BigInt(deposit.amount_kobo) -
-                              (approvedKobo > BigInt(deposit.amount_kobo)
-                                ? BigInt(deposit.amount_kobo)
-                                : approvedKobo),
-                          ),
+            {canManage && deposit.status === 'held' && deposit.settled_on === null && (
+              <>
+                <Card>
+                  <CardHeader
+                    title="Propose a deduction"
+                    description="A deduction needs an approved reason before it can reduce the refund."
+                  />
+                  <CardBody>
+                    <ProposeDeductionForm leaseId={lease.id} depositId={deposit.id} />
+                  </CardBody>
+                </Card>
+                <Card>
+                  <CardHeader
+                    title="Settle the deposit"
+                    description={`The database computes a refund from approved deductions. Suggested refund before settlement: ${formatNaira(
+                      fromTransport(
+                        String(
+                          BigInt(deposit.amount_kobo) -
+                            (approvedKobo > BigInt(deposit.amount_kobo)
+                              ? BigInt(deposit.amount_kobo)
+                              : approvedKobo),
                         ),
-                      )}.`}
+                      ),
+                    )}.`}
+                  />
+                  <CardBody>
+                    <SettleDepositForm
+                      leaseId={lease.id}
+                      depositId={deposit.id}
+                      leases={leaseOptions}
+                      suggestedDate={todayIso()}
                     />
-                    <CardBody>
-                      <SettleDepositForm
-                        leaseId={lease.id}
-                        depositId={deposit.id}
-                        leases={leaseOptions}
-                        suggestedDate={todayIso()}
-                      />
-                    </CardBody>
-                  </Card>
-                </>
-              )}
+                  </CardBody>
+                </Card>
+              </>
+            )}
 
             <Card>
-              <CardHeader title="Evidence" description="Invoices and photographs for deductions." />
-              <CardBody>
-                <p className="text-sm text-muted">
-                  Upload evidence from{' '}
-                  <Link
-                    href="/documents"
-                    className="text-info-text underline-offset-2 hover:underline"
-                  >
-                    Documents
-                  </Link>{' '}
-                  and attach it to the deduction.
-                </p>
+              <CardHeader
+                title="Evidence"
+                description="Invoices and photographs attached to this deposit's deductions."
+              />
+              <CardBody className="space-y-4">
+                <DocumentsTable documents={evidence ?? []} />
+                {canManage && deductions.length > 0 && (
+                  <div className="border-t border-border pt-4">
+                    <DocumentUploadForm
+                      groups={[
+                        {
+                          type: 'deposit_deduction',
+                          label: 'Deposit deduction',
+                          items: deductions.map((deduction) => ({
+                            id: deduction.id,
+                            label: `${formatDate(deduction.created_at.slice(0, 10))} · ${deduction.reason}`,
+                          })),
+                        },
+                      ]}
+                    />
+                  </div>
+                )}
               </CardBody>
             </Card>
           </div>

@@ -1,7 +1,7 @@
 -- Applying a validated spreadsheet import (PROP-4, PROP-5, MIG-3 foundation).
 
 begin;
-select plan(12);
+select plan(18);
 
 select tests.as_owner();
 
@@ -118,6 +118,41 @@ select throws_ok(
   '22023',
   null,
   'PROP-4: an applied batch cannot be applied again, so a retry cannot duplicate the portfolio'
+);
+
+select is(
+  (select count(*)::int from public.import_batch_entities where batch_id = :'batch'::uuid),
+  6,
+  'MIG-3: every created landlord, property and unit is recorded for rollback'
+);
+
+select lives_ok(
+  format('select public.rollback_import_batch(%L)', :'batch'::uuid),
+  'MIG-3: an applied property import can be rolled back'
+);
+
+select is(
+  (select count(*)::int from public.units where organisation_id = :'yb_org'::uuid),
+  0,
+  'MIG-3: rollback removes the units the batch created'
+);
+
+select is(
+  (select count(*)::int from public.properties where organisation_id = :'yb_org'::uuid),
+  0,
+  'MIG-3: rollback removes the properties the batch created'
+);
+
+select is(
+  (select count(*)::int from public.landlords where organisation_id = :'yb_org'::uuid),
+  0,
+  'MIG-3: rollback removes the landlord the batch created'
+);
+
+select is(
+  (select status::text from public.import_batches where id = :'batch'::uuid),
+  'rolled_back',
+  'MIG-3: the batch records that it was rolled back'
 );
 
 select * from finish();

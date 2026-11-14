@@ -22,10 +22,18 @@ import {
 import { PropertyPhotoForm } from '../../../../components/forms/property-photo-form';
 import { UnitForm } from '../../../../components/forms/unit-form';
 import { formatDate } from '../../../../lib/format';
+import { archivePropertyAction, archiveUnitAction } from '../../../../server/portfolio-actions';
 import { currentViewer, supabaseForRequest } from '../../../../server/session';
 
 /** One property, its landlord and its units (PROP-1, PROP-2). */
-export default async function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PropertyPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error: pageError } = await searchParams;
   const { id } = await params;
 
   const viewer = await currentViewer();
@@ -52,7 +60,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
     supabase
       .from('properties')
       .select(
-        'id, name, reference, property_type, address_line, lga, state_code, notes, created_at, landlords(display_name, phone, email), units(id, label, unit_type, status, asking_rent_kobo)',
+        'id, name, reference, property_type, address_line, lga, area, state_code, notes, created_at, archived_at, landlords(display_name, phone, email), units(id, label, reference, unit_type, status, asking_rent_kobo, facilities, archived_at)',
       )
       .eq('id', id)
       .order('label', { referencedTable: 'units' })
@@ -89,11 +97,44 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
         title={property.name}
         description={`${property.address_line}${property.lga === null ? '' : `, ${property.lga}`} · ${property.state_code}`}
         action={
-          <LinkButton href="/properties" variant="secondary">
-            Back to properties
-          </LinkButton>
+          <div className="flex flex-wrap items-center gap-2">
+            <LinkButton href="/properties" variant="secondary">
+              Back to properties
+            </LinkButton>
+            {viewer.access.can('property.write') && property.archived_at === null && (
+              <>
+                <LinkButton href={`/properties/${property.id}/edit`} variant="secondary">
+                  Edit property
+                </LinkButton>
+                <form action={archivePropertyAction}>
+                  <input type="hidden" name="propertyId" value={property.id} />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-[44px] items-center rounded-md border border-danger bg-surface px-4 text-sm font-medium text-danger-text hover:bg-danger-soft"
+                  >
+                    Archive
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
         }
       />
+
+      {property.archived_at !== null && (
+        <div className="mb-4 rounded-md bg-surface2 px-4 py-3 text-sm text-muted">
+          This property is archived. Its records remain visible for history.
+        </div>
+      )}
+
+      {pageError === 'archive' && (
+        <div
+          role="alert"
+          className="mb-4 rounded-md bg-warning-soft px-4 py-3 text-sm text-warning-text"
+        >
+          That property or unit could not be archived. An active lease must be ended first.
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
@@ -135,9 +176,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                   ))}
                 </div>
               )}
-              {(viewer.access.can('property.write') || viewer.access.can('maintenance.write')) && (
-                <PropertyPhotoForm propertyId={property.id} />
-              )}
+              {property.archived_at === null &&
+                (viewer.access.can('property.write') || viewer.access.can('maintenance.write')) && (
+                  <PropertyPhotoForm propertyId={property.id} />
+                )}
             </CardBody>
           </Card>
 
@@ -154,26 +196,65 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                     <Th>Type</Th>
                     <Th>Status</Th>
                     <Th numeric>Asking rent</Th>
+                    <Th>Actions</Th>
                   </tr>
                 </thead>
                 <tbody>
                   {units.length === 0 ? (
-                    <TableEmpty colSpan={4} message="No units yet." />
+                    <TableEmpty colSpan={5} message="No units yet." />
                   ) : (
                     units.map((unit) => (
                       <tr key={unit.id}>
-                        <Td>{unit.label}</Td>
+                        <Td>
+                          {unit.label}
+                          {unit.reference !== null && (
+                            <span className="block text-xs text-subtle">{unit.reference}</span>
+                          )}
+                          {unit.facilities.length > 0 && (
+                            <span className="block text-xs text-subtle">
+                              {unit.facilities.join(' · ')}
+                            </span>
+                          )}
+                        </Td>
                         <Td>{statusLabel(unit.unit_type)}</Td>
                         <Td>
-                          <Badge tone={unitStatusTone(unit.status)}>
-                            {statusLabel(unit.status)}
-                          </Badge>
+                          {unit.archived_at !== null ? (
+                            <Badge tone="neutral">Archived</Badge>
+                          ) : (
+                            <Badge tone={unitStatusTone(unit.status)}>
+                              {statusLabel(unit.status)}
+                            </Badge>
+                          )}
                         </Td>
                         <Td numeric>
                           {unit.asking_rent_kobo === null ? (
                             '—'
                           ) : (
                             <Money kobo={String(unit.asking_rent_kobo)} />
+                          )}
+                        </Td>
+                        <Td>
+                          {viewer.access.can('property.write') && unit.archived_at === null ? (
+                            <div className="flex flex-wrap items-center gap-3">
+                              <a
+                                href={`/properties/${property.id}/units/${unit.id}/edit`}
+                                className="text-info-text underline-offset-2 hover:underline"
+                              >
+                                Edit
+                              </a>
+                              <form action={archiveUnitAction}>
+                                <input type="hidden" name="propertyId" value={property.id} />
+                                <input type="hidden" name="unitId" value={unit.id} />
+                                <button
+                                  type="submit"
+                                  className="text-danger-text underline-offset-2 hover:underline"
+                                >
+                                  Archive
+                                </button>
+                              </form>
+                            </div>
+                          ) : (
+                            '—'
                           )}
                         </Td>
                       </tr>
@@ -184,7 +265,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             </CardBody>
           </Card>
 
-          {viewer.access.can('property.write') && (
+          {viewer.access.can('property.write') && property.archived_at === null && (
             <Card>
               <CardHeader title="Add a unit" description="You can add another at any time." />
               <CardBody>
@@ -213,6 +294,12 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 <dt className="text-xs uppercase tracking-wide text-subtle">Reference</dt>
                 <dd className="mt-0.5 text-text">{property.reference ?? '—'}</dd>
               </div>
+              {property.area !== null && (
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-subtle">Area</dt>
+                  <dd className="mt-0.5 text-text">{property.area}</dd>
+                </div>
+              )}
               <div>
                 <dt className="text-xs uppercase tracking-wide text-subtle">Added</dt>
                 <dd className="mt-0.5 text-text">{formatDate(property.created_at.slice(0, 10))}</dd>

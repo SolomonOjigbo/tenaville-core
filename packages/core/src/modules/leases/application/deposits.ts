@@ -2,11 +2,35 @@ import type { UserClient } from '@tenaville/db';
 import { fromTransport, toSafeNumber } from '@tenaville/money';
 
 import {
+  createDepositSchema,
   proposeDeductionSchema,
   recordDepositReceiptSchema,
+  type CreateDepositInput,
   type ProposeDeductionInput,
   type RecordDepositReceiptInput,
 } from '../schema/index';
+
+/** Add a caution deposit to a lease that was created without one (LEASE-13). */
+export const createDeposit = async (
+  client: UserClient,
+  input: CreateDepositInput,
+): Promise<{ depositId: string }> => {
+  const parsed = createDepositSchema.parse(input);
+  const { data, error } = await client
+    .from('lease_deposits')
+    .insert({
+      organisation_id: parsed.organisationId,
+      lease_id: parsed.leaseId,
+      amount_kobo: toSafeNumber(fromTransport(parsed.amountKobo)),
+      custodian: parsed.custodian,
+      status: 'expected',
+    })
+    .select('id')
+    .single();
+
+  if (error !== null) throw new Error(`could not add deposit: ${error.message}`);
+  return { depositId: data.id };
+};
 
 /**
  * Record that a deposit has arrived (LEASE-13).

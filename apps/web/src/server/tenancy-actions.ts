@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import {
   addDays,
   approveDeduction,
+  createDeposit,
   createLease,
   createTenant,
   formatDate,
@@ -271,6 +272,37 @@ const refreshTenancy = (leaseId: string): void => {
   revalidatePath(`/leases/${leaseId}/deposit`);
   revalidatePath(`/leases/${leaseId}/handovers`);
   revalidatePath('/leases');
+};
+
+export const createDepositAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!financeAccess(viewer)) return { error: 'Your role cannot add deposits.' };
+
+  const leaseId = field(form, 'leaseId').trim();
+  let amountKobo: string;
+  try {
+    amountKobo = toKoboTransport(field(form, 'amount'));
+  } catch (error) {
+    return { fieldErrors: { amount: rentFieldError(error).rent ?? 'Enter a valid amount' } };
+  }
+
+  try {
+    await createDeposit(await supabaseForRequest(), {
+      organisationId: viewer.organisationId,
+      leaseId,
+      amountKobo,
+      custodian: field(form, 'custodian') === 'landlord' ? 'landlord' : 'agency',
+    });
+  } catch (error) {
+    return { error: errorMessage(error, 'Could not add the deposit') };
+  }
+
+  refreshTenancy(leaseId);
+  return { message: 'Deposit added. Record its receipt when the money arrives.' };
 };
 
 export const recordDepositReceiptAction = async (

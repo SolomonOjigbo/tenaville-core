@@ -63,6 +63,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
 
   { href: '/settings', label: 'Settings', permission: 'org.update', group: 'admin' },
+  { href: '/imports', label: 'Imports', permission: 'org.update', group: 'admin' },
   {
     href: '/settings/sessions',
     label: 'Devices & sessions',

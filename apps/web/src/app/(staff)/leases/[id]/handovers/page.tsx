@@ -11,10 +11,12 @@ import {
   PageHeader,
   statusLabel,
 } from '../../../../../components/ui';
+import { DocumentUploadForm } from '../../../../../components/forms/document-upload-form';
 import {
   RecordHandoverForm,
   TerminateLeaseForm,
 } from '../../../../../components/forms/lease-lifecycle-forms';
+import { DocumentsTable } from '../../../../../components/documents/documents-table';
 import { formatDate } from '../../../../../lib/format';
 import { currentViewer, supabaseForRequest } from '../../../../../server/session';
 
@@ -65,6 +67,18 @@ export default async function LeaseHandoversPage({ params }: { params: Promise<{
   const tenant = lease.lease_parties.find((party) => party.role === 'tenant')?.tenants ?? null;
   const completed = new Set((handovers ?? []).map((handover) => handover.kind));
   const canManage = viewer.access.can('lease.write');
+  const handoverIds = (handovers ?? []).map((handover) => handover.id);
+  const { data: evidence } =
+    handoverIds.length === 0
+      ? { data: [] as const }
+      : await supabase
+          .from('documents')
+          .select(
+            'id, entity_type, entity_id, bucket, storage_path, title, file_name, document_type, mime_type, size_bytes, created_at, expiry_date, sensitive',
+          )
+          .eq('entity_type', 'handover')
+          .in('entity_id', handoverIds)
+          .order('created_at', { ascending: false });
   const canTerminate = canManage && (lease.status === 'active' || lease.status === 'draft');
 
   return (
@@ -173,6 +187,32 @@ export default async function LeaseHandoversPage({ params }: { params: Promise<{
               </CardBody>
             </Card>
           )}
+
+          <Card>
+            <CardHeader
+              title="Handover evidence"
+              description="Inspection photos and signed handover sheets."
+            />
+            <CardBody className="space-y-4">
+              <DocumentsTable documents={evidence ?? []} />
+              {canManage && handoverIds.length > 0 && (
+                <div className="border-t border-border pt-4">
+                  <DocumentUploadForm
+                    groups={[
+                      {
+                        type: 'handover',
+                        label: 'Handover',
+                        items: (handovers ?? []).map((handover) => ({
+                          id: handover.id,
+                          label: `${handoverKindLabel(handover.kind)} · ${formatDate(handover.happened_on)}`,
+                        })),
+                      },
+                    ]}
+                  />
+                </div>
+              )}
+            </CardBody>
+          </Card>
         </div>
 
         <div className="space-y-6">

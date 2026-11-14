@@ -26,8 +26,9 @@ export default async function PropertiesPage() {
   const { data: properties } = await supabase
     .from('properties')
     .select(
-      'id, name, reference, property_type, address_line, state_code, lga, units(id, label, status, asking_rent_kobo)',
+      'id, name, reference, property_type, address_line, state_code, lga, units(id, label, status, asking_rent_kobo, archived_at)',
     )
+    .is('archived_at', null)
     .order('name');
 
   const rows = properties ?? [];
@@ -42,6 +43,11 @@ export default async function PropertiesPage() {
             <LinkButton href="/landlords" variant="secondary">
               Landlords
             </LinkButton>
+            {viewer?.access.can('org.update') === true && (
+              <LinkButton href="/imports" variant="secondary">
+                Import
+              </LinkButton>
+            )}
             {viewer?.access.can('property.write') === true && (
               <LinkButton href="/properties/new">Add property</LinkButton>
             )}

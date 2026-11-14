@@ -4,13 +4,27 @@ import { useActionState } from 'react';
 
 import { Button, Field, LinkButton, Select, TextInput } from '../ui';
 import { FormBanner } from './form-banner';
-import { createPropertyAction } from '../../server/portfolio-actions';
+import { createPropertyAction, updatePropertyAction } from '../../server/portfolio-actions';
 import type { ActionResult } from '../../server/auth-actions';
 import type { StateOption } from './landlord-form';
 
 export interface LandlordOption {
   readonly id: string;
   readonly label: string;
+}
+
+export interface PropertyDefaults {
+  readonly landlordId: string;
+  readonly name: string;
+  readonly propertyType: string;
+  readonly reference: string | null;
+  readonly addressLine: string;
+  readonly stateCode: string;
+  readonly lga: string | null;
+  readonly area: string | null;
+  readonly latitude: number | null;
+  readonly longitude: number | null;
+  readonly notes: string | null;
 }
 
 const PROPERTY_TYPES = [
@@ -21,19 +35,27 @@ const PROPERTY_TYPES = [
   ['land', 'Land'],
 ] as const;
 
-/** Add a property (PROP-1). One landlord in R1. */
+/** Add or edit a property (PROP-1). One landlord in R1. */
 export const PropertyForm = ({
   landlords,
   states,
+  propertyId,
+  defaults,
 }: {
   readonly landlords: readonly LandlordOption[];
   readonly states: readonly StateOption[];
+  readonly propertyId?: string;
+  readonly defaults?: PropertyDefaults;
 }) => {
-  const [state, action, pending] = useActionState<ActionResult, FormData>(createPropertyAction, {});
+  const [state, action, pending] = useActionState<ActionResult, FormData>(
+    propertyId === undefined ? createPropertyAction : updatePropertyAction,
+    {},
+  );
 
   return (
     <form action={action} className="space-y-4">
       <FormBanner state={state} />
+      {propertyId !== undefined && <input type="hidden" name="propertyId" value={propertyId} />}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field
@@ -47,7 +69,7 @@ export const PropertyForm = ({
             id="property-landlord"
             name="landlordId"
             required
-            defaultValue={landlords[0]?.id ?? ''}
+            defaultValue={defaults?.landlordId ?? landlords[0]?.id ?? ''}
             invalid={state.fieldErrors?.landlordId !== undefined}
           >
             {landlords.map((landlord) => (
@@ -63,13 +85,18 @@ export const PropertyForm = ({
             id="property-name"
             name="name"
             required
+            defaultValue={defaults?.name}
             placeholder="e.g. Adeyemi Court"
             invalid={state.fieldErrors?.name !== undefined}
           />
         </Field>
 
         <Field id="property-type" label="Type" required>
-          <Select id="property-type" name="propertyType" defaultValue="residential">
+          <Select
+            id="property-type"
+            name="propertyType"
+            defaultValue={defaults?.propertyType ?? 'residential'}
+          >
             {PROPERTY_TYPES.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -79,7 +106,12 @@ export const PropertyForm = ({
         </Field>
 
         <Field id="property-reference" label="Reference" error={state.fieldErrors?.reference}>
-          <TextInput id="property-reference" name="reference" placeholder="e.g. YB/COURT/01" />
+          <TextInput
+            id="property-reference"
+            name="reference"
+            defaultValue={defaults?.reference ?? ''}
+            placeholder="e.g. YB/COURT/01"
+          />
         </Field>
 
         <div className="sm:col-span-2">
@@ -93,6 +125,7 @@ export const PropertyForm = ({
               id="property-address"
               name="addressLine"
               required
+              defaultValue={defaults?.addressLine}
               placeholder="Street and area"
               invalid={state.fieldErrors?.addressLine !== undefined}
             />
@@ -104,7 +137,7 @@ export const PropertyForm = ({
             id="property-state"
             name="stateCode"
             required
-            defaultValue="LA"
+            defaultValue={defaults?.stateCode ?? 'LA'}
             invalid={state.fieldErrors?.stateCode !== undefined}
           >
             {states.map((option) => (
@@ -116,21 +149,63 @@ export const PropertyForm = ({
         </Field>
 
         <Field id="property-lga" label="LGA" error={state.fieldErrors?.lga}>
-          <TextInput id="property-lga" name="lga" placeholder="e.g. Eti-Osa" />
+          <TextInput
+            id="property-lga"
+            name="lga"
+            defaultValue={defaults?.lga ?? ''}
+            placeholder="e.g. Eti-Osa"
+          />
         </Field>
 
-        <div className="sm:col-span-2">
-          <Field id="property-notes" label="Notes" error={state.fieldErrors?.notes}>
-            <TextInput id="property-notes" name="notes" placeholder="Access, caretaker, quirks" />
-          </Field>
-        </div>
+        <Field id="property-area" label="Area" error={state.fieldErrors?.area}>
+          <TextInput
+            id="property-area"
+            name="area"
+            defaultValue={defaults?.area ?? ''}
+            placeholder="e.g. Lekki Phase 1"
+          />
+        </Field>
+
+        <Field id="property-notes" label="Notes" error={state.fieldErrors?.notes}>
+          <TextInput
+            id="property-notes"
+            name="notes"
+            defaultValue={defaults?.notes ?? ''}
+            placeholder="Access, caretaker, quirks"
+          />
+        </Field>
+
+        <Field id="property-latitude" label="Latitude" error={state.fieldErrors?.latitude}>
+          <TextInput
+            id="property-latitude"
+            name="latitude"
+            type="number"
+            step="any"
+            defaultValue={defaults?.latitude ?? ''}
+            placeholder="6.4478"
+          />
+        </Field>
+
+        <Field id="property-longitude" label="Longitude" error={state.fieldErrors?.longitude}>
+          <TextInput
+            id="property-longitude"
+            name="longitude"
+            type="number"
+            step="any"
+            defaultValue={defaults?.longitude ?? ''}
+            placeholder="3.4723"
+          />
+        </Field>
       </div>
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Button type="submit" disabled={pending}>
-          {pending ? 'Saving…' : 'Add property'}
+          {pending ? 'Saving…' : propertyId === undefined ? 'Add property' : 'Save property'}
         </Button>
-        <LinkButton href="/properties" variant="secondary">
+        <LinkButton
+          href={propertyId === undefined ? '/properties' : `/properties/${propertyId}`}
+          variant="secondary"
+        >
           Cancel
         </LinkButton>
       </div>

@@ -77,3 +77,23 @@ export const createUnitSchema = z.object({
 });
 
 export type CreateUnitInput = z.infer<typeof createUnitSchema>;
+
+export const updatePropertySchema = createPropertySchema.and(
+  z.object({ propertyId: z.string().uuid() }),
+);
+
+export type UpdatePropertyInput = z.infer<typeof updatePropertySchema>;
+
+export const updateUnitSchema = createUnitSchema.and(z.object({ unitId: z.string().uuid() }));
+
+export type UpdateUnitInput = z.infer<typeof updateUnitSchema>;
+
+export const archivePropertySchema = z.object({
+  propertyId: z.string().uuid(),
+  organisationId: z.string().uuid(),
+});
+
+export const archiveUnitSchema = z.object({
+  unitId: z.string().uuid(),
+  organisationId: z.string().uuid(),
+});

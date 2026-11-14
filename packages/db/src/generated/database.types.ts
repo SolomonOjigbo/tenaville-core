@@ -677,11 +677,55 @@ export type Database = {
         };
         Relationships: [];
       };
+      import_batch_entities: {
+        Row: {
+          batch_id: string;
+          created_at: string;
+          entity_id: string;
+          entity_type: string;
+          id: string;
+          organisation_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          batch_id: string;
+          created_at?: string;
+          entity_id: string;
+          entity_type: string;
+          id?: string;
+          organisation_id: string;
+        };
+        Update: {
+          batch_id?: string;
+          created_at?: string;
+          entity_id?: string;
+          entity_type?: string;
+          id?: string;
+          organisation_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'import_batch_entities_batch_id_fkey';
+            columns: ['batch_id'];
+            isOneToOne: false;
+            referencedRelation: 'import_batches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'import_batch_entities_organisation_id_fkey';
+            columns: ['organisation_id'];
+            isOneToOne: false;
+            referencedRelation: 'organisations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       import_batches: {
         Row: {
           applied_at: string | null;
           created_at: string;
           created_by: string | null;
+          cutover_on: string | null;
           error: string | null;
           file_name: string | null;
           id: string;
@@ -701,6 +745,7 @@ export type Database = {
           applied_at?: string | null;
           created_at?: string;
           created_by?: string | null;
+          cutover_on?: string | null;
           error?: string | null;
           file_name?: string | null;
           id?: string;
@@ -719,6 +764,7 @@ export type Database = {
           applied_at?: string | null;
           created_at?: string;
           created_by?: string | null;
+          cutover_on?: string | null;
           error?: string | null;
           file_name?: string | null;
           id?: string;
@@ -2248,6 +2294,8 @@ export type Database = {
           lease_expiry_alert_days: number[];
           maintenance_approval_threshold_kobo: number;
           name: string;
+          opening_balances_confirmed_at: string | null;
+          opening_balances_cutover_on: string | null;
           receipt_prefix: string;
           timezone: string;
           type: Database['public']['Enums']['organisation_type'];
@@ -2261,6 +2309,8 @@ export type Database = {
           lease_expiry_alert_days?: number[];
           maintenance_approval_threshold_kobo?: number;
           name: string;
+          opening_balances_confirmed_at?: string | null;
+          opening_balances_cutover_on?: string | null;
           receipt_prefix?: string;
           timezone?: string;
           type: Database['public']['Enums']['organisation_type'];
@@ -2273,6 +2323,8 @@ export type Database = {
           lease_expiry_alert_days?: number[];
           maintenance_approval_threshold_kobo?: number;
           name?: string;
+          opening_balances_confirmed_at?: string | null;
+          opening_balances_cutover_on?: string | null;
           receipt_prefix?: string;
           timezone?: string;
           type?: Database['public']['Enums']['organisation_type'];
@@ -2594,6 +2646,7 @@ export type Database = {
       properties: {
         Row: {
           address_line: string;
+          archived_at: string | null;
           area: string | null;
           branch_id: string | null;
           created_at: string;
@@ -2613,6 +2666,7 @@ export type Database = {
         ComputedFields: never;
         Insert: {
           address_line: string;
+          archived_at?: string | null;
           area?: string | null;
           branch_id?: string | null;
           created_at?: string;
@@ -2631,6 +2685,7 @@ export type Database = {
         };
         Update: {
           address_line?: string;
+          archived_at?: string | null;
           area?: string | null;
           branch_id?: string | null;
           created_at?: string;
@@ -3369,6 +3424,7 @@ export type Database = {
       };
       units: {
         Row: {
+          archived_at: string | null;
           asking_rent_kobo: number | null;
           bathrooms: number | null;
           bedrooms: number | null;
@@ -3387,6 +3443,7 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          archived_at?: string | null;
           asking_rent_kobo?: number | null;
           bathrooms?: number | null;
           bedrooms?: number | null;
@@ -3404,6 +3461,7 @@ export type Database = {
           updated_at?: string | null;
         };
         Update: {
+          archived_at?: string | null;
           asking_rent_kobo?: number | null;
           bathrooms?: number | null;
           bedrooms?: number | null;
@@ -3659,8 +3717,65 @@ export type Database = {
           },
         ];
       };
+      pg_all_foreign_keys: {
+        Row: {
+          fk_columns: unknown[] | null;
+          fk_constraint_name: unknown;
+          fk_schema_name: unknown;
+          fk_table_name: unknown;
+          fk_table_oid: unknown;
+          is_deferrable: boolean | null;
+          is_deferred: boolean | null;
+          match_type: string | null;
+          on_delete: string | null;
+          on_update: string | null;
+          pk_columns: unknown[] | null;
+          pk_constraint_name: unknown;
+          pk_index_name: unknown;
+          pk_schema_name: unknown;
+          pk_table_name: unknown;
+          pk_table_oid: unknown;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      tap_funky: {
+        Row: {
+          args: string | null;
+          is_definer: boolean | null;
+          is_strict: boolean | null;
+          is_visible: boolean | null;
+          kind: unknown;
+          langoid: unknown;
+          name: unknown;
+          oid: unknown;
+          owner: unknown;
+          returns: string | null;
+          returns_set: boolean | null;
+          schema: unknown;
+          volatility: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
     };
     Functions: {
+      _cleanup: { Args: Record<PropertyKey, never>; Returns: boolean };
+      _contract_on: { Args: { '': string }; Returns: unknown };
+      _currtest: { Args: Record<PropertyKey, never>; Returns: number };
+      _db_privs: { Args: Record<PropertyKey, never>; Returns: unknown[] };
+      _extensions: { Args: Record<PropertyKey, never>; Returns: unknown[] };
+      _get: { Args: { '': string }; Returns: number };
+      _get_latest: { Args: { '': string }; Returns: number[] };
+      _get_note: { Args: { '': string }; Returns: string };
+      _is_verbose: { Args: Record<PropertyKey, never>; Returns: boolean };
+      _prokind: { Args: { p_oid: unknown }; Returns: unknown };
+      _query: { Args: { '': string }; Returns: string };
+      _refine_vol: { Args: { '': string }; Returns: string };
+      _retval: { Args: { '': string }; Returns: string };
+      _table_privs: { Args: Record<PropertyKey, never>; Returns: unknown[] };
+      _temptypes: { Args: { '': string }; Returns: string };
+      _todo: { Args: Record<PropertyKey, never>; Returns: string };
       accept_invitation: { Args: { target_organisation_id: string }; Returns: undefined };
       activate_lease: { Args: { charge_rows: Json; target_lease_id: string }; Returns: number };
       add_lease_charge_term: {
@@ -3681,12 +3796,28 @@ export type Database = {
         Args: { p_body: string; p_internal?: boolean; p_request_id: string };
         Returns: string;
       };
+      apply_opening_balance_import: {
+        Args: { target_batch_id: string };
+        Returns: {
+          charges_created: number;
+          credits_created: number;
+          ledger_entries_created: number;
+        }[];
+      };
       apply_property_import: {
         Args: { target_batch_id: string };
         Returns: {
           landlords_created: number;
           properties_created: number;
           units_created: number;
+        }[];
+      };
+      apply_tenant_lease_import: {
+        Args: { target_batch_id: string };
+        Returns: {
+          deposits_created: number;
+          leases_created: number;
+          tenants_created: number;
         }[];
       };
       assign_maintenance_request: {
@@ -3713,6 +3844,34 @@ export type Database = {
         Args: { p_organisation_id: string; p_plan_id: string; p_reason: string };
         Returns: string;
       };
+      col_is_null:
+        | {
+            Args: {
+              column_name: unknown;
+              description?: string;
+              schema_name: unknown;
+              table_name: unknown;
+            };
+            Returns: string;
+          }
+        | {
+            Args: { column_name: unknown; description?: string; table_name: unknown };
+            Returns: string;
+          };
+      col_not_null:
+        | {
+            Args: {
+              column_name: unknown;
+              description?: string;
+              schema_name: unknown;
+              table_name: unknown;
+            };
+            Returns: string;
+          }
+        | {
+            Args: { column_name: unknown; description?: string; table_name: unknown };
+            Returns: string;
+          };
       confirm_maintenance_resolution: { Args: { p_request_id: string }; Returns: undefined };
       create_lease_with_tenant: {
         Args: {
@@ -3767,6 +3926,26 @@ export type Database = {
         Args: { p_approval_id: string; p_approved: boolean; p_comment?: string };
         Returns: undefined;
       };
+      diag:
+        | {
+            Args: { msg: unknown };
+            Returns: {
+              error: true;
+            } & 'Could not choose the best candidate function between: public.diag(msg => text), public.diag(msg => anyelement). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+          }
+        | {
+            Args: { msg: string };
+            Returns: {
+              error: true;
+            } & 'Could not choose the best candidate function between: public.diag(msg => text), public.diag(msg => anyelement). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+          };
+      diag_test_name: { Args: { '': string }; Returns: string };
+      do_tap:
+        | { Args: Record<PropertyKey, never>; Returns: string[] }
+        | { Args: { '': string }; Returns: string[] };
+      fail:
+        | { Args: Record<PropertyKey, never>; Returns: string }
+        | { Args: { '': string }; Returns: string };
       finalise_usage_reading: {
         Args: { target_reading_id: string };
         Returns: {
@@ -3797,6 +3976,9 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      findfuncs: { Args: { '': string }; Returns: string[] };
+      finish: { Args: { exception_on_failure?: boolean }; Returns: string[] };
+      format_type_string: { Args: { '': string }; Returns: string };
       generate_document_expiry_tasks: {
         Args: { p_days_ahead?: number; p_organisation_id: string };
         Returns: number;
@@ -3813,7 +3995,21 @@ export type Database = {
         Args: { p_organisation_id: string; p_period_end: string; p_period_start: string };
         Returns: string;
       };
+      has_unique: { Args: { '': string }; Returns: string };
+      in_todo: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_empty: { Args: { '': string }; Returns: string };
+      isnt_empty: { Args: { '': string }; Returns: string };
       issue_statement: { Args: { target_statement_id: string }; Returns: undefined };
+      lives_ok: { Args: { '': string }; Returns: string };
+      no_plan: { Args: Record<PropertyKey, never>; Returns: boolean[] };
+      num_failed: { Args: Record<PropertyKey, never>; Returns: number };
+      os_name: { Args: Record<PropertyKey, never>; Returns: string };
+      pass:
+        | { Args: Record<PropertyKey, never>; Returns: string }
+        | { Args: { '': string }; Returns: string };
+      pg_version: { Args: Record<PropertyKey, never>; Returns: string };
+      pg_version_num: { Args: Record<PropertyKey, never>; Returns: number };
+      pgtap_version: { Args: Record<PropertyKey, never>; Returns: number };
       plan_entitlements: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3933,6 +4129,10 @@ export type Database = {
       };
       reverse_payment: { Args: { reason: string; target_payment_id: string }; Returns: string };
       review_statement: { Args: { target_statement_id: string }; Returns: undefined };
+      rollback_import_batch: { Args: { target_batch_id: string }; Returns: number };
+      runtests:
+        | { Args: Record<PropertyKey, never>; Returns: string[] }
+        | { Args: { '': string }; Returns: string[] };
       settle_deposit: {
         Args: {
           p_deposit_id: string;
@@ -3943,6 +4143,9 @@ export type Database = {
         };
         Returns: undefined;
       };
+      skip:
+        | { Args: { '': string }; Returns: string }
+        | { Args: { how_many: number; why: string }; Returns: string };
       take_usage_reading: {
         Args: { period_end: string; period_start: string; target_organisation_id: string };
         Returns: string;
@@ -3951,6 +4154,16 @@ export type Database = {
         Args: { p_lease_id: string; p_reason: string; p_terminated_on: string };
         Returns: undefined;
       };
+      throws_ok: { Args: { '': string }; Returns: string };
+      todo:
+        | { Args: { how_many: number }; Returns: boolean[] }
+        | { Args: { how_many: number; why: string }; Returns: boolean[] }
+        | { Args: { why: string }; Returns: boolean[] }
+        | { Args: { how_many: number; why: string }; Returns: boolean[] };
+      todo_end: { Args: Record<PropertyKey, never>; Returns: boolean[] };
+      todo_start:
+        | { Args: Record<PropertyKey, never>; Returns: boolean[] }
+        | { Args: { '': string }; Returns: boolean[] };
       transition_maintenance_request: {
         Args: {
           p_note?: string;
@@ -3989,7 +4202,8 @@ export type Database = {
       billing_invoice_status: 'draft' | 'open' | 'paid' | 'void';
       billing_period: 'monthly' | 'annual';
       charge_frequency: 'one_off' | 'monthly' | 'quarterly' | 'half_yearly' | 'annual';
-      charge_kind: 'rent' | 'service_charge' | 'utility' | 'agreed_fee' | 'repair';
+      charge_kind:
+        'rent' | 'service_charge' | 'utility' | 'agreed_fee' | 'repair' | 'opening_balance';
       charge_status: 'open' | 'cancelled';
       commission_basis: 'on_receipt' | 'on_invoice';
       commission_type: 'percentage' | 'fixed';
@@ -4062,7 +4276,8 @@ export type Database = {
       message_status: 'queued' | 'sent' | 'delivered' | 'failed' | 'skipped';
       message_template_status: 'draft' | 'pending_approval' | 'approved' | 'rejected';
       organisation_type: 'agency' | 'individual_landlord';
-      payment_method: 'cash' | 'bank_transfer' | 'pos' | 'cheque' | 'mobile_money' | 'other';
+      payment_method:
+        'cash' | 'bank_transfer' | 'pos' | 'cheque' | 'mobile_money' | 'other' | 'opening_balance';
       payment_status: 'recorded' | 'confirmed' | 'reversed';
       plan_tier: 'free' | 'landlord' | 'agent' | 'growth' | 'enterprise';
       property_type: 'residential' | 'commercial' | 'mixed_use' | 'estate' | 'land';
@@ -4092,7 +4307,9 @@ export type Database = {
       vendor_status: 'active' | 'inactive';
     };
     CompositeTypes: {
-      [_ in never]: never;
+      _time_trial_type: {
+        a_time: number | null;
+      };
     };
   };
   storage: {
@@ -4235,7 +4452,7 @@ export const Constants = {
       billing_invoice_status: ['draft', 'open', 'paid', 'void'],
       billing_period: ['monthly', 'annual'],
       charge_frequency: ['one_off', 'monthly', 'quarterly', 'half_yearly', 'annual'],
-      charge_kind: ['rent', 'service_charge', 'utility', 'agreed_fee', 'repair'],
+      charge_kind: ['rent', 'service_charge', 'utility', 'agreed_fee', 'repair', 'opening_balance'],
       charge_status: ['open', 'cancelled'],
       commission_basis: ['on_receipt', 'on_invoice'],
       commission_type: ['percentage', 'fixed'],
@@ -4319,7 +4536,15 @@ export const Constants = {
       message_status: ['queued', 'sent', 'delivered', 'failed', 'skipped'],
       message_template_status: ['draft', 'pending_approval', 'approved', 'rejected'],
       organisation_type: ['agency', 'individual_landlord'],
-      payment_method: ['cash', 'bank_transfer', 'pos', 'cheque', 'mobile_money', 'other'],
+      payment_method: [
+        'cash',
+        'bank_transfer',
+        'pos',
+        'cheque',
+        'mobile_money',
+        'other',
+        'opening_balance',
+      ],
       payment_status: ['recorded', 'confirmed', 'reversed'],
       plan_tier: ['free', 'landlord', 'agent', 'growth', 'enterprise'],
       property_type: ['residential', 'commercial', 'mixed_use', 'estate', 'land'],

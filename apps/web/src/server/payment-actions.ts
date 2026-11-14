@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { MoneyParseError, parseNaira, toSafeNumber } from '@tenaville/money';
 
-import { isPaymentMethod, type PaymentMethod } from '../lib/payments';
+import { isPaymentMethod, type SelectablePaymentMethod } from '../lib/payments';
 import { currentViewer, supabaseForRequest } from './session';
 import type { ActionResult } from './auth-actions';
 
@@ -119,7 +119,7 @@ export const recordPaymentAction = async (
       target_organisation_id: viewer.organisationId,
       target_lease_id: leaseId,
       payment_amount_kobo: amountKobo as number,
-      payment_method: method as PaymentMethod,
+      payment_method: method as SelectablePaymentMethod,
       payment_client_mutation_id:
         clientMutationId === '' ? globalThis.crypto.randomUUID() : clientMutationId,
       ...(paidOn === '' ? {} : { payment_paid_on: paidOn }),

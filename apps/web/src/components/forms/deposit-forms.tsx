@@ -6,6 +6,7 @@ import { Button, Field, MoneyInput, Select, TextInput } from '../ui';
 import { FormBanner } from './form-banner';
 import {
   approveDepositDeductionAction,
+  createDepositAction,
   proposeDepositDeductionAction,
   recordDepositReceiptAction,
   settleDepositAction,
@@ -17,6 +18,35 @@ const textareaClass =
 
 const useAction = (action: (previous: ActionResult, form: FormData) => Promise<ActionResult>) =>
   useActionState<ActionResult, FormData>(action, {});
+
+export const CreateDepositForm = ({ leaseId }: { readonly leaseId: string }) => {
+  const [state, action, pending] = useAction(createDepositAction);
+  return (
+    <form action={action} className="space-y-4">
+      <FormBanner state={state} />
+      <input type="hidden" name="leaseId" value={leaseId} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field
+          id="deposit-amount"
+          label="Deposit amount"
+          required
+          error={state.fieldErrors?.amount}
+        >
+          <MoneyInput id="deposit-amount" name="amount" required autoComplete="off" />
+        </Field>
+        <Field id="deposit-custodian" label="Custodian" required>
+          <Select id="deposit-custodian" name="custodian" defaultValue="agency">
+            <option value="agency">Held by the agency</option>
+            <option value="landlord">Held by the landlord</option>
+          </Select>
+        </Field>
+      </div>
+      <Button type="submit" disabled={pending}>
+        {pending ? 'Adding…' : 'Add deposit'}
+      </Button>
+    </form>
+  );
+};
 
 export const RecordDepositReceiptForm = ({
   leaseId,

@@ -5,7 +5,14 @@ import { redirect } from 'next/navigation';
 
 import { uploadDocument } from '@tenaville/core/documents';
 import { createLandlord } from '@tenaville/core/landlords';
-import { createProperty, createUnit } from '@tenaville/core/properties';
+import {
+  archiveProperty,
+  archiveUnit,
+  createProperty,
+  createUnit,
+  updateProperty,
+  updateUnit,
+} from '@tenaville/core/properties';
 import { createAdminClient } from '@tenaville/db';
 import { MoneyParseError, parseNaira, toTransport } from '@tenaville/money';
 
@@ -100,6 +107,13 @@ export const createPropertyAction = async (
         ? {}
         : { reference: optionalField(form, 'reference') }),
       ...(optionalField(form, 'lga') === undefined ? {} : { lga: optionalField(form, 'lga') }),
+      ...(optionalField(form, 'area') === undefined ? {} : { area: optionalField(form, 'area') }),
+      ...(numberField(form, 'latitude') === undefined
+        ? {}
+        : { latitude: numberField(form, 'latitude') }),
+      ...(numberField(form, 'longitude') === undefined
+        ? {}
+        : { longitude: numberField(form, 'longitude') }),
       ...(optionalField(form, 'notes') === undefined
         ? {}
         : { notes: optionalField(form, 'notes') }),
@@ -112,6 +126,188 @@ export const createPropertyAction = async (
   }
 
   revalidatePath('/properties');
+  redirect(`/properties/${propertyId}`);
+};
+
+const unitStatus = (
+  value: string,
+): 'vacant' | 'occupied' | 'reserved' | 'under_maintenance' | 'inactive' => {
+  if (
+    value === 'occupied' ||
+    value === 'reserved' ||
+    value === 'under_maintenance' ||
+    value === 'inactive'
+  ) {
+    return value;
+  }
+  return 'vacant';
+};
+
+const facilities = (form: FormData): string[] =>
+  field(form, 'facilities')
+    .split(/[\n,]/)
+    .map((facility) => facility.trim())
+    .filter((facility) => facility !== '')
+    .slice(0, 50);
+
+const optionalNaira = (form: FormData, name: string): string | undefined => {
+  const value = field(form, name).trim();
+  return value === '' ? undefined : value;
+};
+
+export const updatePropertyAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('property.write')) {
+    return { error: 'Your role cannot edit properties.' };
+  }
+
+  const propertyId = field(form, 'propertyId').trim();
+  try {
+    await updateProperty(await supabaseForRequest(), {
+      propertyId,
+      organisationId: viewer.organisationId,
+      ...(viewer.access.branchId === null ? {} : { branchId: viewer.access.branchId }),
+      landlordId: field(form, 'landlordId'),
+      name: field(form, 'name'),
+      propertyType: field(form, 'propertyType') as
+        'residential' | 'commercial' | 'mixed_use' | 'estate' | 'land',
+      addressLine: field(form, 'addressLine'),
+      stateCode: field(form, 'stateCode'),
+      ...(optionalField(form, 'reference') === undefined
+        ? {}
+        : { reference: optionalField(form, 'reference') }),
+      ...(optionalField(form, 'lga') === undefined ? {} : { lga: optionalField(form, 'lga') }),
+      ...(optionalField(form, 'area') === undefined ? {} : { area: optionalField(form, 'area') }),
+      ...(numberField(form, 'latitude') === undefined
+        ? {}
+        : { latitude: numberField(form, 'latitude') }),
+      ...(numberField(form, 'longitude') === undefined
+        ? {}
+        : { longitude: numberField(form, 'longitude') }),
+      ...(optionalField(form, 'notes') === undefined
+        ? {}
+        : { notes: optionalField(form, 'notes') }),
+    });
+  } catch (error) {
+    const fieldErrors = fieldErrorsFrom(error);
+    if (fieldErrors !== null) return { fieldErrors };
+    return { error: errorMessage(error, 'Could not save the property') };
+  }
+
+  revalidatePath('/properties');
+  revalidatePath(`/properties/${propertyId}`);
+  redirect(`/properties/${propertyId}`);
+};
+
+export const archivePropertyAction = async (form: FormData): Promise<void> => {
+  const viewer = await currentViewer();
+  if (viewer === null || !viewer.access.can('property.write')) return;
+  const propertyId = field(form, 'propertyId').trim();
+  if (propertyId === '') return;
+
+  try {
+    await archiveProperty(await supabaseForRequest(), propertyId, viewer.organisationId);
+  } catch {
+    redirect(`/properties/${propertyId}?error=archive`);
+  }
+
+  revalidatePath('/properties');
+  revalidatePath(`/properties/${propertyId}`);
+  redirect('/properties');
+};
+
+export const updateUnitAction = async (
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> => {
+  const viewer = await currentViewer();
+  if (viewer === null) return { error: 'Your session has expired. Sign in again.' };
+  if (!viewer.access.can('property.write')) {
+    return { error: 'Your role cannot edit units.' };
+  }
+
+  const propertyId = field(form, 'propertyId').trim();
+  const unitId = field(form, 'unitId').trim();
+  const askingText = optionalNaira(form, 'askingRent');
+  let askingRentKobo: string | undefined;
+  if (askingText !== undefined) {
+    try {
+      askingRentKobo = toKoboTransport(askingText);
+    } catch (error) {
+      return {
+        fieldErrors: {
+          askingRent:
+            error instanceof MoneyParseError
+              ? 'Enter a naira amount, for example 1,200,000.00'
+              : 'That amount is too large to store',
+        },
+      };
+    }
+  }
+
+  try {
+    await updateUnit(await supabaseForRequest(), {
+      unitId,
+      organisationId: viewer.organisationId,
+      propertyId,
+      label: field(form, 'label'),
+      reference: optionalField(form, 'reference'),
+      unitType: field(form, 'unitType') as
+        | 'flat'
+        | 'self_contained'
+        | 'room'
+        | 'duplex'
+        | 'bungalow'
+        | 'shop'
+        | 'office'
+        | 'warehouse'
+        | 'other',
+      status: unitStatus(field(form, 'status')),
+      facilities: facilities(form),
+      ...(numberField(form, 'bedrooms') === undefined
+        ? {}
+        : { bedrooms: numberField(form, 'bedrooms') }),
+      ...(numberField(form, 'bathrooms') === undefined
+        ? {}
+        : { bathrooms: numberField(form, 'bathrooms') }),
+      ...(numberField(form, 'floorAreaSqm') === undefined
+        ? {}
+        : { floorAreaSqm: numberField(form, 'floorAreaSqm') }),
+      ...(askingRentKobo === undefined ? {} : { askingRentKobo }),
+      ...(optionalField(form, 'notes') === undefined
+        ? {}
+        : { notes: optionalField(form, 'notes') }),
+    });
+  } catch (error) {
+    const fieldErrors = fieldErrorsFrom(error);
+    if (fieldErrors !== null) return { fieldErrors };
+    return { error: errorMessage(error, 'Could not save the unit') };
+  }
+
+  revalidatePath(`/properties/${propertyId}`);
+  revalidatePath('/properties');
+  redirect(`/properties/${propertyId}`);
+};
+
+export const archiveUnitAction = async (form: FormData): Promise<void> => {
+  const viewer = await currentViewer();
+  if (viewer === null || !viewer.access.can('property.write')) return;
+  const propertyId = field(form, 'propertyId').trim();
+  const unitId = field(form, 'unitId').trim();
+  if (propertyId === '' || unitId === '') return;
+
+  try {
+    await archiveUnit(await supabaseForRequest(), unitId, viewer.organisationId);
+  } catch {
+    redirect(`/properties/${propertyId}?error=archive`);
+  }
+
+  revalidatePath('/properties');
+  revalidatePath(`/properties/${propertyId}`);
   redirect(`/properties/${propertyId}`);
 };
 
@@ -162,14 +358,17 @@ export const createUnitAction = async (
         | 'office'
         | 'warehouse'
         | 'other',
-      status: 'vacant',
-      facilities: [],
+      status: unitStatus(field(form, 'status')),
+      facilities: facilities(form),
       ...(numberField(form, 'bedrooms') === undefined
         ? {}
         : { bedrooms: numberField(form, 'bedrooms') }),
       ...(numberField(form, 'bathrooms') === undefined
         ? {}
         : { bathrooms: numberField(form, 'bathrooms') }),
+      ...(numberField(form, 'floorAreaSqm') === undefined
+        ? {}
+        : { floorAreaSqm: numberField(form, 'floorAreaSqm') }),
       ...(askingRentKobo === undefined ? {} : { askingRentKobo }),
       ...(optionalField(form, 'notes') === undefined
         ? {}

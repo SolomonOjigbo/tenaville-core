@@ -1,0 +1,23 @@
+{
+  "name": "@tenaville/seed",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Deterministic demo data for staging and investor demonstrations. Seeds through the same application layer and RPCs the product uses, so every invariant in CLAUDE.md is exercised rather than bypassed.",
+  "type": "module",
+  "scripts": {
+    "seed": "tsx src/cli.ts",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "@tenaville/core": "workspace:*",
+    "@tenaville/db": "workspace:*",
+    "@tenaville/money": "workspace:*"
+  },
+  "devDependencies": {
+    "@tenaville/config": "workspace:*",
+    "tsx": "^4.19.0"
+  }
+}

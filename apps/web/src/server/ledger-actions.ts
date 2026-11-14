@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { recordRemittance } from '@tenaville/core/ledger';
 import { MoneyParseError, parseNaira, toTransport } from '@tenaville/money';
 
-import { isPaymentMethod, type PaymentMethod } from '../lib/payments';
+import { isPaymentMethod, type SelectablePaymentMethod } from '../lib/payments';
 import { errorMessage, fieldErrorsFrom } from '../lib/form-errors';
 import { field } from './form-fields';
 import { currentViewer, supabaseForRequest } from './session';
@@ -62,7 +62,7 @@ export const recordRemittanceAction = async (
       landlordId,
       amountKobo: amountKobo as string,
       paidOn,
-      method: method as PaymentMethod,
+      method: method as SelectablePaymentMethod,
       ...(reference === '' ? {} : { reference }),
     });
   } catch (error) {

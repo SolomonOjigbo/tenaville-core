@@ -7,7 +7,8 @@
  * components means they can be tested without a DOM.
  */
 
-export type PaymentMethod = 'cash' | 'bank_transfer' | 'pos' | 'cheque' | 'mobile_money' | 'other';
+export type PaymentMethod =
+  'cash' | 'bank_transfer' | 'pos' | 'cheque' | 'mobile_money' | 'other' | 'opening_balance';
 
 const METHOD_LABELS: Record<PaymentMethod, string> = {
   cash: 'Cash',
@@ -16,16 +17,23 @@ const METHOD_LABELS: Record<PaymentMethod, string> = {
   cheque: 'Cheque',
   mobile_money: 'Mobile money',
   other: 'Other',
+  opening_balance: 'Opening balance',
 };
 
-/** The order the methods appear in a picker. */
-export const PAYMENT_METHODS = Object.keys(METHOD_LABELS) as PaymentMethod[];
+export type SelectablePaymentMethod = Exclude<PaymentMethod, 'opening_balance'>;
 
-export const isPaymentMethod = (value: string): value is PaymentMethod =>
-  Object.prototype.hasOwnProperty.call(METHOD_LABELS, value);
+/** The order the methods appear in a picker. Opening balances are not a payment choice. */
+export const PAYMENT_METHODS: SelectablePaymentMethod[] = (
+  Object.keys(METHOD_LABELS) as PaymentMethod[]
+).filter((method): method is SelectablePaymentMethod => method !== 'opening_balance');
+
+export const isPaymentMethod = (value: string): value is SelectablePaymentMethod =>
+  value !== 'opening_balance' && Object.prototype.hasOwnProperty.call(METHOD_LABELS, value);
 
 export const paymentMethodLabel = (method: string): string =>
-  isPaymentMethod(method) ? METHOD_LABELS[method] : method;
+  Object.prototype.hasOwnProperty.call(METHOD_LABELS, method)
+    ? METHOD_LABELS[method as PaymentMethod]
+    : method;
 
 /** Sum inline kobo values without ever passing through a float. */
 export const sumKobo = (amounts: readonly (number | null | undefined)[]): bigint =>
@@ -126,8 +134,8 @@ export const summariseCashUp = (rows: readonly CashUpPayment[]): CashUpSummary =
 
   const order = new Map(PAYMENT_METHODS.map((method, index) => [method, index]));
   const methods = [...byMethod.values()].sort((a, b) => {
-    const left = order.get(a.method as PaymentMethod) ?? Number.MAX_SAFE_INTEGER;
-    const right = order.get(b.method as PaymentMethod) ?? Number.MAX_SAFE_INTEGER;
+    const left = order.get(a.method as SelectablePaymentMethod) ?? Number.MAX_SAFE_INTEGER;
+    const right = order.get(b.method as SelectablePaymentMethod) ?? Number.MAX_SAFE_INTEGER;
     return left === right ? a.method.localeCompare(b.method) : left - right;
   });
 
